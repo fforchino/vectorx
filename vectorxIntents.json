@@ -1,0 +1,56 @@
+[
+  {
+    "name": "extended_intent_rolladie",
+    "description": "Vector rolls a die",
+    "utterances": [
+      "banana jobs"
+    ],
+    "intent": "intent_greeting_hello",
+    "params": {
+      "paramname": "",
+      "paramvalue": ""
+    },
+    "exec": "/home/pi/vectorx/runCmd.sh",
+    "execargs": [
+      "!botSerial",
+      "!intentName",
+      "!speechText"
+    ]
+  },
+  {
+    "name": "extended_intent_set_robot_name",
+    "description": "Human gives Vector a name",
+    "utterances": [
+      "banana pink"
+    ],
+    "intent": "intent_greeting_hello",
+    "params": {
+      "paramname": "",
+      "paramvalue": ""
+    },
+    "exec": "/home/pi/vectorx/runCmd.sh",
+    "execargs": [
+      "!botSerial",
+      "!intentName",
+      "!speechText"
+    ]
+  },
+  {
+    "name": "extended_intent_say_robot_name",
+    "description": "Vector says its name",
+    "utterances": [
+      "banana gold"
+    ],
+    "intent": "intent_greeting_hello",
+    "params": {
+      "paramname": "",
+      "paramvalue": ""
+    },
+    "exec": "/home/pi/vectorx/runCmd.sh",
+    "execargs": [
+      "!botSerial",
+      "!intentName",
+      "!speechText"
+    ]
+  }
+]
