@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type intentsStruct []struct {
@@ -15,8 +16,9 @@ type intentsStruct []struct {
 		ParamName  string `json:"paramname"`
 		ParamValue string `json:"paramvalue"`
 	} `json:"params"`
-	Exec     string   `json:"exec"`
-	ExecArgs []string `json:"execargs"`
+	Exec           string   `json:"exec"`
+	ExecArgs       []string `json:"execargs"`
+	IsSystemIntent bool     `json:"issystem"`
 }
 
 func contains(iss intentsStruct, i string) bool {
@@ -44,7 +46,7 @@ func main() {
 		}
 	}
 	// Load VECTORX custom intents
-	vectorxIntentsFile := "./vectorxIntents.json"
+	vectorxIntentsFile := "./vectorxSetup.json"
 	if _, err := os.Stat(vectorxIntentsFile); err == nil {
 		vectorxIntentsJSONFile, err := os.ReadFile(vectorxIntentsFile)
 		if err == nil {
@@ -55,6 +57,8 @@ func main() {
 	// Overwrite vectorx intents in wirepod custom intents
 	if nil != vectorxIntentJSON {
 		for i, v := range vectorxIntentJSON {
+			cwd, _ := os.Getwd()
+			v.Exec = strings.Replace(v.Exec, "__REPLACEME__", cwd, -1)
 			if !contains(customIntentJSON, v.Name) {
 				println("Appending intent " + v.Name)
 				customIntentJSON = append(customIntentJSON, v)

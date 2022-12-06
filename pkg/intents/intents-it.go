@@ -2,9 +2,9 @@ package intents
 
 import "strings"
 
-func ParseParamsIt(speechText string, intent string) IntentParams {
+func ParseParamsIt(speechText string, intent IntentDef) IntentParams {
 	var intentParams IntentParams
-	if strings.Contains(intent, "extended_intent_set_robot_name") {
+	if contains(intent.Parameters, PARAMETER_USERNAME) {
 		var username string
 		var nameSplitter string
 		if strings.Contains(speechText, "is") {

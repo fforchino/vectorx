@@ -1,0 +1,21 @@
+[
+  {
+    "name": "extended_intent_preprocessor",
+    "description": "Calls VectorX intent preprocessor",
+    "utterances": [
+      "*"
+    ],
+    "intent": "intent_greeting_hello",
+    "params": {
+      "paramname": "",
+      "paramvalue": ""
+    },
+    "exec": "__REPLACEME__/runCmd.sh",
+    "execargs": [
+      "!botSerial",
+      "!locale",
+      "!speechText"
+    ],
+    "issystem": true
+  }
+]

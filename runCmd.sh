@@ -1,5 +1,4 @@
 #!/bin/bash
-whoami
 cd /home/pi/vectorx
 
 if [[ ! -f ./source.sh ]]; then
@@ -8,4 +7,4 @@ if [[ ! -f ./source.sh ]]; then
 fi
 
 source source.sh
-/usr/local/go/bin/go run cmd/main.go --serial $1 --intent $2 --speechText "${@:3}"
+/usr/local/go/bin/go run cmd/main.go --serial $1 --locale $2 --speechText "${@:3}"
