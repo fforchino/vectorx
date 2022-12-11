@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 )
 
 /**********************************************************************************************************************/
@@ -32,39 +33,34 @@ func ChangeLanguage_Register(intentList *[]IntentDef) error {
 func changeLanguage(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
 	loc := "en-US"
-	println("Language to set:" + params.Language)
 	switch params.Language {
 	case LOCALE_ITALIAN:
 		sdk_wrapper.SetLocale("it-IT")
 		loc = "it-IT"
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ITALIAN)
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/languages/it.png"), 500, false)
 		break
 	case LOCALE_SPANISH:
 		sdk_wrapper.SetLocale("es-ES")
 		loc = "es-ES"
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_SPANISH)
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/languages/es.png"), 500, false)
 		break
 	case LOCALE_FRENCH:
 		sdk_wrapper.SetLocale("fr-FR")
 		loc = "fr-FR"
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_FRENCH)
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/languages/fr.png"), 500, false)
 		break
 	case LOCALE_GERMAN:
 		sdk_wrapper.SetLocale("de-DE")
 		loc = "de-DE"
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_GERMAN)
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/languages/de.png"), 500, false)
 		break
 	default:
 		sdk_wrapper.SetLocale("en-US")
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ENGLISH)
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/languages/en.png"), 500, false)
 		break
 	}
-	sdk_wrapper.SayText(getText(STR_HELLO_WORLD))
+	newLanguage := strings.Split(loc, "-")[0]
+	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_IN, 10)
 	// Patch and restart chipper
 	vectorxPath := os.Getenv("VECTORX_HOME")
 	chipperPatcherPath := path.Join(vectorxPath, "patchChipper.sh")
@@ -73,5 +69,7 @@ func changeLanguage(intent IntentDef, params IntentParams) string {
 	if err != nil {
 		println(err.Error())
 	}
+	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/languages/" + newLanguage + ".wav"))
+	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_OUT, 10)
 	return returnIntent
 }

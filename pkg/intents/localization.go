@@ -31,26 +31,28 @@ const es_ES = 2
 const fr_FR = 3
 const de_DE = 4
 
+// All text must be lowercase!
+
 var texts = map[string][]string{
 	//  key                 			en-US   it-IT   es-ES    fr-FR    de-DE
 	STR_WEATHER_IN:                     {" in ", " a ", " en ", " en ", " in "},
-	STR_WEATHER_FORECAST:               {"forecast", "previsioni", "pronóstico", "prévisions", "Wettervorhersage"},
+	STR_WEATHER_FORECAST:               {"forecast", "previsioni", "pronóstico", "prévisions", "wettervorhersage"},
 	STR_WEATHER_TOMORROW:               {"tomorrow", "domani", "mañana", "demain", "morgen"},
-	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani", "el día después de mañana", "lendemain de demain", "am Tag nach morgen"},
-	STR_WEATHER_TONIGHT:                {"tonight", "stasera", "esta noche", "ce soir", "Heute Abend"},
-	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio", "esta tarde", "après-midi", "Heute Nachmittag"},
+	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani", "el día después de mañana", "lendemain de demain", "am tag nach morgen"},
+	STR_WEATHER_TONIGHT:                {"tonight", "stasera", "esta noche", "ce soir", "heute abend"},
+	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio", "esta tarde", "après-midi", "heute nachmittag"},
 	STR_NAME_IS:                        {" is ", " è ", " es ", " est ", " ist "},
 	STR_NAME_IS2:                       {"'s", "sono ", "soy ", "suis ", "bin "},
 	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},
-	STR_LANGUAGE_ITALIAN:               {"italian", "italiano", "italiano", "italien", "Italienisch"},
-	STR_LANGUAGE_SPANISH:               {"spanish", "spagnolo", "castellano", "espagnol", "Spanisch "},
-	STR_LANGUAGE_FRENCH:                {"french", "francese", "inglés", "français", "Französisch"},
-	STR_LANGUAGE_GERMAN:                {"german", "tedesco", "alemán", "allemand", "Deutsch"},
-	STR_LANGUAGE_ENGLISH:               {"english", "inglese", "inglés", "anglais", "Englisch"},
-	STR_ROBOT_GET_NAME:                 {"my name is %s1", "mi chiamo %s1", "mi nombre es %s1", "je m'appelle %s1", "Mein Name ist %s1"},
-	STR_ROBOT_SET_NAME:                 {"ok. my name is %s1", "bene, mi chiamerò %s1", "bueno. mi nombre es %s1", "d'accord. mon nom est %s1", "OK. Mein Name ist %s1"},
-	STR_ROBOT_NO_NAME:                  {"i don't have a name yet", "non ho ancora un nome", "todavía no tengo nombre", "je n'ai pas encore de nom", "Ich habe noch keinen Namen"},
-	STR_HELLO_WORLD:                    {"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "Hallo Welt"},
+	STR_LANGUAGE_ITALIAN:               {"italian", "italiano", "italiano", "italien", "italienisch"},
+	STR_LANGUAGE_SPANISH:               {"spanish", "spagnolo", "castellano", "espagnol", "spanisch "},
+	STR_LANGUAGE_FRENCH:                {"french", "francese", "inglés", "français", "französisch"},
+	STR_LANGUAGE_GERMAN:                {"german", "tedesco", "alemán", "allemand", "deutsch"},
+	STR_LANGUAGE_ENGLISH:               {"english", "inglese", "inglés", "anglais", "englisch"},
+	STR_ROBOT_GET_NAME:                 {"my name is %s1", "mi chiamo %s1", "mi nombre es %s1", "je m'appelle %s1", "mein name ist %s1"},
+	STR_ROBOT_SET_NAME:                 {"ok. my name is %s1", "bene, mi chiamerò %s1", "bueno. mi nombre es %s1", "d'accord. mon nom est %s1", "ok. mein name ist %s1"},
+	STR_ROBOT_NO_NAME:                  {"i don't have a name yet", "non ho ancora un nome", "todavía no tengo nombre", "je n'ai pas encore de nom", "ich habe noch keinen namen"},
+	STR_HELLO_WORLD:                    {"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "hallo welt"},
 }
 
 func getText(key string) string {
