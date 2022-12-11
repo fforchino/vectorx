@@ -18,7 +18,7 @@ func ChangeLanguage_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"parliamo in"}
 	utterances[LOCALE_SPANISH] = []string{"hablamos en"}
 	utterances[LOCALE_FRENCH] = []string{"parlons en"}
-	utterances[LOCALE_GERMAN] = []string{"sprechen auf"}
+	utterances[LOCALE_GERMAN] = []string{"sprechen"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_changelanguage",
