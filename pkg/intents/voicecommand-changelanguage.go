@@ -2,7 +2,6 @@ package intents
 
 import (
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
-	"golang.org/x/crypto/acme/autocert"
 	"os"
 	"os/exec"
 	"path"
@@ -70,6 +69,7 @@ func changeLanguage(intent IntentDef, params IntentParams) string {
 	if err != nil {
 		println(err.Error())
 	}
-	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/languages/"+newLanguage+".wav"))
-	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_OUT, 10)	return returnIntent
+	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/languages/" + newLanguage + ".wav"))
+	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_OUT, 10)
+	return returnIntent
 }

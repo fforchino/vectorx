@@ -119,7 +119,7 @@ func IntentMatch(speechText string, locale string) (IntentDef, error) {
 
 func hasPerfectMatch(utterances []string, phrase string) bool {
 	for _, s := range utterances {
-		if s == phrase {
+		if strings.ToLower(s) == strings.ToLower(phrase) {
 			return true
 		}
 	}
@@ -128,7 +128,7 @@ func hasPerfectMatch(utterances []string, phrase string) bool {
 
 func hasPartialMatch(utterances []string, phrase string) bool {
 	for _, s := range utterances {
-		if strings.Contains(phrase, s) {
+		if strings.Contains(strings.ToLower(phrase), strings.ToLower(s)) {
 			return true
 		}
 	}
