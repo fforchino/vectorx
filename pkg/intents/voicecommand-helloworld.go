@@ -18,6 +18,9 @@ func HelloWorld_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"hello world"}
 	utterances[LOCALE_ITALIAN] = []string{"ciao mondo"}
+	utterances[LOCALE_SPANISH] = []string{"hola Mundo"}
+	utterances[LOCALE_FRENCH] = []string{"bonjour le monde"}
+	utterances[LOCALE_GERMAN] = []string{"Hallo Welt"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_hello_world",
@@ -37,6 +40,6 @@ to be sent back to the robot. That's all!
 
 func helloWorld(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	sdk_wrapper.SayText("Hello world!")
+	sdk_wrapper.SayText(getText(STR_HELLO_WORLD))
 	return returnIntent
 }

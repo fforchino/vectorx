@@ -9,10 +9,14 @@ import (
 
 const LOCALE_ENGLISH = "en"
 const LOCALE_ITALIAN = "it"
+const LOCALE_SPANISH = "es"
+const LOCALE_FRENCH = "fr"
+const LOCALE_GERMAN = "de"
 
 // Supported parameters
 
 const PARAMETER_USERNAME = "PARAMETER_USERNAME"
+const PARAMETER_LANGUAGE = "PARAMETER_LANGUAGE"
 
 // Standard intents a production Vector understands
 
@@ -73,6 +77,7 @@ const STANDARD_INTENT_KEEPAWAY = "intent_play_keepaway"
 
 type IntentParams struct {
 	RobotName string
+	Language  string
 }
 
 type IntentHandlerFunc func(IntentDef, IntentParams) string
@@ -91,6 +96,7 @@ func RegisterIntents() {
 	RollaDie_Register(&intents)
 	RobotName_Register(&intents)
 	ImageTest_Register(&intents)
+	ChangeLanguage_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {
@@ -105,13 +111,6 @@ func IntentMatch(speechText string, locale string) (IntentDef, error) {
 		}
 	}
 	return IntentDef{}, fmt.Errorf("Intent not found")
-}
-
-func ParseParams(speechText string, intent IntentDef, locale string) IntentParams {
-	if strings.HasPrefix(locale, "it") {
-		return ParseParamsIt(speechText, intent)
-	}
-	return ParseParamsEn(speechText, intent)
 }
 
 /**********************************************************************************************************************/

@@ -10,6 +10,7 @@ function wirepodPrompt() {
 		wirepodHome=${wirepodhome}
 	fi
 }
+vectorxHome=`pwd`
 wirepodPrompt
 echo "Getting Vector GO SDK..."
 /usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
@@ -22,6 +23,7 @@ echo "export WIREPOD_EX_DATA_PATH=vectorfs/data" >>source.sh
 echo "export WIREPOD_EX_NVM_PATH=vectorfs/nvm" >>source.sh
 echo "export GOPATH=/usr/local/go" >>source.sh
 echo "export GOCACHE=/usr/local/go/pkg/mod" >>source.sh
+echo "export VECTORX_HOME=${vectorxHome}" >>source.sh
 echo
 echo "Created source.sh file!"
 echo

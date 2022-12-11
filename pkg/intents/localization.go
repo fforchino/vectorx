@@ -12,24 +12,45 @@ const STR_WEATHER_TOMORROW = "str_weather_tomorrow"
 const STR_WEATHER_THE_DAY_AFTER_TOMORROW = "str_weather_the_day_after_tomorrow"
 const STR_WEATHER_TONIGHT = "str_weather_tonight"
 const STR_WEATHER_THIS_AFTERNOON = "str_weather_this_afternoon"
+const STR_NAME_IS = "str_name_is"
+const STR_NAME_IS2 = "str_name_is1"
+const STR_NAME_IS3 = "str_name_is2"
 const STR_ROBOT_GET_NAME = "str_robot_get_name"
 const STR_ROBOT_SET_NAME = "str_robot_set_name"
 const STR_ROBOT_NO_NAME = "str_robot_no_name"
+const STR_HELLO_WORLD = "str_hello_world"
+const STR_LANGUAGE_ITALIAN = "str_language_italian"
+const STR_LANGUAGE_FRENCH = "str_language_french"
+const STR_LANGUAGE_SPANISH = "str_language_spanish"
+const STR_LANGUAGE_GERMAN = "str_language_german"
+const STR_LANGUAGE_ENGLISH = "str_language_english"
 
 const en_US = 0
 const it_IT = 1
+const es_ES = 2
+const fr_FR = 3
+const de_DE = 4
 
 var texts = map[string][]string{
-	//  key                 			en-US   it-IT
-	STR_WEATHER_IN:                     {" in ", " a "},
-	STR_WEATHER_FORECAST:               {"forecast", "previsioni"},
-	STR_WEATHER_TOMORROW:               {"tomorrow", "domani"},
-	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani"},
-	STR_WEATHER_TONIGHT:                {"tonight", "stasera"},
-	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio"},
-	STR_ROBOT_GET_NAME:                 {"my name is %s1", "mi chiamo %s1"},
-	STR_ROBOT_SET_NAME:                 {"ok. my name is %s1", "bene, mi chiamerò %s1"},
-	STR_ROBOT_NO_NAME:                  {"i don't have a name yet'", "non ho ancora un nome"},
+	//  key                 			en-US   it-IT   es-ES    fr-FR    de-DE
+	STR_WEATHER_IN:                     {" in ", " a ", " en ", " en ", " in "},
+	STR_WEATHER_FORECAST:               {"forecast", "previsioni", "pronóstico", "prévisions", "Wettervorhersage"},
+	STR_WEATHER_TOMORROW:               {"tomorrow", "domani", "mañana", "demain", "morgen"},
+	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani", "el día después de mañana", "lendemain de demain", "am Tag nach morgen"},
+	STR_WEATHER_TONIGHT:                {"tonight", "stasera", "esta noche", "ce soir", "Heute Abend"},
+	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio", "esta tarde", "après-midi", "Heute Nachmittag"},
+	STR_NAME_IS:                        {" is ", " è ", " es ", " est ", " ist "},
+	STR_NAME_IS2:                       {"'s", "sono ", "soy ", "suis ", "bin "},
+	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},
+	STR_LANGUAGE_ITALIAN:               {"italian", "italiano", "italiano", "italien", "Italienisch"},
+	STR_LANGUAGE_SPANISH:               {"spanish", "spagnolo", "castellano", "espagnol", "Spanisch "},
+	STR_LANGUAGE_FRENCH:                {"french", "francese", "inglés", "français", "Französisch"},
+	STR_LANGUAGE_GERMAN:                {"german", "tedesco", "alemán", "allemand", "Deutsch"},
+	STR_LANGUAGE_ENGLISH:               {"english", "inglese", "inglés", "anglais", "Englisch"},
+	STR_ROBOT_GET_NAME:                 {"my name is %s1", "mi chiamo %s1", "mi nombre es %s1", "je m'appelle %s1", "Mein Name ist %s1"},
+	STR_ROBOT_SET_NAME:                 {"ok. my name is %s1", "bene, mi chiamerò %s1", "bueno. mi nombre es %s1", "d'accord. mon nom est %s1", "OK. Mein Name ist %s1"},
+	STR_ROBOT_NO_NAME:                  {"i don't have a name yet", "non ho ancora un nome", "todavía no tengo nombre", "je n'ai pas encore de nom", "Ich habe noch keinen Namen"},
+	STR_HELLO_WORLD:                    {"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "Hallo Welt"},
 }
 
 func getText(key string) string {
@@ -42,6 +63,12 @@ func getTextEx(key string, params []string) string {
 	if data != nil {
 		if sdk_wrapper.GetLanguage() == sdk_wrapper.LANGUAGE_ITALIAN {
 			text = data[it_IT]
+		} else if sdk_wrapper.GetLanguage() == sdk_wrapper.LANGUAGE_SPANISH {
+			text = data[es_ES]
+		} else if sdk_wrapper.GetLanguage() == sdk_wrapper.LANGUAGE_FRENCH {
+			text = data[fr_FR]
+		} else if sdk_wrapper.GetLanguage() == sdk_wrapper.LANGUAGE_GERMAN {
+			text = data[de_DE]
 		} else {
 			text = data[en_US]
 		}

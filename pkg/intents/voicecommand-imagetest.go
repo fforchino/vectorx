@@ -13,6 +13,9 @@ func ImageTest_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"image demo", "image test"}
 	utterances[LOCALE_ITALIAN] = []string{"demo immagini", "prova immagini"}
+	utterances[LOCALE_SPANISH] = []string{"demo imágenes"}
+	utterances[LOCALE_FRENCH] = []string{"demo images"}
+	utterances[LOCALE_GERMAN] = []string{"Bilder", "Demo-Bilder"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_image_test",

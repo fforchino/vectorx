@@ -41,7 +41,7 @@ func main() {
 
 		if err == nil {
 			// Ok, we have a match. Then extract the parameters (if any) from the intent...
-			params := intents.ParseParams(*speechText, xIntent, *locale)
+			params := intents.ParseParams(*speechText, xIntent)
 
 			// And now run the handler function (SDK code)
 			sdk_wrapper.InitSDKForWirepod(*serial)
