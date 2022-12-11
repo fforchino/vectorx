@@ -32,6 +32,20 @@ func main() {
 		// Register vectorx intents
 		intents.RegisterIntents()
 
+		sdk_wrapper.InitSDKForWirepod(*serial)
+
+		robotLocale := sdk_wrapper.GetLocale()
+		if Debug {
+			println("ROBOT LOCALE: " + robotLocale)
+		}
+		if robotLocale != *locale {
+			println("Different locales! Setting " + *locale)
+			sdk_wrapper.SetLocale(*locale)
+		}
+		if Debug {
+			println("ROBOT LOCALE: " + robotLocale)
+		}
+
 		// Make sure "locale" is just the language name
 		if strings.Contains(*locale, "-") {
 			*locale = strings.Split(*locale, "-")[0]
@@ -40,16 +54,6 @@ func main() {
 		xIntent, err := intents.IntentMatch(*speechText, *locale)
 
 		if err == nil {
-			// And now run the handler function (SDK code)
-			sdk_wrapper.InitSDKForWirepod(*serial)
-			robotLocale := sdk_wrapper.GetLocale()
-			if Debug {
-				println("ROBOT LOCALE: " + robotLocale)
-			}
-			if robotLocale != *locale {
-				sdk_wrapper.SetLocale(*locale)
-			}
-
 			// Ok, we have a match. Then extract the parameters (if any) from the intent...
 			params := intents.ParseParams(*speechText, xIntent)
 
