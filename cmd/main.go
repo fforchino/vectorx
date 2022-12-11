@@ -9,7 +9,7 @@ import (
 	"vectorx/pkg/intents"
 )
 
-var Debug = false
+var Debug = true
 
 func main() {
 	var serial = flag.String("serial", "", "Vector's Serial Number")
@@ -40,11 +40,18 @@ func main() {
 		xIntent, err := intents.IntentMatch(*speechText, *locale)
 
 		if err == nil {
-			// Ok, we have a match. Then extract the parameters (if any) from the intent...
-			params := intents.ParseParams(*speechText, xIntent)
-
 			// And now run the handler function (SDK code)
 			sdk_wrapper.InitSDKForWirepod(*serial)
+			robotLocale := sdk_wrapper.GetLocale()
+			if Debug {
+				println("ROBOT LOCALE: " + robotLocale)
+			}
+			if robotLocale != *locale {
+				sdk_wrapper.SetLocale(*locale)
+			}
+
+			// Ok, we have a match. Then extract the parameters (if any) from the intent...
+			params := intents.ParseParams(*speechText, xIntent)
 
 			ctx := context.Background()
 			start := make(chan bool)
