@@ -116,8 +116,8 @@ github.com/evanphx/json-patch v4.12.0+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQL
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fatih/structs v1.1.0 h1:Q7juDM0QtcnhCpeyLGQKyg4TOIghuNXrkL32pHAUMxo=
 github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga6PJ7M=
-github.com/fforchino/vector-go-sdk v0.0.0-20221211223041-e95186d7ad3b h1:9sV1IKvpwcK2z1QM2Gg0QYBXAD+FM65mQd6kdIW13TM=
-github.com/fforchino/vector-go-sdk v0.0.0-20221211223041-e95186d7ad3b/go.mod h1:VhuDr1h8ilsmbbjG1Wvp66kIzWfyGFwKA54oIhpwIKQ=
+github.com/fforchino/vector-go-sdk v0.0.0-20221211234453-0029a91b5b71 h1:XXX8pUjwa32Vi4iVaztjLqOj0b74RvJNRJ1tqbZ7QFE=
+github.com/fforchino/vector-go-sdk v0.0.0-20221211234453-0029a91b5b71/go.mod h1:VhuDr1h8ilsmbbjG1Wvp66kIzWfyGFwKA54oIhpwIKQ=
 github.com/fogleman/gg v1.3.0 h1:/7zJX8F6AaYQc57WQCyN9cAIz+4bCJGO9B+dyW29am8=
 github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=

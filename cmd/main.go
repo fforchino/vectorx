@@ -9,7 +9,7 @@ import (
 	"vectorx/pkg/intents"
 )
 
-var Debug = true
+var Debug = false
 
 func main() {
 	var serial = flag.String("serial", "", "Vector's Serial Number")
@@ -39,7 +39,9 @@ func main() {
 			println("ROBOT LOCALE: " + robotLocale)
 		}
 		if robotLocale != *locale {
-			println("Different locales! Setting " + *locale)
+			if Debug {
+				println("Different locales! Setting " + *locale)
+			}
 			sdk_wrapper.SetLocale(*locale)
 		}
 		if Debug {
