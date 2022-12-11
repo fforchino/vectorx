@@ -27,10 +27,6 @@ func ParseParams(speechText string, intent IntentDef) IntentParams {
 			intentParams.RobotName = username
 		}
 	} else if contains(intent.Parameters, PARAMETER_LANGUAGE) {
-		println(getText(STR_LANGUAGE_ITALIAN))
-		println(getText(STR_LANGUAGE_SPANISH))
-		println(getText(STR_LANGUAGE_FRENCH))
-		println(getText(STR_LANGUAGE_GERMAN))
 		if strings.Contains(speechText, getText(STR_LANGUAGE_ITALIAN)) {
 			intentParams.Language = LOCALE_ITALIAN
 		} else if strings.Contains(speechText, getText(STR_LANGUAGE_SPANISH)) {
