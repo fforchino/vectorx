@@ -42,7 +42,6 @@ var texts = map[string][]string{
 	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani", "el día después de mañana", "lendemain de demain", "am tag nach morgen"},
 	STR_WEATHER_TONIGHT:                {"tonight", "stasera", "esta noche", "ce soir", "heute abend"},
 	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio", "esta tarde", "après-midi", "heute nachmittag"},
-	STR_WEATHER_AND:                    {" and ", " e ", " y ", " et ", " und "},
 	STR_NAME_IS:                        {" is ", " è ", " es ", " est ", " ist "},
 	STR_NAME_IS2:                       {"'s", "sono ", "soy ", "suis ", "bin "},
 	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},
@@ -55,6 +54,7 @@ var texts = map[string][]string{
 	STR_ROBOT_SET_NAME:                 {"ok. my name is %s1", "bene, mi chiamerò %s1", "bueno. mi nombre es %s1", "d'accord. mon nom est %s1", "ok. mein name ist %s1"},
 	STR_ROBOT_NO_NAME:                  {"i don't have a name yet", "non ho ancora un nome", "todavía no tengo nombre", "je n'ai pas encore de nom", "ich habe noch keinen namen"},
 	STR_HELLO_WORLD:                    {"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "hallo welt"},
+	STR_WEATHER_AND:                    {" degrees and ", " gradi e ", " grados y ", " degrés et ", " Grad und "},
 }
 
 func getText(key string) string {

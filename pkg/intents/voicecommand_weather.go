@@ -101,11 +101,15 @@ func Weather_Register(intentList *[]IntentDef) error {
 
 func doWeatherForecast(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-	sdk_wrapper.SayText(params.Weather.Temperature + getText("STR_WEATHER_AND") + params.Weather.Condition)
+	sdk_wrapper.UseVectorEyeColorInImages(true)
+	intT, _ := strconv.ParseInt(params.Weather.Temperature, 10, 32)
+	sdk_wrapper.DisplayTemperature(int(intT), params.Weather.TemperatureUnit, 500, false)
+	sdk_wrapper.SayText(params.Weather.Temperature + getText(STR_WEATHER_AND) + params.Weather.Condition)
+	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 3, false)
 	return returnIntent
 }
 
-func weatherParser(speechText string, botLocation string, botUnits string) (string, string, string, string, string, string) {
+func weatherParser(speechText string, botLocation string, botUnits string) (string, string, string, string, string, string, string) {
 	var specificLocation bool
 	var apiLocation string
 	var speechLocation string
@@ -156,11 +160,11 @@ func weatherParser(speechText string, botLocation string, botUnits string) (stri
 		apiLocation = botLocation
 	}
 	// call to weather API
-	condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit := getWeather(apiLocation, botUnits, hoursFromNow)
-	return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit
+	condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon := getWeather(apiLocation, botUnits, hoursFromNow)
+	return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon
 }
 
-func getWeather(location string, botUnits string, hoursFromNow int) (string, string, string, string, string, string) {
+func getWeather(location string, botUnits string, hoursFromNow int) (string, string, string, string, string, string, string) {
 	var weatherEnabled bool
 	var condition string
 	var is_forecast string
@@ -168,6 +172,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 	var speakable_location_string string
 	var temperature string
 	var temperature_unit string
+	var icon string = sdk_wrapper.GetDataPath("images/weather/conditions/rain_light.gif")
 	weatherAPIEnabled := os.Getenv("WEATHERAPI_ENABLED")
 	weatherAPIKey := os.Getenv("WEATHERAPI_KEY")
 	weatherAPIUnit := os.Getenv("WEATHERAPI_UNIT")
@@ -223,7 +228,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 			speakable_location_string = location // preferably the processed location
 			temperature = "120"
 			temperature_unit = "C"
-			return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit
+			return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon
 		}
 		Lat := fmt.Sprintf("%f", geoCodingInfoStruct[0].Lat)
 		Lon := fmt.Sprintf("%f", geoCodingInfoStruct[0].Lon)
@@ -307,7 +312,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		local_datetime = t.Format(time.RFC850)
 		println(local_datetime)
 		speakable_location_string = openWeatherMapAPIResponse.Name
-		temperature = fmt.Sprintf("%f", math.Round(openWeatherMapAPIResponse.Main.Temp))
+		temperature = fmt.Sprintf("%d", int(math.Round(openWeatherMapAPIResponse.Main.Temp)))
 		if weatherAPIUnit == "C" {
 			temperature_unit = "C"
 		} else {
@@ -321,5 +326,5 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		temperature = "120"
 		temperature_unit = "C"
 	}
-	return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit
+	return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon
 }

@@ -45,8 +45,8 @@ func ParseParams(speechText string, intent IntentDef) IntentParams {
 	} else if contains(intent.Parameters, PARAMETER_WEATHER) {
 		botLocation := sdk_wrapper.GetVectorSettings()["default_location"].(string)
 		botUnits := os.Getenv("WEATHERAPI_UNIT")
-		condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit := weatherParser(speechText, botLocation, botUnits)
-		wp := WeatherParams{condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit}
+		condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon := weatherParser(speechText, botLocation, botUnits)
+		wp := WeatherParams{condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon}
 		intentParams.Weather = wp
 	}
 	return intentParams

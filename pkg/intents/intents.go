@@ -84,6 +84,7 @@ type WeatherParams struct {
 	SpeakableLocationString string
 	Temperature             string
 	TemperatureUnit         string
+	Icon                    string
 }
 
 type IntentParams struct {
