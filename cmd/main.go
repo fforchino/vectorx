@@ -47,6 +47,7 @@ func main() {
 		if Debug {
 			println("ROBOT LOCALE: " + robotLocale)
 		}
+		sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
 
 		// Make sure "locale" is just the language name
 		if strings.Contains(*locale, "-") {

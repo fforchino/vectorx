@@ -15,9 +15,9 @@ import (
 func ChangeLanguage_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"let's talk", "let's speak"}
-	utterances[LOCALE_ITALIAN] = []string{"parliamo in"}
-	utterances[LOCALE_SPANISH] = []string{"hablamos en"}
-	utterances[LOCALE_FRENCH] = []string{"parlons en"}
+	utterances[LOCALE_ITALIAN] = []string{"parliamo"}
+	utterances[LOCALE_SPANISH] = []string{"hablamos"}
+	utterances[LOCALE_FRENCH] = []string{"parlons"}
 	utterances[LOCALE_GERMAN] = []string{"sprechen"}
 
 	var intent = IntentDef{
@@ -54,10 +54,12 @@ func changeLanguage(intent IntentDef, params IntentParams) string {
 		loc = "de-DE"
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_GERMAN)
 		break
-	default:
+	case LOCALE_ENGLISH:
 		sdk_wrapper.SetLocale("en-US")
 		sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ENGLISH)
 		break
+	default:
+		return STANDARD_INTENT_SYSTEM_NOAUDIO
 	}
 	newLanguage := strings.Split(loc, "-")[0]
 	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_IN, 10)
@@ -67,7 +69,7 @@ func changeLanguage(intent IntentDef, params IntentParams) string {
 	// Patch and restart chipper
 	vectorxPath := os.Getenv("VECTORX_HOME")
 	chipperPatcherPath := path.Join(vectorxPath, "patchChipper.sh")
-	cmd := exec.Command(chipperPatcherPath, loc)
+	cmd := exec.Command(chipperPatcherPath, loc, "&")
 	err := cmd.Start()
 	if err != nil {
 		println(err.Error())
