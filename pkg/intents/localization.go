@@ -12,6 +12,7 @@ const STR_WEATHER_TOMORROW = "str_weather_tomorrow"
 const STR_WEATHER_THE_DAY_AFTER_TOMORROW = "str_weather_the_day_after_tomorrow"
 const STR_WEATHER_TONIGHT = "str_weather_tonight"
 const STR_WEATHER_THIS_AFTERNOON = "str_weather_this_afternoon"
+const STR_WEATHER_AND = "str_weather_and"
 const STR_NAME_IS = "str_name_is"
 const STR_NAME_IS2 = "str_name_is1"
 const STR_NAME_IS3 = "str_name_is2"
@@ -41,6 +42,7 @@ var texts = map[string][]string{
 	STR_WEATHER_THE_DAY_AFTER_TOMORROW: {"day after tomorrow", "dopodomani", "el día después de mañana", "lendemain de demain", "am tag nach morgen"},
 	STR_WEATHER_TONIGHT:                {"tonight", "stasera", "esta noche", "ce soir", "heute abend"},
 	STR_WEATHER_THIS_AFTERNOON:         {"afternoon", "pomeriggio", "esta tarde", "après-midi", "heute nachmittag"},
+	STR_WEATHER_AND:                    {" and ", " e ", " y ", " et ", " und "},
 	STR_NAME_IS:                        {" is ", " è ", " es ", " est ", " ist "},
 	STR_NAME_IS2:                       {"'s", "sono ", "soy ", "suis ", "bin "},
 	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},

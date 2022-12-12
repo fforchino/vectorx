@@ -101,7 +101,7 @@ func Weather_Register(intentList *[]IntentDef) error {
 
 func doWeatherForecast(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-	sdk_wrapper.SayText(params.Weather.Condition)
+	sdk_wrapper.SayText(params.Weather.Temperature + getText("STR_WEATHER_AND") + params.Weather.Condition)
 	return returnIntent
 }
 
