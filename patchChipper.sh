@@ -9,4 +9,5 @@ sed -i "s/STT_LANGUAGE=.*/STT_LANGUAGE=$1/" $WIREPOD_HOME/chipper/source.sh
 #ps -ef | grep chipper | grep -v grep | awk '{print $2}' | xargs kill
 
 # Restart wirepod service
+sleep 3
 systemctl restart wire-pod

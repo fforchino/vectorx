@@ -61,15 +61,16 @@ func changeLanguage(intent IntentDef, params IntentParams) string {
 	}
 	newLanguage := strings.Split(loc, "-")[0]
 	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_IN, 10)
+	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/languages/" + newLanguage + ".wav"))
+	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_OUT, 10)
+
 	// Patch and restart chipper
 	vectorxPath := os.Getenv("VECTORX_HOME")
 	chipperPatcherPath := path.Join(vectorxPath, "patchChipper.sh")
 	cmd := exec.Command(chipperPatcherPath, loc)
-	err := cmd.Run()
+	err := cmd.Start()
 	if err != nil {
 		println(err.Error())
 	}
-	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/languages/" + newLanguage + ".wav"))
-	sdk_wrapper.DisplayImageWithTransition(sdk_wrapper.GetDataPath("images/languages/"+newLanguage+".png"), 1000, sdk_wrapper.IMAGE_TRANSITION_FADE_OUT, 10)
 	return returnIntent
 }
