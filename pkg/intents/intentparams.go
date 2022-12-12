@@ -1,6 +1,10 @@
 package intents
 
-import "strings"
+import (
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"os"
+	"strings"
+)
 
 func ParseParams(speechText string, intent IntentDef) IntentParams {
 	var intentParams IntentParams
@@ -38,6 +42,12 @@ func ParseParams(speechText string, intent IntentDef) IntentParams {
 		} else if strings.Contains(speechText, getText(STR_LANGUAGE_ENGLISH)) {
 			intentParams.Language = LOCALE_ENGLISH
 		}
+	} else if contains(intent.Parameters, PARAMETER_WEATHER) {
+		botLocation := sdk_wrapper.GetVectorSettings()["default_location"].(string)
+		botUnits := os.Getenv("WEATHERAPI_UNIT")
+		condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit := weatherParser(speechText, botLocation, botUnits)
+		wp := WeatherParams{condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit}
+		intentParams.Weather = wp
 	}
 	return intentParams
 }

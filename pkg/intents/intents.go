@@ -17,6 +17,7 @@ const LOCALE_GERMAN = "de"
 
 const PARAMETER_USERNAME = "PARAMETER_USERNAME"
 const PARAMETER_LANGUAGE = "PARAMETER_LANGUAGE"
+const PARAMETER_WEATHER = "PARAMETER_WEATHER"
 
 // Standard intents a production Vector understands
 
@@ -76,9 +77,19 @@ const STANDARD_INTENT_BLACKJACK_STAND = "intent_blackjack_stand"
 const STANDARD_INTENT_KEEPAWAY = "intent_play_keepaway"
 const STANDARD_INTENT_SYSTEM_NOAUDIO = "intent_system_noaudio"
 
+type WeatherParams struct {
+	Condition               string
+	IsForecast              string
+	LocalDatetime           string
+	SpeakableLocationString string
+	Temperature             string
+	TemperatureUnit         string
+}
+
 type IntentParams struct {
 	RobotName string
 	Language  string
+	Weather   WeatherParams
 }
 
 type IntentHandlerFunc func(IntentDef, IntentParams) string
@@ -98,6 +109,7 @@ func RegisterIntents() {
 	RobotName_Register(&intents)
 	ImageTest_Register(&intents)
 	ChangeLanguage_Register(&intents)
+	Weather_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {

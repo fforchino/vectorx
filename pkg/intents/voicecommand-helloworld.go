@@ -40,7 +40,6 @@ to be sent back to the robot. That's all!
 
 func helloWorld(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
 	sdk_wrapper.SayText(getText(STR_HELLO_WORLD))
 	return returnIntent
 }
