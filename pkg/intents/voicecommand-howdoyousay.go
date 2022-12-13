@@ -39,30 +39,35 @@ func HowDoYouSay(intent IntentDef, speechText string, params IntentParams) strin
 	wordSplitter := getText("STR_HOWDOYOUSAY_HOW_DO_YOU_SAY")
 	languageSplitter := getText("STR_HOWDOYOUSAY_IN")
 
+	println(speechText)
 	if strings.Contains(speechText, wordSplitter) && strings.Contains(speechText, languageSplitter) {
-		splitPhrase := strings.SplitAfter(speechText, wordSplitter)
+		splitPhrase := strings.Split(speechText, wordSplitter)
 		tmp := strings.TrimSpace(splitPhrase[1])
-		splitPhrase2 := strings.SplitAfter(tmp, languageSplitter)
+		println(tmp)
+		splitPhrase2 := strings.Split(tmp, languageSplitter)
 		word = splitPhrase2[0]
 		language = splitPhrase2[1]
+		println("Word: " + word + ", target language: " + language)
 		trans := getText(STR_GENERIC_I_DONT_KNOW)
 		currentLanguage := sdk_wrapper.GetLanguage()
 		if word != "" {
 			if language == getText(STR_LANGUAGE_ENGLISH) {
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ENGLISH)
-				trans = sdk_wrapper.Translate(word, currentLanguage, language)
+				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_ENGLISH) + "!"
 			} else if language == getText(STR_LANGUAGE_ITALIAN) {
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_ITALIAN)
-				trans = sdk_wrapper.Translate(word, currentLanguage, language)
+				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_ITALIAN) + "!"
 			} else if language == getText(STR_LANGUAGE_SPANISH) {
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_SPANISH)
-				trans = sdk_wrapper.Translate(word, currentLanguage, language)
+				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_SPANISH) + "!"
 			} else if language == getText(STR_LANGUAGE_FRENCH) {
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_FRENCH)
-				trans = sdk_wrapper.Translate(word, currentLanguage, language)
+				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_FRENCH) + "!"
 			} else if language == getText(STR_LANGUAGE_GERMAN) {
 				sdk_wrapper.SetLanguage(sdk_wrapper.LANGUAGE_GERMAN)
-				trans = sdk_wrapper.Translate(word, currentLanguage, language)
+				trans = sdk_wrapper.Translate(word, currentLanguage, sdk_wrapper.LANGUAGE_GERMAN) + "!"
+			} else {
+				returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
 			}
 		}
 		sdk_wrapper.SayText(trans)

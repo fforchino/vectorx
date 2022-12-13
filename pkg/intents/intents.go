@@ -121,15 +121,42 @@ func RegisterIntents() {
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {
+	var candidates1 []IntentDef
+	var candidates2 []IntentDef
+	maxLen := 0
+	cIntent := 0
 	for _, intent := range intents {
 		if hasPerfectMatch(intent.Utterances[locale], speechText) {
-			return intent, nil
+			candidates1 = append(candidates1, intent)
 		}
 	}
+	// Return the intent with longer utterance matched
+	if len(candidates1) > 0 {
+		for idx, intent := range candidates1 {
+			if len(intent.Utterances[locale]) > maxLen {
+				maxLen = len(intent.Utterances[locale])
+				cIntent = idx
+			}
+		}
+		return candidates1[cIntent], nil
+	}
+
 	for _, intent := range intents {
 		if hasPartialMatch(intent.Utterances[locale], speechText) {
-			return intent, nil
+			candidates2 = append(candidates1, intent)
 		}
+	}
+	maxLen = 0
+	cIntent = 0
+	// Return the intent with longer utterance matched
+	if len(candidates2) > 0 {
+		for idx, intent := range candidates2 {
+			if len(intent.Utterances[locale]) > maxLen {
+				maxLen = len(intent.Utterances[locale])
+				cIntent = idx
+			}
+		}
+		return candidates2[cIntent], nil
 	}
 	return IntentDef{}, fmt.Errorf("Intent not found")
 }

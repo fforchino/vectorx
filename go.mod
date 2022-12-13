@@ -2,7 +2,7 @@ module vectorx
 
 go 1.19
 
-require github.com/fforchino/vector-go-sdk 76ebece51e857edd84ae51236c2b9ec0cee4197c
+require github.com/fforchino/vector-go-sdk v0.0.0-20221213115551-f5110a923093
 
 require (
 	github.com/PerformLine/go-stockutil v1.9.3 // indirect
