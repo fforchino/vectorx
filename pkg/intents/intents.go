@@ -97,7 +97,7 @@ type IntentParams struct {
 	Weather   WeatherParams
 }
 
-type IntentHandlerFunc func(IntentDef, IntentParams) string
+type IntentHandlerFunc func(IntentDef, string, IntentParams) string
 
 type IntentDef struct {
 	IntentName string
@@ -115,7 +115,7 @@ func RegisterIntents() {
 	HelloWorld_Register(&intents)
 	RollaDie_Register(&intents)
 	RobotName_Register(&intents)
-	ImageTest_Register(&intents)
+	HowDoYouSay_Register(&intents)
 	ChangeLanguage_Register(&intents)
 	Weather_Register(&intents)
 }

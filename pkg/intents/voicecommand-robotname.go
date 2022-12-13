@@ -29,14 +29,18 @@ func registerSetRobotName(intentList *[]IntentDef) error {
 		Handler:    setRobotName,
 	}
 	*intentList = append(*intentList, intent)
+	addLocalizedString("STR_ROBOT_GET_NAME", []string{"my name is %s1", "mi chiamo %s1", "mi nombre es %s1", "je m'appelle %s1", "mein name ist %s1"})
+	addLocalizedString("STR_ROBOT_SET_NAME", []string{"ok. my name is %s1", "bene, mi chiamerò %s1", "bueno. mi nombre es %s1", "d'accord. mon nom est %s1", "ok. mein name ist %s1"})
+	addLocalizedString("STR_ROBOT_NO_NAME", []string{"i don't have a name yet", "non ho ancora un nome", "todavía no tengo nombre", "je n'ai pas encore de nom", "ich habe noch keinen namen"})
+
 	return nil
 }
 
-func setRobotName(intent IntentDef, params IntentParams) string {
+func setRobotName(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
 	if len(params.RobotName) > 0 {
 		sdk_wrapper.SetRobotName(params.RobotName)
-		sdk_wrapper.SayText(getTextEx(STR_ROBOT_SET_NAME, []string{params.RobotName}))
+		sdk_wrapper.SayText(getTextEx("STR_ROBOT_SET_NAME", []string{params.RobotName}))
 		returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 	}
 	return returnIntent
@@ -64,13 +68,13 @@ func registerSayRobotName(intentList *[]IntentDef) error {
 	return nil
 }
 
-func sayRobotName(intent IntentDef, params IntentParams) string {
+func sayRobotName(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 	robotName := sdk_wrapper.GetRobotName()
 	if len(robotName) > 0 {
-		sdk_wrapper.SayText(getTextEx(STR_ROBOT_GET_NAME, []string{robotName}))
+		sdk_wrapper.SayText(getTextEx("STR_ROBOT_GET_NAME", []string{robotName}))
 	} else {
-		sdk_wrapper.SayText(getText(STR_ROBOT_NO_NAME))
+		sdk_wrapper.SayText(getText("STR_ROBOT_NO_NAME"))
 	}
 	return returnIntent
 }

@@ -30,7 +30,7 @@ func RollaDie_Register(intentList *[]IntentDef) error {
 	return nil
 }
 
-func rollADie(intent IntentDef, params IntentParams) string {
+func rollADie(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
 	sdk_wrapper.MoveHead(3.0)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})

@@ -29,6 +29,8 @@ func HelloWorld_Register(intentList *[]IntentDef) error {
 		Handler:    helloWorld,
 	}
 	*intentList = append(*intentList, intent)
+	addLocalizedString("STR_HELLO_WORLD", []string{"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "hallo welt"})
+
 	return nil
 }
 
@@ -38,8 +40,8 @@ recognized. The engine passes this fuction the matched intent and its parameters
 to be sent back to the robot. That's all!
 */
 
-func helloWorld(intent IntentDef, params IntentParams) string {
+func helloWorld(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	sdk_wrapper.SayText(getText(STR_HELLO_WORLD))
+	sdk_wrapper.SayText(getText("STR_HELLO_WORLD"))
 	return returnIntent
 }

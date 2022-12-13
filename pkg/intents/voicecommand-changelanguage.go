@@ -30,7 +30,7 @@ func ChangeLanguage_Register(intentList *[]IntentDef) error {
 	return nil
 }
 
-func changeLanguage(intent IntentDef, params IntentParams) string {
+func changeLanguage(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
 	loc := "en-US"
 	switch params.Language {

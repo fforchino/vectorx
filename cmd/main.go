@@ -72,7 +72,7 @@ func main() {
 			for {
 				select {
 				case <-start:
-					returnIntent := xIntent.Handler(xIntent, params)
+					returnIntent := xIntent.Handler(xIntent, *speechText, params)
 					// Seems that we have to force back en_US locale or "Hey Vector" won't work anymore
 					sdk_wrapper.SetLocale("en_US")
 					// Ok, intent handled. Return the intent that Wirepod has to send to the robot

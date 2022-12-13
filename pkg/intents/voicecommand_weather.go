@@ -116,17 +116,24 @@ func Weather_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_CLEAR", []string{"clear", "sereno", "sereno", "serein", "heiter"})
 	addLocalizedString("STR_CLOUDY", []string{"cloudy", "nuvoloso", "nuboso", "nuageux", "wolkig"})
 	addLocalizedString("STR_VERY_CLOUDY", []string{"very cloudy", "molto nuvoloso", "muy nublado", "très nuageux", "sehr wolkig"})
-
+	addLocalizedString("STR_HOT", []string{"hot", "caldo", "caliente", "chaud", "heiß"})
+	addLocalizedString("STR_COLD", []string{"freezing", "freddo", "frío", "froid", "kalt"})
+	addLocalizedString("STR_WEATHER_DEGREES_AND", []string{" degrees and ", " gradi e ", " grados y ", " degrés et ", " Grad und "})
+	addLocalizedString("STR_WEATHER_DEGREE_AND", []string{" degree and ", " grado e ", " grado y ", " degré et ", " Grad und "})
 	return nil
 }
 
-func doWeatherForecast(intent IntentDef, params IntentParams) string {
+func doWeatherForecast(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 	sdk_wrapper.UseVectorEyeColorInImages(true)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0xff, 0xff, 0xff, 0xff})
 	intT, _ := strconv.ParseInt(params.Weather.Temperature, 10, 32)
 	sdk_wrapper.DisplayTemperature(int(intT), params.Weather.TemperatureUnit, 500, false)
-	sdk_wrapper.SayText(params.Weather.Temperature + getText(STR_WEATHER_AND) + params.Weather.Condition)
+	if intT == 1 {
+		sdk_wrapper.SayText(params.Weather.Temperature + getText("STR_WEATHER_DEGREE_AND") + params.Weather.Condition)
+	} else {
+		sdk_wrapper.SayText(params.Weather.Temperature + getText("STR_WEATHER_DEGREES_AND") + params.Weather.Condition)
+	}
 	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 3, true)
 	return returnIntent
 }
@@ -378,11 +385,11 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 
 		temp := int(math.Round(openWeatherMapAPIResponse.Main.Temp))
 		if (weatherAPIUnit == "C" && temp > HOT_TEMPERATURE_C) || (weatherAPIUnit == "F" && temp > celsiusToFaranheit(HOT_TEMPERATURE_C)) {
-			condition = "Hot"
+			condition = getText("STR_HOT")
 			icon = sdk_wrapper.GetDataPath("images/weather/conditions/hot.gif")
 		} else if (weatherAPIUnit == "C" && temp < COLD_TEMPERATURE_C) || (weatherAPIUnit == "F" && temp < celsiusToFaranheit(COLD_TEMPERATURE_C)) {
 			icon = sdk_wrapper.GetDataPath("images/weather/conditions/cold.gif")
-			condition = "Cold"
+			condition = getText("STR_COLD")
 		}
 
 		is_forecast = "false"
