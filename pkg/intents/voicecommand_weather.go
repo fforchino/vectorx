@@ -18,6 +18,9 @@ import (
 /*                                EXTENDED WEATHER FORECAST                                                           */
 /**********************************************************************************************************************/
 
+const HOT_TEMPERATURE_C = 30
+const COLD_TEMPERATURE_C = 4
+
 // *** OPENWEATHERMAP.ORG ***
 
 type openWeatherMapAPIGeoCodingStruct struct {
@@ -97,6 +100,23 @@ func Weather_Register(intentList *[]IntentDef) error {
 		Handler:    doWeatherForecast,
 	}
 	*intentList = append(*intentList, intent)
+
+	addLocalizedString("STR_HEAVY_THUNDERSTORM", []string{"heavy thunderstorm", "temporali forti", "fuertes tormentas eléctricas", "orages forts", "Starke Gewitter"})
+	addLocalizedString("STR_THUNDERSTORM", []string{"thunderstorm", "temporale", "tormenta", "orage", "Gewitter"})
+	addLocalizedString("STR_DRIZZLE", []string{"drizzle", "pioggerellina", "llovizna", "bruine", "Nieselregen"})
+	addLocalizedString("STR_LIGHT_RAIN", []string{"light rain", "pioggia leggera", "lluvia ligera", "pluie légère", "leichter Regen"})
+	addLocalizedString("STR_HAIL", []string{"hailstorm", "grandine", "granizada", "averse de grêle", "Hagel"})
+	addLocalizedString("STR_RAIN", []string{"rain", "pioggia", "lluvia", "pluie", "Regen"})
+	addLocalizedString("STR_SLEET", []string{"sleet", "nevischio", "aguanieve", "neige fondue", "Schneeregen"})
+	addLocalizedString("STR_SNOW", []string{"snow", "neve", "nieve", "neige", "Schnee"})
+	addLocalizedString("STR_FOGGY", []string{"foggy", "nebbia", "niebla", "brouillard", "Nebel"})
+	addLocalizedString("STR_TORNADO", []string{"tornado", "tornado", "tornado", "tornade", "Tornado"})
+	addLocalizedString("STR_WINDY", []string{"windy", "vento", "viento", "vent", "Wind"})
+	addLocalizedString("STR_SUNNY", []string{"sunny", "soleggiato", "soleado", "ensoleillé", "sonnig"})
+	addLocalizedString("STR_CLEAR", []string{"clear", "sereno", "sereno", "serein", "heiter"})
+	addLocalizedString("STR_CLOUDY", []string{"cloudy", "nuvoloso", "nuboso", "nuageux", "wolkig"})
+	addLocalizedString("STR_VERY_CLOUDY", []string{"very cloudy", "molto nuvoloso", "muy nublado", "très nuageux", "sehr wolkig"})
+
 	return nil
 }
 
@@ -174,7 +194,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 	var speakable_location_string string
 	var temperature string
 	var temperature_unit string
-	var icon string = sdk_wrapper.GetDataPath("images/weather/conditions/rain_light.gif")
+	var icon string = sdk_wrapper.GetDataPath("images/weather/conditions/snow1.gif")
 	weatherAPIEnabled := os.Getenv("WEATHERAPI_ENABLED")
 	weatherAPIKey := os.Getenv("WEATHERAPI_KEY")
 	weatherAPIUnit := os.Getenv("WEATHERAPI_UNIT")
@@ -277,36 +297,92 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 
 		if conditionCode < 300 {
 			// Thunderstorm
-			condition = "Thunderstorms"
+			if conditionCode == 211 || conditionCode == 212 {
+				condition = getText("STR_HEAVY_THUNDERSTORM")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/thunderstorm_heavy.gif")
+			} else {
+				condition = getText("STR_THUNDERSTORM")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/thunderstorm_light.gif")
+			}
 		} else if conditionCode < 400 {
 			// Drizzle
-			condition = "Rain"
+			condition = getText("STR_DRIZZLE")
+			icon = sdk_wrapper.GetDataPath("images/weather/conditions/drizzle.gif")
 		} else if conditionCode < 600 {
 			// Rain
-			condition = "Rain"
+			if conditionCode == 500 || conditionCode == 501 || conditionCode == 520 || conditionCode == 521 {
+				condition = getText("STR_LIGHT_RAIN")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/rain_light.gif")
+			} else if conditionCode == 511 {
+				condition = getText("STR_HAIL")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/hail.gif")
+			} else {
+				condition = getText("STR_RAIN")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/rain_heavy.gif")
+			}
 		} else if conditionCode < 700 {
 			// Snow
-			condition = "Snow"
+			if conditionCode == 600 || (conditionCode >= 611 && conditionCode <= 620) {
+				condition = getText("STR_SLEET")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/snow_light.gif")
+			} else {
+				condition = getText("STR_SNOW")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/snow_heavy.gif")
+			}
 		} else if conditionCode < 800 {
 			// Athmosphere
 			if openWeatherMapAPIResponse.Weather[0].Main == "Mist" ||
 				openWeatherMapAPIResponse.Weather[0].Main == "Fog" {
-				condition = "Rain"
+				condition = getText("STR_FOGGY")
 			} else {
-				condition = "Windy"
+				condition = getText("STR_WINDY")
+			}
+			if conditionCode == 701 || conditionCode == 741 {
+				condition = getText("STR_FOGGY")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/foggy.gif")
+			} else if conditionCode == 771 || conditionCode == 781 || conditionCode == 731 {
+				condition = getText("STR_TORNADO")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/tornado.gif")
+			} else {
+				condition = getText("STR_WINDY")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/windy.gif")
 			}
 		} else if conditionCode == 800 {
 			// Clear
 			if openWeatherMapAPIResponse.DT < openWeatherMapAPIResponse.Sys.Sunset {
 				condition = "Sunny"
+				condition = getText("STR_SUNNY")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/sunny1.gif")
 			} else {
 				condition = "Stars"
+				condition = getText("STR_CLEAR")
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/stars.gif")
 			}
 		} else if conditionCode < 900 {
 			// Cloud
 			condition = "Cloudy"
+			if conditionCode == 801 || conditionCode == 802 {
+				if openWeatherMapAPIResponse.DT < openWeatherMapAPIResponse.Sys.Sunset {
+					condition = getText("STR_CLOUDY")
+					icon = sdk_wrapper.GetDataPath("images/weather/conditions/cloudy_day.gif")
+				} else {
+					condition = getText("STR_VERY_CLOUDY")
+					icon = sdk_wrapper.GetDataPath("images/weather/conditions/cloudy_night.gif")
+				}
+			} else {
+				icon = sdk_wrapper.GetDataPath("images/weather/conditions/cloudy_cloudy.gif")
+			}
 		} else {
 			condition = openWeatherMapAPIResponse.Weather[0].Main
+		}
+
+		temp := int(math.Round(openWeatherMapAPIResponse.Main.Temp))
+		if (weatherAPIUnit == "C" && temp > HOT_TEMPERATURE_C) || (weatherAPIUnit == "F" && temp > celsiusToFaranheit(HOT_TEMPERATURE_C)) {
+			condition = "Hot"
+			icon = sdk_wrapper.GetDataPath("images/weather/conditions/hot.gif")
+		} else if (weatherAPIUnit == "C" && temp < COLD_TEMPERATURE_C) || (weatherAPIUnit == "F" && temp < celsiusToFaranheit(COLD_TEMPERATURE_C)) {
+			icon = sdk_wrapper.GetDataPath("images/weather/conditions/cold.gif")
+			condition = "Cold"
 		}
 
 		is_forecast = "false"
@@ -314,7 +390,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		local_datetime = t.Format(time.RFC850)
 		println(local_datetime)
 		speakable_location_string = openWeatherMapAPIResponse.Name
-		temperature = fmt.Sprintf("%d", int(math.Round(openWeatherMapAPIResponse.Main.Temp)))
+		temperature = fmt.Sprintf("%d", temp)
 		if weatherAPIUnit == "C" {
 			temperature_unit = "C"
 		} else {
@@ -329,4 +405,8 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		temperature_unit = "C"
 	}
 	return condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon
+}
+
+func celsiusToFaranheit(c int) int {
+	return (c * 9 / 5) + 32
 }

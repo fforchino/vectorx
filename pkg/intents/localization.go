@@ -57,6 +57,10 @@ var texts = map[string][]string{
 	STR_WEATHER_AND:                    {" degrees and ", " gradi e ", " grados y ", " degrés et ", " Grad und "},
 }
 
+func addLocalizedString(keyName string, translations []string) {
+	texts[keyName] = translations
+}
+
 func getText(key string) string {
 	return getTextEx(key, []string{})
 }
