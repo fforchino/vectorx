@@ -31,6 +31,7 @@ func main() {
 
 		// Register vectorx intents
 		intents.RegisterIntents()
+		intents.GetWirepodBotInfo(*serial)
 
 		sdk_wrapper.InitSDKForWirepod(*serial)
 
