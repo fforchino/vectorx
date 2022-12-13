@@ -43,7 +43,7 @@ var texts = map[string][]string{
 	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},
 	STR_LANGUAGE_ITALIAN:               {"italian", "italiano", "italiano", "italien", "italienisch"},
 	STR_LANGUAGE_SPANISH:               {"spanish", "spagnolo", "castellano", "espagnol", "spanisch "},
-	STR_LANGUAGE_FRENCH:                {"french", "francese", "inglés", "français", "französisch"},
+	STR_LANGUAGE_FRENCH:                {"french", "francese", "francés", "français", "französisch"},
 	STR_LANGUAGE_GERMAN:                {"german", "tedesco", "alemán", "allemand", "deutsch"},
 	STR_LANGUAGE_ENGLISH:               {"english", "inglese", "inglés", "anglais", "englisch"},
 	STR_GENERIC_I_DONT_KNOW:            {"i don't know", "non lo so", "no sé", "je ne sais pas", "ich weiß nicht"},
