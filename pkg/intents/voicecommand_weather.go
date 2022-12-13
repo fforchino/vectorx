@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"image/color"
 	"io"
 	"math"
 	"net/http"
@@ -102,10 +103,11 @@ func Weather_Register(intentList *[]IntentDef) error {
 func doWeatherForecast(intent IntentDef, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 	sdk_wrapper.UseVectorEyeColorInImages(true)
+	sdk_wrapper.SetBackgroundColor(color.RGBA{0xff, 0xff, 0xff, 0xff})
 	intT, _ := strconv.ParseInt(params.Weather.Temperature, 10, 32)
 	sdk_wrapper.DisplayTemperature(int(intT), params.Weather.TemperatureUnit, 500, false)
 	sdk_wrapper.SayText(params.Weather.Temperature + getText(STR_WEATHER_AND) + params.Weather.Condition)
-	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 3, false)
+	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 3, true)
 	return returnIntent
 }
 
