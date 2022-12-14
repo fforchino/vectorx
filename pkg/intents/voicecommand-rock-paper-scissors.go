@@ -170,7 +170,7 @@ func sendImageToImageServer(client *http.Client, img *image.Image) string {
 	}
 
 	// Upload and get back the json response
-	resp, err := Upload(client, "http://127.0.0.0:8090", values)
+	resp, err := Upload(client, "http://localhost:8090", values)
 	if err != nil {
 		println("Response error!")
 		return ""
