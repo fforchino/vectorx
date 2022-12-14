@@ -46,9 +46,9 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 
 func playRockPaperScissors(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	sdk_wrapper.SayText("STR_LETS_PLAY")
+	sdk_wrapper.SayText(getText("STR_LETS_PLAY"))
 	playGame(10)
-	sdk_wrapper.SayText("Ok, I think it's enough")
+	sdk_wrapper.SayText(getText("STR_ENOUGH"))
 	return returnIntent
 }
 
