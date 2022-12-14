@@ -71,7 +71,6 @@ func playGame(numSteps int) {
 	sdk_wrapper.MoveHead(3.0)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
 	sdk_wrapper.UseVectorEyeColorInImages(true)
-	sdk_wrapper.EnableCameraStream()
 
 	myScore := 0
 	userScore := 0
@@ -89,8 +88,14 @@ func playGame(numSteps int) {
 
 		myMove := options[r1.Intn(len(options))]
 		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/rps/"+myMove+".png"), 5000, false)
-		image := sdk_wrapper.ProcessCameraStream()
-		if image != nil {
+		fName := sdk_wrapper.GetTemporaryFilename("rps", "jpg", true)
+		sdk_wrapper.SaveHiResCameraPicture(fName)
+		f, err := os.Open(fName)
+
+		if err == nil {
+			defer f.Close()
+			image, _, _ := image.Decode(f)
+
 			var handInfo map[string]interface{}
 			jsonData := sendImageToImageServer(client, &image)
 			println("OpenCV server response: " + jsonData)

@@ -7,13 +7,15 @@ curl -F "image=@test.jpg" localhost:8090
 
 """
 import json
+import datetime
+import os
 import cv2
 import mediapipe as mp
 from PIL import Image
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from socketserver import ThreadingMixIn
-from io import StringIO 
+from io import StringIO
 import time
 import numpy as np
 from requests_toolbelt.multipart import decoder
@@ -30,7 +32,13 @@ class VideoHandler(BaseHTTPRequestHandler):
             image_byte = multipart_data[0].content
             #Read image using cv2
             image_numpy = np.frombuffer(image_byte, np.int8)
-            img = cv2.imdecode(image_numpy, cv2.IMREAD_UNCHANGED)            
+            img = cv2.imdecode(image_numpy, cv2.IMREAD_UNCHANGED)
+            """
+            pref = "IMAGE" + datetime.datetime.now().strftime("%y%m%d_%H%M%S") + ".jpg"
+            filedir = "/tmp"
+            filename = os.path.join(filedir, pref)
+            cv2.imwrite(filename, img)
+            """
             jsonData = self.detectFingers(img)      
             print(jsonData)
 
