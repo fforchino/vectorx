@@ -71,6 +71,7 @@ func playGame(numSteps int) {
 	sdk_wrapper.MoveHead(3.0)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
 	sdk_wrapper.UseVectorEyeColorInImages(true)
+	sdk_wrapper.EnableCameraStream()
 
 	myScore := 0
 	userScore := 0
@@ -92,6 +93,7 @@ func playGame(numSteps int) {
 		if image != nil {
 			var handInfo map[string]interface{}
 			jsonData := sendImageToImageServer(client, &image)
+			println("OpenCV server response: " + jsonData)
 			json.Unmarshal([]byte(jsonData), &handInfo)
 			numFingers := -1
 			numFingers = int(handInfo["raisedfingers"].(float64))
