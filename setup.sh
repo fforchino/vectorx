@@ -6,7 +6,7 @@ echo "Getting Vector GO SDK..."
 
 # Now let's install python and all required dependencies to run the opencv/mediapipe server
 echo "Install Python & OpenCV..."
-apt-get install python
+apt-get install python3
 apt-get install pip
 apt-get install python3-opencv
 pip install mediapipe
@@ -86,7 +86,7 @@ echo >>opencv.service
 echo "[Service]" >>opencv.service
 echo "Type=simple" >>opencv.service
 echo "WorkingDirectory=$(readlink -f ./opencv)" >>opencv.service
-echo "ExecStart=$(readlink -f ./opencv/start.sh)" >>opencv.service
+echo "ExecStart=/usr/bin/python $(readlink -f ./opencv/opencvserver.py)" >>opencv.service
 echo >>opencv.service
 echo "[Install]" >>opencv.service
 echo "WantedBy=multi-user.target" >>opencv.service
