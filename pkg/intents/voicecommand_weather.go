@@ -18,8 +18,8 @@ import (
 /*                                EXTENDED WEATHER FORECAST                                                           */
 /**********************************************************************************************************************/
 
-const HOT_TEMPERATURE_C = 30
-const COLD_TEMPERATURE_C = 4
+const HOT_TEMPERATURE_C = 34
+const COLD_TEMPERATURE_C = -3
 
 // *** OPENWEATHERMAP.ORG ***
 
