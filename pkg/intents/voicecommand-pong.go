@@ -23,11 +23,11 @@ import (
 
 func Pong_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
-	utterances[LOCALE_ENGLISH] = []string{"follow the finger"}
-	utterances[LOCALE_ITALIAN] = []string{"segui il dito"}
-	utterances[LOCALE_SPANISH] = []string{"sigue el dedo"}
-	utterances[LOCALE_FRENCH] = []string{"suivre le doigt"}
-	utterances[LOCALE_GERMAN] = []string{"Folgen Sie dem Finger"}
+	utterances[LOCALE_ENGLISH] = []string{"let's play pong"}
+	utterances[LOCALE_ITALIAN] = []string{"giochiamo a pong"}
+	utterances[LOCALE_SPANISH] = []string{"juguemos a pong"}
+	utterances[LOCALE_FRENCH] = []string{"jouons à pong"}
+	utterances[LOCALE_GERMAN] = []string{"lass uns pong spielen"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_play_pong",
@@ -219,8 +219,8 @@ func doPong(useFx bool) {
 
 	// Game over. Let's see who won
 	if vectorScore > humanScore {
-		sdk_wrapper.SayText("STR_PONG_I_WON")
+		sdk_wrapper.SayText(getText("STR_PONG_I_WON"))
 	} else {
-		sdk_wrapper.SayText("STR_PONG_YOU_WON")
+		sdk_wrapper.SayText(getText("STR_PONG_YOU_WON"))
 	}
 }
