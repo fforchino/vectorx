@@ -25,7 +25,7 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"spielen schere stein papier"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_hello_world",
+		IntentName: "extended_intent_rock_paper_scissors",
 		Utterances: utterances,
 		Parameters: []string{},
 		Handler:    playRockPaperScissors,
