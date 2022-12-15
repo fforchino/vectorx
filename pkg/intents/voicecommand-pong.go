@@ -36,17 +36,19 @@ func Pong_Register(intentList *[]IntentDef) error {
 		Handler:    playPong,
 	}
 	*intentList = append(*intentList, intent)
+	addLocalizedString("STR_PONG_I_WON", []string{"I won! ", "ho vinto!", "yo gané!", "j'ai gagné!", "ich habe gewonnen!"})
+	addLocalizedString("STR_PONG_YOU_WON", []string{"you won!", "hai vinto!", "ganaste tu!", "tu as gagné!", "du hast gewonnen!"})
 
 	return nil
 }
 
 func playPong(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	doPong(1000, true)
+	doPong(true)
 	return returnIntent
 }
 
-func doPong(numSteps int, useFx bool) {
+func doPong(useFx bool) {
 	opencv_ifc.CreateClient()
 
 	s1 := rand.NewSource(time.Now().UnixNano())
@@ -76,7 +78,7 @@ func doPong(numSteps int, useFx bool) {
 	const HEIGHT = sdk_wrapper.VECTOR_SCREEN_HEIGHT
 	PADDLE_WIDTH := paddle.Bounds().Dx()
 	PADDLE_HEIGHT := paddle.Bounds().Dy()
-	SPEED := 3
+	SPEED := 5
 	VECTOR_PADDLE_SPEED := 3
 	BALL_WIDTH := ball.Bounds().Dx()
 	BALL_HEIGHT := ball.Bounds().Dy()
@@ -89,6 +91,19 @@ func doPong(numSteps int, useFx bool) {
 	ballObj := image.Point{WIDTH / 2, HEIGHT / 2}
 	// Ball speed
 	bSpeed := image.Point{X: -1 * SPEED, Y: 0}
+
+	fx := ""
+
+	// Play audio asynchronously
+	go func() {
+		for true {
+			if useFx && fx != "" {
+				println(fx)
+				sdk_wrapper.PlaySound(fx)
+				fx = ""
+			}
+		}
+	}()
 
 	// Read input asynchronously
 	go func() {
@@ -111,8 +126,7 @@ func doPong(numSteps int, useFx bool) {
 		}
 	}()
 
-	for i := 0; i <= numSteps; i++ {
-		fx := ""
+	for humanScore < 9 && vectorScore < 9 {
 		// Increment ball position
 		ballObj.X += bSpeed.X
 		ballObj.Y += bSpeed.Y
@@ -200,52 +214,13 @@ func doPong(numSteps int, useFx bool) {
 				InterruptRunning: true,
 			},
 		)
-
-		// Play FX
-		if useFx && fx != "" {
-			go func() {
-				sdk_wrapper.PlaySound(fx)
-			}()
-		}
 		//println(fmt.Sprintf("Step %d/%d. User pos @ %d,%d, ball pos %d,%d ballspeed @ %d,%d", i, numSteps, humanPaddle.X, humanPaddle.Y, ballObj.X, ballObj.Y, bSpeed.X, bSpeed.Y))
 	}
-}
 
-func convertPixesTo16BitRGB(r uint32, g uint32, b uint32, a uint32, opacityPercentage uint16) uint16 {
-	R, G, B := uint16(r/257), uint16(g/8193), uint16(b/257)
-
-	R = R * opacityPercentage / 100
-	G = G * opacityPercentage / 100
-	B = B * opacityPercentage / 100
-
-	//The format appears to be: 000bbbbbrrrrrggg
-
-	var Br uint16 = (uint16(B & 0xF8)) << 5 // 5 bits for blue  [8..12]
-	var Rr uint16 = (uint16(R & 0xF8))      // 5 bits for red   [3..7]
-	var Gr uint16 = (uint16(G))             // 3 bits for green [0..2]
-
-	out := uint16(Br | Rr | Gr)
-	//println(fmt.Sprintf("%d,%d,%d -> R: %016b G: %016b B: %016b = %016b", R, G, B, Rr, Gr, Br, out))
-	return out
-}
-
-func convertPixelsToRawBitmap(image image.Image, opacityPercentage int) []uint16 {
-	imgHeight, imgWidth := image.Bounds().Max.Y, image.Bounds().Max.X
-	bitmap := make([]uint16, imgWidth*imgHeight)
-
-	for y := 0; y < imgHeight; y++ {
-		for x := 0; x < imgWidth; x++ {
-			r, g, b, a := image.At(x, y).RGBA()
-			vectorEyes := sdk_wrapper.GetEyeColor()
-			vR := uint32(vectorEyes.R) * 255
-			vG := uint32(vectorEyes.G) * 255
-			vB := uint32(vectorEyes.B) * 255
-
-			r = r * vR / 0xffff
-			g = g * vG / 0xffff
-			b = b * vB / 0xffff
-			bitmap[(y)*imgWidth+(x)] = convertPixesTo16BitRGB(r, g, b, a, uint16(opacityPercentage))
-		}
+	// Game over. Let's see who won
+	if vectorScore > humanScore {
+		sdk_wrapper.SayText("STR_PONG_I_WON")
+	} else {
+		sdk_wrapper.SayText("STR_PONG_YOU_WON")
 	}
-	return bitmap
 }
