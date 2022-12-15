@@ -16,6 +16,8 @@ import (
 
 var client *http.Client
 
+var openCVServerAddr = "http://localhost:8090"
+
 func CreateClient() {
 	//setup a mocked http client.
 	println("")
@@ -31,6 +33,10 @@ func CreateClient() {
 	client = ts.Client()
 }
 
+func SetServerAddress(serverAddress string) {
+	openCVServerAddr = serverAddress
+}
+
 func SendImageToImageServer(img *image.Image) string {
 	//println("Encoding new frame")
 	// Convert image to jpg and obtain the bytes
@@ -43,7 +49,7 @@ func SendImageToImageServer(img *image.Image) string {
 	}
 
 	// Upload and get back the json response
-	resp, err := Upload(client, "http://localhost:8090", values)
+	resp, err := Upload(client, openCVServerAddr, values)
 	if err != nil {
 		println("Response error!")
 		return ""

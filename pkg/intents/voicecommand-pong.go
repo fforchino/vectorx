@@ -50,6 +50,8 @@ func playPong(intent IntentDef, speechText string, params IntentParams) string {
 
 func doPong(useFx bool) {
 	opencv_ifc.CreateClient()
+	// Run opencv server on my pc to be faster
+	opencv_ifc.SetServerAddress("http://192.168.43.65:8090")
 
 	s1 := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(s1)
@@ -107,8 +109,11 @@ func doPong(useFx bool) {
 
 	// Read input asynchronously
 	go func() {
+		sdk_wrapper.EnableCameraStream()
 		for true {
-			img, _ := sdk_wrapper.GetStaticCameraPicture(false)
+			tx := time.Now().UnixMilli()
+			img := sdk_wrapper.GetCameraPicture()
+			println(fmt.Sprintf("T1: %d", time.Now().UnixMilli()-tx))
 			var handInfo map[string]interface{}
 			jsonData := opencv_ifc.SendImageToImageServer(&img)
 			//println("OpenCV server response: " + jsonData)
@@ -123,6 +128,7 @@ func doPong(useFx bool) {
 					humanPaddle.Y = HEIGHT - PADDLE_HEIGHT/2
 				}
 			}
+			println(fmt.Sprintf("T2: %d", time.Now().UnixMilli()-tx))
 		}
 	}()
 
@@ -223,4 +229,5 @@ func doPong(useFx bool) {
 	} else {
 		sdk_wrapper.SayText(getText("STR_PONG_YOU_WON"))
 	}
+	sdk_wrapper.DisableCameraStream()
 }
