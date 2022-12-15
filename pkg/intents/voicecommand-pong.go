@@ -21,7 +21,7 @@ import (
 /*                                          FOLLOW (INDEX) FINGER                                                     */
 /**********************************************************************************************************************/
 
-func FollowFinger_Register(intentList *[]IntentDef) error {
+func Pong_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"follow the finger"}
 	utterances[LOCALE_ITALIAN] = []string{"segui il dito"}
@@ -30,23 +30,23 @@ func FollowFinger_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Folgen Sie dem Finger"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_follow_finger",
+		IntentName: "extended_intent_play_pong",
 		Utterances: utterances,
 		Parameters: []string{},
-		Handler:    followFinger,
+		Handler:    playPong,
 	}
 	*intentList = append(*intentList, intent)
 
 	return nil
 }
 
-func followFinger(intent IntentDef, speechText string, params IntentParams) string {
+func playPong(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_GREETING_HELLO
-	doFollow(1000)
+	doPong(1000, true)
 	return returnIntent
 }
 
-func doFollow(numSteps int) {
+func doPong(numSteps int, useFx bool) {
 	opencv_ifc.CreateClient()
 
 	s1 := rand.NewSource(time.Now().UnixNano())
@@ -184,8 +184,8 @@ func doFollow(numSteps int) {
 		dc.DrawImage(paddle, humanPaddle.X, humanPaddle.Y-PADDLE_HEIGHT/2)
 		dc.DrawImage(paddle, vectorPaddle.X, vectorPaddle.Y-PADDLE_HEIGHT/2)
 		dc.DrawImage(ball, ballObj.X, ballObj.Y)
-		dc.DrawImage(scores[humanScore], WIDTH/4-10, 0)
-		dc.DrawImage(scores[vectorScore], WIDTH/4*3-10, 0)
+		dc.DrawImage(scores[humanScore], WIDTH/4-5, 0)
+		dc.DrawImage(scores[vectorScore], WIDTH/4*3-5, 0)
 
 		buf := new(bytes.Buffer)
 		bitmap := convertPixelsToRawBitmap(dc.Image(), 100)
@@ -202,12 +202,11 @@ func doFollow(numSteps int) {
 		)
 
 		// Play FX
-		if fx != "" {
+		if useFx && fx != "" {
 			go func() {
-				//sdk_wrapper.PlaySound(fx)
+				sdk_wrapper.PlaySound(fx)
 			}()
 		}
-
 		//println(fmt.Sprintf("Step %d/%d. User pos @ %d,%d, ball pos %d,%d ballspeed @ %d,%d", i, numSteps, humanPaddle.X, humanPaddle.Y, ballObj.X, ballObj.Y, bSpeed.X, bSpeed.Y))
 	}
 }
