@@ -4,11 +4,11 @@
 echo "Getting Vector GO SDK..."
 /usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
 
-# Now let's install python and all required dependencies to run the opencv/mediapipe server
+# Now let's install python and all required dependencies to run the opencv-ifc/mediapipe server
 echo "Install Python & OpenCV..."
 apt-get install python3
 apt-get install pip
-apt-get install python3-opencv
+apt-get install python3-opencv-ifc
 pip install mediapipe
 pip install requests-toolbelt
 pip install numpy
@@ -80,20 +80,20 @@ if [[ ${weatherSetup} == "true" ]]; then
 fi
 
 echo "Enabling opencvserver as a service"
-echo "[Unit]" >opencv.service
-echo "Description=VectorX OpenCV Server" >>opencv.service
-echo >>opencv.service
-echo "[Service]" >>opencv.service
-echo "Type=simple" >>opencv.service
-echo "WorkingDirectory=$(readlink -f ./opencv)" >>opencv.service
-echo "ExecStart=/usr/bin/python $(readlink -f ./opencv/opencvserver.py)" >>opencv.service
-echo >>opencv.service
-echo "[Install]" >>opencv.service
-echo "WantedBy=multi-user.target" >>opencv.service
-cat opencv.service
-mv opencv.service /lib/systemd/system/
+echo "[Unit]" >opencv-ifc.service
+echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
+echo >>opencv-ifc.service
+echo "[Service]" >>opencv-ifc.service
+echo "Type=simple" >>opencv-ifc.service
+echo "WorkingDirectory=$(readlink -f ./opencv-ifc)" >>opencv-ifc.service
+echo "ExecStart=/usr/bin/python $(readlink -f ./opencv-ifc/opencvserver.py)" >>opencv-ifc.service
+echo >>opencv-ifc.service
+echo "[Install]" >>opencv-ifc.service
+echo "WantedBy=multi-user.target" >>opencv-ifc.service
+cat opencv-ifc.service
+mv opencv-ifc.service /lib/systemd/system/
 systemctl daemon-reload
-systemctl enable opencv
+systemctl enable opencv-ifc
 
 echo "Creating source.sh"
 rm -fr source.sh

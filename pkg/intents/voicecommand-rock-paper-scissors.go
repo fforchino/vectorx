@@ -1,22 +1,15 @@
 package intents
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"image"
 	"image/color"
-	"image/jpeg"
-	"io"
-	"log"
 	"math/rand"
-	"mime/multipart"
-	"net/http"
-	"net/http/httptest"
-	"net/http/httputil"
 	"os"
 	"time"
+	opencv_ifc "vectorx/pkg/opencv-ifc"
 )
 
 /**********************************************************************************************************************/
@@ -38,8 +31,17 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 		Handler:    playRockPaperScissors,
 	}
 	*intentList = append(*intentList, intent)
-	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen"})
+	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen!"})
 	addLocalizedString("STR_ENOUGH", []string{"Ok, I think it's enough", "Penso che possa bastare", "Bien, creo que es suficiente", "bien, je pense que ça suffit!", "Gut, ich denke, es ist genug"})
+	addLocalizedString("STR_I_WIN", []string{"I win", "ho vinto", "yo gano", "je gagne", "ich gewinne"})
+	addLocalizedString("STR_YOU_WIN", []string{"you win", "hai vinto", "tú ganas", "Vous gagnez", "du gewinnst"})
+	addLocalizedString("STR_ITS_A_DRAW", []string{"it's a draw", "pareggio", "es un empate", "C'est un match nul", "es ist eine Zeichnung"})
+	addLocalizedString("STR_YOU_PUT", []string{"you put", "hai messo", "pones", "tu mets", "du legst"})
+	addLocalizedString("STR_I_PUT", []string{"I put", "ho messo", "puse", "je mets", "ich lege"})
+	addLocalizedString("STR_SORRY_I_DONT_GET_IT", []string{"sorry, I don't get it", "scusa non l'ho capita", "Lo siento, no lo entiendo", "Désolé, je ne comprends pas", "Entschuldigung, ich verstehe es nicht"})
+	addLocalizedString("STR_ROCK", []string{"rock", "roccia", "roca", "rock", "Felsen"})
+	addLocalizedString("STR_PAPER", []string{"paper", "carta", "papel", "papier", "Papier"})
+	addLocalizedString("STR_SCISSORS", []string{"scissors", "forbici", "tijeras", "les ciseaux", "Schere"})
 
 	return nil
 }
@@ -53,20 +55,7 @@ func playRockPaperScissors(intent IntentDef, speechText string, params IntentPar
 }
 
 func playGame(numSteps int) {
-	// Start http client
-	var client *http.Client
-	//setup a mocked http client.
-	println("")
-	println("Setup HTTP client")
-	ts := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		b, err := httputil.DumpRequest(r, true)
-		if err != nil {
-			panic(err)
-		}
-		println(fmt.Sprintf("%s", b))
-	}))
-	defer ts.Close()
-	client = ts.Client()
+	opencv_ifc.CreateClient()
 
 	sdk_wrapper.MoveHead(3.0)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
@@ -97,7 +86,7 @@ func playGame(numSteps int) {
 			image, _, _ := image.Decode(f)
 
 			var handInfo map[string]interface{}
-			jsonData := sendImageToImageServer(client, &image)
+			jsonData := opencv_ifc.SendImageToImageServer(&image)
 			println("OpenCV server response: " + jsonData)
 			json.Unmarshal([]byte(jsonData), &handInfo)
 			numFingers := -1
@@ -137,114 +126,49 @@ func playGame(numSteps int) {
 				}
 				break
 			default:
-				answer = "Sorry... I don't get it"
+				answer = getText("STR_SORRY_I_DONT_GET_IT")
 				break
 			}
 
+			userMoveLocalized := localizeMove(userMove)
+			myMoveLocalized := localizeMove(myMove)
+
 			if answer == "" {
-				answer = "You put " + userMove + ". "
+				answer = getText("STR_YOU_PUT") + " " + userMoveLocalized + ". "
 
 				switch win {
 				case -1:
-					answer = answer + "You win!"
+					answer = answer + getText("STR_YOU_WIN") + "!"
 					userScore++
 					break
 				case 1:
-					answer = answer + "I win!"
+					answer = answer + getText("STR_I_WIN") + "!"
 					myScore++
 					break
 				default:
-					answer = answer + "It's a draw!"
+					answer = answer + getText("STR_ITS_A_DRAW") + "!"
 					break
 				}
 			}
-			sdk_wrapper.SayText("I put " + myMove + "!")
+			sdk_wrapper.SayText(getText("STR_I_PUT") + " " + myMoveLocalized + "!")
 			sdk_wrapper.SayText(answer)
 			sdk_wrapper.WriteText(fmt.Sprintf("%d - %d", myScore, userScore), 64, true, 5000, true)
 		}
 	}
 }
 
-func sendImageToImageServer(client *http.Client, img *image.Image) string {
-	//println("Encoding new frame")
-	// Convert image to jpg and obtain the bytes
-	var imageBuf bytes.Buffer
-	_ = jpeg.Encode(&imageBuf, *img, nil)
-
-	// Prepare the reader instances to encode
-	values := map[string]io.Reader{
-		"file": bytes.NewReader(imageBuf.Bytes()),
+func localizeMove(move string) string {
+	locMove := move
+	switch move {
+	case "rock":
+		locMove = getText("STR_ROCK")
+		break
+	case "paper":
+		locMove = getText("STR_PAPER")
+		break
+	case "scissors":
+		locMove = getText("STR_SCISSORS")
+		break
 	}
-
-	// Upload and get back the json response
-	resp, err := Upload(client, "http://localhost:8090", values)
-	if err != nil {
-		println("Response error!")
-		return ""
-	}
-
-	// Return json string
-	//println("Response received: " + resp)
-	return resp
-}
-
-func Upload(client *http.Client, url string, values map[string]io.Reader) (response string, err error) {
-	// Prepare a form that you will submit to that URL.
-	var b bytes.Buffer
-	w := multipart.NewWriter(&b)
-	for key, r := range values {
-		var fw io.Writer
-		if x, ok := r.(io.Closer); ok {
-			defer x.Close()
-		}
-		// Add an image file
-		if x, ok := r.(*os.File); ok {
-			if fw, err = w.CreateFormFile(key, x.Name()); err != nil {
-				return "", err
-			}
-		} else {
-			// Add other fields
-			if fw, err = w.CreateFormField(key); err != nil {
-				return "", err
-			}
-		}
-		if _, err = io.Copy(fw, r); err != nil {
-			return "", err
-		}
-	}
-	// Don't forget to close the multipart writer.
-	// If you don't close it, your request will be missing the terminating boundary.
-	w.Close()
-
-	//println("Encoded data")
-	// Now that you have a form, you can submit it to your handler.
-	req, err := http.NewRequest("POST", url, &b)
-	if err != nil {
-		println("Error when performing HTTP request")
-		return "", err
-	}
-	// Don't forget to set the content type, this will contain the boundary.
-	req.Header.Set("Content-Type", w.FormDataContentType())
-
-	// Submit the request
-	//println("POSTing...")
-	res, err := client.Do(req)
-	if err != nil {
-		println(err.Error())
-		return "", err
-	}
-
-	// Check the response
-	if res.StatusCode != http.StatusOK {
-		err = fmt.Errorf("bad status: %s", res.Status)
-		println(fmt.Errorf("bad status: %s", res.Status))
-	} else {
-		bodyBytes, err := io.ReadAll(res.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		bodyString := string(bodyBytes)
-		return bodyString, nil
-	}
-	return "", err
+	return locMove
 }
