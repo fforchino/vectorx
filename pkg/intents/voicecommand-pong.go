@@ -108,7 +108,7 @@ func doPong(useFx bool) {
 	// Read input asynchronously
 	go func() {
 		for true {
-			img, _ := sdk_wrapper.GetHiResCameraPicture()
+			img, _ := sdk_wrapper.GetStaticCameraPicture(false)
 			var handInfo map[string]interface{}
 			jsonData := opencv_ifc.SendImageToImageServer(&img)
 			//println("OpenCV server response: " + jsonData)
@@ -202,7 +202,7 @@ func doPong(useFx bool) {
 		dc.DrawImage(scores[vectorScore], WIDTH/4*3-5, 0)
 
 		buf := new(bytes.Buffer)
-		bitmap := convertPixelsToRawBitmap(dc.Image(), 100)
+		bitmap := sdk_wrapper.ConvertPixelsToRawBitmap(dc.Image(), 100)
 		for _, ui := range bitmap {
 			binary.Write(buf, binary.LittleEndian, ui)
 		}
