@@ -119,6 +119,7 @@ func RegisterIntents() {
 	ChangeLanguage_Register(&intents)
 	Weather_Register(&intents)
 	RockPaperScissors_Register(&intents)
+	FollowFinger_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {
