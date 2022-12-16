@@ -18,8 +18,8 @@ import (
 /*                                EXTENDED WEATHER FORECAST                                                           */
 /**********************************************************************************************************************/
 
-const HOT_TEMPERATURE_C = 30
-const COLD_TEMPERATURE_C = 4
+const HOT_TEMPERATURE_C = 34
+const COLD_TEMPERATURE_C = -3
 
 // *** OPENWEATHERMAP.ORG ***
 
@@ -134,6 +134,23 @@ func doWeatherForecast(intent IntentDef, speechText string, params IntentParams)
 	} else {
 		sdk_wrapper.SayText(params.Weather.Temperature + getText("STR_WEATHER_DEGREES_AND") + params.Weather.Condition)
 	}
+
+	// Play audio asynchronously
+	go func() {
+		for true {
+			if params.Weather.Condition == getText("STR_RAIN") || params.Weather.Condition == getText("STR_LIGHT_RAIN") || params.Weather.Condition == getText("STR_DRIZZLE") {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/rain.mp3"))
+			} else if params.Weather.Condition == getText("STR_THUNDERSTORM") || params.Weather.Condition == getText("STR_HEAVY_THUNDERSTORM") {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/thunder.mp3"))
+			} else if params.Weather.Condition == getText("STR_WINDY") || params.Weather.Condition == getText("STR_TORNADO") {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/wind.mp3"))
+			} else if params.Weather.Condition == getText("STR_SUNNY") {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/sunny.mp3"))
+			} else if params.Weather.Condition == getText("STR_CLEAR") {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/night.mp3"))
+			}
+		}
+	}()
 	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 3, true)
 	return returnIntent
 }

@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Assuming GO is already installed...
+echo "Getting Vector GO SDK..."
+/usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
+
+# Now let's install python and all required dependencies to run the opencv-ifc/mediapipe server
+echo "Install Python & OpenCV..."
+apt-get install python3
+apt-get install pip
+apt-get install python3-opencv-ifc
+pip install mediapipe
+pip install requests-toolbelt
+pip install numpy
+
 # Locate Wirepod
 function wirepodPrompt() {
 	WIREPOD_HOME="/home/pi/wire-pod"
@@ -13,16 +26,13 @@ function wirepodPrompt() {
 vectorxHome=`pwd`
 wirepodPrompt
 
-echo "Getting Vector GO SDK..."
-/usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
-
 function weatherPrompt() {
   echo "Would you like to setup weather commands? This involves creating a free account at one of the weather providers' websites and putting in your API key."
   echo "Otherwise, placeholder values will be used."
   echo
   echo "1: Yes, and I want to use openweathermap.org (with forecast support)"
   echo "2: No"
-  read -p "Enter a number (3): " yn
+  read -p "Enter a number (2): " yn
   case $yn in
   "1") weatherSetup="true" weatherProvider="openweathermap.org";;
   "2") weatherSetup="false" ;;
@@ -68,6 +78,22 @@ if [[ ${weatherSetup} == "true" ]]; then
   }
   weatherUnitPrompt
 fi
+
+echo "Enabling opencvserver as a service"
+echo "[Unit]" >opencv-ifc.service
+echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
+echo >>opencv-ifc.service
+echo "[Service]" >>opencv-ifc.service
+echo "Type=simple" >>opencv-ifc.service
+echo "WorkingDirectory=$(readlink -f ./opencv-ifc)" >>opencv-ifc.service
+echo "ExecStart=/usr/bin/python $(readlink -f ./opencv-ifc/opencvserver.py)" >>opencv-ifc.service
+echo >>opencv-ifc.service
+echo "[Install]" >>opencv-ifc.service
+echo "WantedBy=multi-user.target" >>opencv-ifc.service
+cat opencv-ifc.service
+mv opencv-ifc.service /lib/systemd/system/
+systemctl daemon-reload
+systemctl enable opencv-ifc
 
 echo "Creating source.sh"
 rm -fr source.sh

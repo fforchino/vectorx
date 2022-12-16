@@ -118,6 +118,8 @@ func RegisterIntents() {
 	HowDoYouSay_Register(&intents)
 	ChangeLanguage_Register(&intents)
 	Weather_Register(&intents)
+	RockPaperScissors_Register(&intents)
+	Pong_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {

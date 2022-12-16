@@ -2,7 +2,10 @@ module vectorx
 
 go 1.19
 
-require github.com/fforchino/vector-go-sdk v0.0.0-20221213115551-f5110a923093
+require (
+	github.com/fforchino/vector-go-sdk v0.0.0-20221216080054-dfe1a258d335
+	github.com/fogleman/gg v1.3.0
+)
 
 require (
 	github.com/PerformLine/go-stockutil v1.9.3 // indirect
@@ -12,7 +15,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/digital-dream-labs/hugh v0.0.0-20210210154335-f4159b9fcd5f // indirect
 	github.com/fatih/structs v1.1.0 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect

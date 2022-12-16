@@ -85,10 +85,12 @@ func main() {
 			// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
 			sdk_wrapper.SetLocale("en_US")
 			fmt.Println("{\"status\": \"ko\", \"returnIntent\": \"\"}")
+			sdk_wrapper.SetLocale("en_US")
 		}
 	} else {
 		// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
 		sdk_wrapper.SetLocale("en_US")
 		fmt.Println("{\"status\": \"ko\", \"returnIntent\": \"\"}")
+		sdk_wrapper.SetLocale("en_US")
 	}
 }
