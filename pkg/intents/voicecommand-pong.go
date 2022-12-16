@@ -23,7 +23,7 @@ import (
 
 func Pong_Register(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
-	utterances[LOCALE_ENGLISH] = []string{"let's play pong"}
+	utterances[LOCALE_ENGLISH] = []string{"let's play a classic"}
 	utterances[LOCALE_ITALIAN] = []string{"giochiamo a pong"}
 	utterances[LOCALE_SPANISH] = []string{"juguemos a pong"}
 	utterances[LOCALE_FRENCH] = []string{"jouons à pong"}
@@ -51,7 +51,7 @@ func playPong(intent IntentDef, speechText string, params IntentParams) string {
 func doPong(useFx bool) {
 	opencv_ifc.CreateClient()
 	// Run opencv server on my pc to be faster
-	opencv_ifc.SetServerAddress("http://192.168.43.65:8090")
+	// opencv_ifc.SetServerAddress("http://192.168.43.65:8090")
 
 	s1 := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(s1)
@@ -109,26 +109,27 @@ func doPong(useFx bool) {
 
 	// Read input asynchronously
 	go func() {
-		sdk_wrapper.EnableCameraStream()
 		for true {
-			tx := time.Now().UnixMilli()
-			img := sdk_wrapper.GetCameraPicture()
-			println(fmt.Sprintf("T1: %d", time.Now().UnixMilli()-tx))
-			var handInfo map[string]interface{}
-			jsonData := opencv_ifc.SendImageToImageServer(&img)
-			//println("OpenCV server response: " + jsonData)
-			json.Unmarshal([]byte(jsonData), &handInfo)
-			index_x := int(handInfo["index_x"].(float64))
-			if index_x != -1 {
-				// Increment human paddle position
-				humanPaddle.Y = HEIGHT * index_x / img.Bounds().Dx()
-				if humanPaddle.Y < PADDLE_HEIGHT/2 {
-					humanPaddle.Y = PADDLE_HEIGHT / 2
-				} else if humanPaddle.Y > HEIGHT-PADDLE_HEIGHT/2 {
-					humanPaddle.Y = HEIGHT - PADDLE_HEIGHT/2
+			//tx := time.Now().UnixMilli()
+			img, err := sdk_wrapper.GetStaticCameraPicture(false)
+			if nil == err {
+				//println(fmt.Sprintf("T1: %d", time.Now().UnixMilli()-tx))
+				var handInfo map[string]interface{}
+				jsonData := opencv_ifc.SendImageToImageServer(&img)
+				//println("OpenCV server response: " + jsonData)
+				json.Unmarshal([]byte(jsonData), &handInfo)
+				index_x := int(handInfo["index_x"].(float64))
+				if index_x != -1 {
+					// Increment human paddle position
+					humanPaddle.Y = HEIGHT * index_x / img.Bounds().Dx()
+					if humanPaddle.Y < PADDLE_HEIGHT/2 {
+						humanPaddle.Y = PADDLE_HEIGHT / 2
+					} else if humanPaddle.Y > HEIGHT-PADDLE_HEIGHT/2 {
+						humanPaddle.Y = HEIGHT - PADDLE_HEIGHT/2
+					}
 				}
+				//println(fmt.Sprintf("T2: %d", time.Now().UnixMilli()-tx))
 			}
-			println(fmt.Sprintf("T2: %d", time.Now().UnixMilli()-tx))
 		}
 	}()
 
@@ -229,5 +230,4 @@ func doPong(useFx bool) {
 	} else {
 		sdk_wrapper.SayText(getText("STR_PONG_YOU_WON"))
 	}
-	sdk_wrapper.DisableCameraStream()
 }
