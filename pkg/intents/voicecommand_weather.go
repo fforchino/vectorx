@@ -138,7 +138,7 @@ func doWeatherForecast(intent IntentDef, speechText string, params IntentParams)
 	// Play audio asynchronously
 	go func() {
 		for true {
-			if params.Weather.Condition == getText("STR_RAIN") || params.Weather.Condition == getText("STR_FOGGY") {
+			if params.Weather.Condition == getText("STR_RAIN") || params.Weather.Condition == getText("STR_LIGHT_RAIN") || params.Weather.Condition == getText("STR_DRIZZLE") {
 				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/rain.mp3"))
 			} else if params.Weather.Condition == getText("STR_THUNDERSTORM") || params.Weather.Condition == getText("STR_HEAVY_THUNDERSTORM") {
 				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/weather/thunder.mp3"))

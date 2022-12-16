@@ -32,8 +32,13 @@ Hey Vector...
     - It is fully localized
     - Supports more weather conditions (for example, fog)
   Well, the animations are not as funny as the original ones. The icons used have been found on FlatIcon (https://www.flaticon.com/free-icons/weather),
-  they are created by **kosonicon** and reworked a bit to give them the proper Vector look.
-  
+  they are created by **kosonicon** and reworked a bit to give them the proper Vector look. Since graphics only (though animated) was a bit lame, I added also
+  some sounds (thunderstorm, rain, wind...) Still unsure what's the sound of the fog (I thought about a wolf howling :) 
+- **let's play a new game**
+  - Play "rocket,paper,scissors!" with Vector. He will use the camera to track your hand and guess the number of fingers. Best played with right hand.
+- **let's play a classic**
+  - Play Pong against Vector. You need to use the standard Vector cube. Move it up and down in front of the camera to move the left paddle correspondly.
+  The game ends when you or Vector reach 9 points.
 All commands are fully localized in the 5 supported languages. Feel free to help with the trenslations, that can surely be improved! 
 
 ## Setup
@@ -41,8 +46,9 @@ All commands are fully localized in the 5 supported languages. Feel free to help
    engine since VectorX aims to fully support localization in different languages, and VOSK is currently the
    only TTS engine that enables Wirepod to do that.
 2. Enable Wirepod as a system service and reboot.
-   3. Run setup.sh. It basically just asks you where you installed Wirepod and the openweathermap.org free 
-   API key if you want to use the extended weather forecast (you'd better do)
+3. Run setup.sh. It basically just asks you where you installed Wirepod and the openweathermap.org free 
+   API key if you want to use the extended weather forecast (you'd better do). VectorX also installs Python and an 
+   OpenCV server used for the computer vision games that need hand tracking.
 4. That's it. To test that everything works fine, just try:
    - Hi Vector! Hello world!
    Vector should reply:
