@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
-	"encoding/json"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"github.com/fforchino/vector-go-sdk/pkg/vectorpb"
@@ -14,7 +13,6 @@ import (
 	"math/rand"
 	"os"
 	"time"
-	opencv_ifc "vectorx/pkg/opencv-ifc"
 )
 
 /**********************************************************************************************************************/
@@ -49,10 +47,6 @@ func playPong(intent IntentDef, speechText string, params IntentParams) string {
 }
 
 func doPong(useFx bool) {
-	opencv_ifc.CreateClient()
-	// Run opencv server on my pc to be faster
-	// opencv_ifc.SetServerAddress("http://192.168.43.65:8090")
-
 	s1 := rand.NewSource(time.Now().UnixNano())
 	rnd := rand.New(s1)
 
@@ -76,6 +70,8 @@ func doPong(useFx bool) {
 
 	humanScore := 0
 	vectorScore := 0
+	additionalSpeed := 0
+	bounces := 0
 	const WIDTH = sdk_wrapper.VECTOR_SCREEN_WIDTH
 	const HEIGHT = sdk_wrapper.VECTOR_SCREEN_HEIGHT
 	PADDLE_WIDTH := paddle.Bounds().Dx()
@@ -96,6 +92,11 @@ func doPong(useFx bool) {
 
 	fx := ""
 
+	sdk_wrapper.Robot.Conn.EnableMarkerDetection(
+		context.Background(),
+		&vectorpb.EnableMarkerDetectionRequest{Enable: true},
+	)
+
 	// Play audio asynchronously
 	go func() {
 		for true {
@@ -109,26 +110,43 @@ func doPong(useFx bool) {
 
 	// Read input asynchronously
 	go func() {
-		for true {
-			//tx := time.Now().UnixMilli()
-			img, err := sdk_wrapper.GetStaticCameraPicture(false)
-			if nil == err {
-				//println(fmt.Sprintf("T1: %d", time.Now().UnixMilli()-tx))
-				var handInfo map[string]interface{}
-				jsonData := opencv_ifc.SendImageToImageServer(&img)
-				//println("OpenCV server response: " + jsonData)
-				json.Unmarshal([]byte(jsonData), &handInfo)
-				index_x := int(handInfo["index_x"].(float64))
-				if index_x != -1 {
-					// Increment human paddle position
-					humanPaddle.Y = HEIGHT * index_x / img.Bounds().Dx()
-					if humanPaddle.Y < PADDLE_HEIGHT/2 {
-						humanPaddle.Y = PADDLE_HEIGHT / 2
-					} else if humanPaddle.Y > HEIGHT-PADDLE_HEIGHT/2 {
-						humanPaddle.Y = HEIGHT - PADDLE_HEIGHT/2
+		for {
+			evt := sdk_wrapper.WaitForEvent()
+			if evt != nil {
+				evtUserIntent := evt.GetUserIntent()
+				evtObject := evt.GetObjectEvent()
+				if evtUserIntent != nil {
+					println(fmt.Sprintf("Received intent %d", evtUserIntent.IntentId))
+					println(evtUserIntent.JsonData)
+					println(evtUserIntent.String())
+				}
+				if evtObject != nil {
+					appearedObject := evtObject.GetObjectAvailable()
+					if appearedObject != nil {
+						println("An object is available")
+					}
+					observerdObject := evtObject.GetRobotObservedObject()
+					if observerdObject != nil && observerdObject.GetObjectType() == vectorpb.ObjectType_BLOCK_LIGHTCUBE1 {
+						cubey := (observerdObject.ImgRect.YTopLeft + observerdObject.ImgRect.Height) / 2
+						//cubex := (observerdObject.ImgRect.XTopLeft + observerdObject.ImgRect.Width) / 2
+						//println(fmt.Sprintf("Spotted cube at %f,%f", cubex, cubey))
+
+						// Seems that the cube Y ranges between 40 and 180, let's normalize it in a little shorter range
+						if cubey < 60 {
+							cubey = 60
+						} else if cubey > 160 {
+							cubey = 160
+						}
+						cubey -= 60
+
+						humanPaddle.Y = int(HEIGHT * cubey / 100)
+						if humanPaddle.Y < PADDLE_HEIGHT/2 {
+							humanPaddle.Y = PADDLE_HEIGHT / 2
+						} else if humanPaddle.Y > HEIGHT-PADDLE_HEIGHT/2 {
+							humanPaddle.Y = HEIGHT - PADDLE_HEIGHT/2
+						}
 					}
 				}
-				//println(fmt.Sprintf("T2: %d", time.Now().UnixMilli()-tx))
 			}
 		}
 	}()
@@ -137,6 +155,16 @@ func doPong(useFx bool) {
 		// Increment ball position
 		ballObj.X += bSpeed.X
 		ballObj.Y += bSpeed.Y
+		if bSpeed.X > 0 {
+			ballObj.X += additionalSpeed
+		} else {
+			ballObj.X -= additionalSpeed
+		}
+		if bSpeed.Y > 0 {
+			ballObj.Y += additionalSpeed
+		} else {
+			ballObj.Y -= additionalSpeed
+		}
 
 		// Increment Vector's paddle position, and check bounds
 		if (vectorPaddle.Y + PADDLE_WIDTH) < ballObj.Y {
@@ -157,14 +185,20 @@ func doPong(useFx bool) {
 			// Ball hits Human's wall
 			if ballObj.Y >= humanPaddle.Y-PADDLE_HEIGHT/2 && ballObj.Y <= humanPaddle.Y+PADDLE_HEIGHT/2 {
 				// Paddle hits the ball
+				bounces++
+				if bounces%3 == 0 {
+					additionalSpeed++
+				}
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_ping.pcm")
 				bSpeed.X = bSpeed.X * -1
-				bSpeed.Y = (humanPaddle.Y - ballObj.Y) / 4
+				bSpeed.Y -= (humanPaddle.Y - ballObj.Y) / 4
 				println(fmt.Sprintf(">> HUMAN HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			} else {
 				// Ball lost
 				if vectorScore < 9 {
 					vectorScore++
+					additionalSpeed = 0
+					bounces = 0
 				}
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_out.pcm")
 				ballObj.X = WIDTH / 2
@@ -178,12 +212,14 @@ func doPong(useFx bool) {
 				// Paddle hits the ball
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_pong.pcm")
 				bSpeed.X = bSpeed.X * -1
-				bSpeed.Y = (vectorPaddle.Y - ballObj.Y) / 4
+				bSpeed.Y -= (vectorPaddle.Y - ballObj.Y) / 4
 				println(fmt.Sprintf(">> VECTOR HITS THE BALL, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			} else {
 				// Ball lost
 				if humanScore < 9 {
 					humanScore++
+					additionalSpeed = 0
+					bounces = 0
 				}
 				fx = sdk_wrapper.GetDataPath("audio/pong/ball_out.pcm")
 				ballObj.X = WIDTH / 2
@@ -192,7 +228,7 @@ func doPong(useFx bool) {
 				bSpeed.Y = -3 + rnd.Intn(6)
 				println(fmt.Sprintf(">> BALL LOST, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			}
-		} else if ballObj.Y <= BALL_HEIGHT || ballObj.Y+BALL_HEIGHT >= HEIGHT {
+		} else if (ballObj.Y <= BALL_HEIGHT && bSpeed.Y < 0) || (ballObj.Y+BALL_HEIGHT > HEIGHT && bSpeed.Y > 0) {
 			// Ball hits top or bottom part of the screen, bounce back
 			println(fmt.Sprintf(">> BALL BOUNCE, new speed %d,%d", bSpeed.X, bSpeed.Y))
 			fx = sdk_wrapper.GetDataPath("audio/pong/ball_bounce.pcm")
