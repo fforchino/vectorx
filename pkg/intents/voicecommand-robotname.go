@@ -17,7 +17,7 @@ func RobotName_Register(intentList *[]IntentDef) error {
 func registerSetRobotName(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"you are", "your name is", "your name's"}
-	utterances[LOCALE_ITALIAN] = []string{"tu sei", "ti chiami", "il tuo nome è"}
+	utterances[LOCALE_ITALIAN] = []string{"tu sei", "ti chiami", "il tuo nome è", "il tuo nome e"}
 	utterances[LOCALE_SPANISH] = []string{"tú eres", "te llamas", "tu nombre es"}
 	utterances[LOCALE_FRENCH] = []string{"tu es", "tu t'appelles", "ton nom est"}
 	utterances[LOCALE_GERMAN] = []string{"Du bist", "du nennst dich", "dein Name ist"}
@@ -25,7 +25,7 @@ func registerSetRobotName(intentList *[]IntentDef) error {
 	var intent = IntentDef{
 		IntentName: "extended_intent_set_robot_name",
 		Utterances: utterances,
-		Parameters: []string{PARAMETER_USERNAME},
+		Parameters: []string{PARAMETER_ROBOTNAME},
 		Handler:    setRobotName,
 	}
 	*intentList = append(*intentList, intent)

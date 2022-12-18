@@ -15,6 +15,9 @@ const STR_WEATHER_THIS_AFTERNOON = "str_weather_this_afternoon"
 const STR_NAME_IS = "str_name_is"
 const STR_NAME_IS2 = "str_name_is1"
 const STR_NAME_IS3 = "str_name_is2"
+const STR_ROBOT_NAME_IS = "str_robot_name_is"
+const STR_ROBOT_NAME_IS2 = "str_robot_name_is1"
+const STR_ROBOT_NAME_IS3 = "str_robot_name_is2"
 const STR_LANGUAGE_ITALIAN = "str_language_italian"
 const STR_LANGUAGE_FRENCH = "str_language_french"
 const STR_LANGUAGE_SPANISH = "str_language_spanish"
@@ -41,6 +44,9 @@ var texts = map[string][]string{
 	STR_NAME_IS:                        {" is ", " è ", " es ", " est ", " ist "},
 	STR_NAME_IS2:                       {"'s", "sono ", "soy ", "suis ", "bin "},
 	STR_NAME_IS3:                       {"names", " chiamo ", " llamo ", "appelle ", "werde"},
+	STR_ROBOT_NAME_IS:                  {" is ", " e ", " es ", " est ", " ist "},
+	STR_ROBOT_NAME_IS2:                 {"'s", " sei ", "eres ", "es ", "bist "},
+	STR_ROBOT_NAME_IS3:                 {"names", " chiami ", " llamas ", "appelles ", "nennst dich "},
 	STR_LANGUAGE_ITALIAN:               {"italian", "italiano", "italiano", "italien", "italienisch"},
 	STR_LANGUAGE_SPANISH:               {"spanish", "spagnolo", "castellano", "espagnol", "spanisch "},
 	STR_LANGUAGE_FRENCH:                {"french", "francese", "francés", "français", "französisch"},

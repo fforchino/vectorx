@@ -28,6 +28,28 @@ func ParseParams(speechText string, intent IntentDef) IntentParams {
 			}
 			intentParams.RobotName = username
 		}
+	} else if contains(intent.Parameters, PARAMETER_ROBOTNAME) {
+		var username string
+		var nameSplitter string = ""
+		if strings.Contains(speechText, getText(STR_ROBOT_NAME_IS)) {
+			nameSplitter = getText(STR_ROBOT_NAME_IS)
+		} else if strings.Contains(speechText, getText(STR_ROBOT_NAME_IS2)) {
+			nameSplitter = getText(STR_ROBOT_NAME_IS2)
+		} else if strings.Contains(speechText, getText(STR_ROBOT_NAME_IS3)) {
+			nameSplitter = getText(STR_ROBOT_NAME_IS3)
+		}
+		if nameSplitter != "" {
+			splitPhrase := strings.SplitAfter(speechText, nameSplitter)
+			username = strings.TrimSpace(splitPhrase[1])
+			if len(splitPhrase) == 3 {
+				username = username + " " + strings.TrimSpace(splitPhrase[2])
+			} else if len(splitPhrase) == 4 {
+				username = username + " " + strings.TrimSpace(splitPhrase[2]) + " " + strings.TrimSpace(splitPhrase[3])
+			} else if len(splitPhrase) > 4 {
+				username = username + " " + strings.TrimSpace(splitPhrase[2]) + " " + strings.TrimSpace(splitPhrase[3])
+			}
+			intentParams.RobotName = username
+		}
 	} else if contains(intent.Parameters, PARAMETER_LANGUAGE) {
 		if strings.Contains(speechText, getText(STR_LANGUAGE_ITALIAN)) {
 			intentParams.Language = LOCALE_ITALIAN
