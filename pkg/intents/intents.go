@@ -121,6 +121,8 @@ func RegisterIntents() {
 	Weather_Register(&intents)
 	RockPaperScissors_Register(&intents)
 	Pong_Register(&intents)
+	//FollowCube_Register(&intents)
+	Lottery_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {

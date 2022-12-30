@@ -10,6 +10,9 @@ import (
 )
 
 var Debug = false
+var Ctx = context.Background()
+var Start = make(chan bool)
+var Stop = make(chan bool)
 
 func main() {
 	var serial = flag.String("serial", "", "Vector's Serial Number")
@@ -61,23 +64,19 @@ func main() {
 			// Ok, we have a match. Then extract the parameters (if any) from the intent...
 			params := intents.ParseParams(*speechText, xIntent)
 
-			ctx := context.Background()
-			start := make(chan bool)
-			stop := make(chan bool)
-
 			go func() {
-				_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
+				_ = sdk_wrapper.Robot.BehaviorControl(Ctx, Start, Stop)
 			}()
 
 			for {
 				select {
-				case <-start:
+				case <-Start:
 					returnIntent := xIntent.Handler(xIntent, *speechText, params)
 					// Seems that we have to force back en_US locale or "Hey Vector" won't work anymore
 					sdk_wrapper.SetLocale("en_US")
 					// Ok, intent handled. Return the intent that Wirepod has to send to the robot
 					fmt.Println("{\"status\": \"ok\", \"returnIntent\": \"" + returnIntent + "\"}")
-					stop <- true
+					Stop <- true
 				}
 				return
 			}
