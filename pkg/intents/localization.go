@@ -24,6 +24,7 @@ const STR_LANGUAGE_SPANISH = "str_language_spanish"
 const STR_LANGUAGE_GERMAN = "str_language_german"
 const STR_LANGUAGE_ENGLISH = "str_language_english"
 const STR_GENERIC_I_DONT_KNOW = "str_generic_i_dont_know"
+const STR_SET_CHAT_TARGET = "str_set_chat_target"
 
 const en_US = 0
 const it_IT = 1
@@ -53,6 +54,7 @@ var texts = map[string][]string{
 	STR_LANGUAGE_GERMAN:                {"german", "tedesco", "alemán", "allemand", "deutsch"},
 	STR_LANGUAGE_ENGLISH:               {"english", "inglese", "inglés", "anglais", "englisch"},
 	STR_GENERIC_I_DONT_KNOW:            {"i don't know", "non lo so", "no sé", "je ne sais pas", "ich weiß nicht"},
+	STR_SET_CHAT_TARGET:                {"chat with", "parla con", "habla con", "parlez à", "sprich mit"},
 }
 
 func addLocalizedString(keyName string, translations []string) {

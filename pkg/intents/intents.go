@@ -23,6 +23,7 @@ const PARAMETER_USERNAME = "PARAMETER_USERNAME"
 const PARAMETER_ROBOTNAME = "PARAMETER_ROBOTNAME"
 const PARAMETER_LANGUAGE = "PARAMETER_LANGUAGE"
 const PARAMETER_WEATHER = "PARAMETER_WEATHER"
+const PARAMETER_CHAT_TARGET = "PARAMETER_CHAT_TARGET"
 
 // Standard intents a production Vector understands
 
@@ -93,9 +94,10 @@ type WeatherParams struct {
 }
 
 type IntentParams struct {
-	RobotName string
-	Language  string
-	Weather   WeatherParams
+	RobotName      string
+	Language       string
+	Weather        WeatherParams
+	ChatTargetName string
 }
 
 type IntentHandlerFunc func(IntentDef, string, IntentParams) string
@@ -123,6 +125,7 @@ func RegisterIntents() {
 	Pong_Register(&intents)
 	//FollowCube_Register(&intents)
 	Lottery_Register(&intents)
+	VIM_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {

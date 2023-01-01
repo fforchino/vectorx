@@ -66,6 +66,17 @@ func ParseParams(speechText string, intent IntentDef) IntentParams {
 		condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon := weatherParser(speechText, BotLocation, BotUnits)
 		wp := WeatherParams{condition, is_forecast, local_datetime, speakable_location_string, temperature, temperature_unit, icon}
 		intentParams.Weather = wp
+	} else if contains(intent.Parameters, PARAMETER_CHAT_TARGET) {
+		var username string
+		var nameSplitter string = ""
+		if strings.Contains(speechText, getText(STR_SET_CHAT_TARGET)) {
+			nameSplitter = getText(STR_SET_CHAT_TARGET)
+		}
+		if nameSplitter != "" {
+			splitPhrase := strings.SplitAfter(speechText, nameSplitter)
+			username = strings.TrimSpace(splitPhrase[1])
+			intentParams.ChatTargetName = username
+		}
 	}
 	return intentParams
 }
