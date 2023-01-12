@@ -9,28 +9,34 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 )
 
-const VIM_SERVER_URL = "http://192.168.43.65/VIM"
+var VIM_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VIM" //"http://192.168.43.65/VIM"
+var VIMEnabled = (os.Getenv("VIM_ENABLED") == "true")
 
 var VIMDebug = true
 
 func VIM_Register(intentList *[]IntentDef) error {
-	registerSignUpToChat(intentList)
-	registerLoginToChat(intentList)
-	registerSetChatTarget(intentList)
-	registerQueryChatTarget(intentList)
-	registerSendMessageToChat(intentList)
+	if VIMEnabled && VIM_SERVER_URL != "" {
+		registerSignUpToChat(intentList)
+		registerLoginToChat(intentList)
+		registerLogoutChat(intentList)
+		registerSetChatTarget(intentList)
+		registerQueryChatTarget(intentList)
+		registerSendMessageToChat(intentList)
 
-	addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Sign up successful as %s1", "", "", "", ""})
-	addLocalizedString("STR_VIM_ERROR", []string{"Error", "", "", "", ""})
-	addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "", "", ""})
-	addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "", "", ""})
-	addLocalizedString("STR_VIM_MESSAGE_SENT", []string{"Message to %s1 sent", "", "", "", ""})
-	addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "", "", ""})
-	addLocalizedString("STR_USER_SAYS_MESSAGE", []string{"%s1 says: %s2", "%s1 dice: %s2", "", "", ""})
-	addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "", "", ""})
-	addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "", "", ""})
+		addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Sign up successful as %s1", "", "", "", ""})
+		addLocalizedString("STR_VIM_ERROR_ALREADY_REGISTERED", []string{"Username %s1 is already registered", "", "", "", ""})
+		addLocalizedString("STR_VIM_ERROR", []string{"Error", "", "", "", ""})
+		addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "", "", ""})
+		addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "", "", ""})
+		addLocalizedString("STR_VIM_MESSAGE_SENT", []string{"Message to %s1 sent", "", "", "", ""})
+		addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "", "", ""})
+		addLocalizedString("STR_USER_SAYS_MESSAGE", []string{"%s1 says: %s2", "%s1 dice: %s2", "", "", ""})
+		addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "", "", ""})
+		addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "", "", ""})
+	}
 	return nil
 }
 
@@ -64,6 +70,8 @@ func signUpToChat(intent IntentDef, speechText string, params IntentParams) stri
 		if err == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_SIGN_UP_SUCCESSFUL", []string{robotName}))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+		} else if err.Error() == "Already registered" {
+			sdk_wrapper.SayText(getTextEx("STR_VIM_ERROR_ALREADY_REGISTERED", []string{robotName}))
 		} else {
 			println(err.Error())
 		}
@@ -100,6 +108,41 @@ func loginToChat(intent IntentDef, speechText string, params IntentParams) strin
 	if len(robotName) > 0 {
 		if VIMAPILogin(robotName) == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_LOGIN_SUCCESSFUL", []string{robotName}))
+			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+		}
+	}
+	if returnIntent == STANDARD_INTENT_IMPERATIVE_NEGATIVE {
+		sdk_wrapper.SayText(getText("STR_VIM_ERROR"))
+	}
+	return returnIntent
+}
+
+/**********************************************************************************************************************/
+/*                                            LOGOUT TO CHAT                                                           */
+/**********************************************************************************************************************/
+
+func registerLogoutChat(intentList *[]IntentDef) error {
+	utterances := make(map[string][]string)
+	utterances[LOCALE_ENGLISH] = []string{"quit chat service"}
+	utterances[LOCALE_ITALIAN] = []string{"esci dal servizio di chat"}
+
+	var intent = IntentDef{
+		IntentName: "extended_intent_vim_logout",
+		Utterances: utterances,
+		Parameters: []string{},
+		Handler:    logoutChat,
+	}
+	*intentList = append(*intentList, intent)
+	return nil
+}
+
+func logoutChat(intent IntentDef, speechText string, params IntentParams) string {
+	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
+	robotName := sdk_wrapper.GetRobotName()
+
+	if len(robotName) > 0 {
+		if VIMAPILogout(robotName) == nil {
+			sdk_wrapper.SayText(getTextEx("STR_VIM_LOGOUT_SUCCESSFUL", []string{robotName}))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 		}
 	}
@@ -257,6 +300,28 @@ func VIMAPILogin(robotName string) error {
 	}
 
 	resp, err := http.PostForm(VIM_SERVER_URL+"/php/login.php", data)
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		var responseText []byte
+		responseText, err = ioutil.ReadAll(resp.Body)
+		if string(responseText) != "success" {
+			err = errors.New(string(responseText))
+		} else {
+			err = nil
+		}
+	}
+	return err
+}
+
+func VIMAPILogout(robotName string) error {
+	data := url.Values{
+		"email":    {robotName + "@vectorx.org"},
+		"password": {robotName},
+	}
+	//TODO:
+	resp, err := http.PostForm(VIM_SERVER_URL+"/php/logout-vector.php", data)
 
 	if err != nil {
 		log.Fatal(err)

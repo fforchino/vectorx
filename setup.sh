@@ -79,6 +79,48 @@ if [[ ${weatherSetup} == "true" ]]; then
   weatherUnitPrompt
 fi
 
+function vimPrompt() {
+  echo "Would you like to enable VIM (Vector Instant Messaging)? You can then send and receive messages with other bots."
+  echo "You can choose to use a global server or to host it on your own machine."
+  echo
+  echo "1: Yes, and I want to use VIM global server (shared among all users)"
+  echo "2: Yes, and I want to use another server (local network or on the internet)"
+  echo "3: No, I don't want to use VIM"
+  read -p "Enter a number (1): " yn
+  case $yn in
+  "1") vimSetup="true" vimServer="https://www.wondergarden.app/VIM";;
+  "2") vimSetup="true" vimServer="";;
+  "3") vimSetup="false" vimServer="";;
+  "") vimSetup="false" vimServer="";;
+  *)
+    echo "Please answer with 1,2 or 3."
+    weatherPrompt
+    ;;
+  esac
+}
+vimPrompt
+
+if [[ ${vimSetup} == "true" ]]; then
+  if [[ ${vimServer} == "" ]]; then
+    function vimServerPrompt() {
+      echo
+      echo "Download VIM Server from github and host it on a website or local server in a /VIM folder."
+      echo "Then enter the full path of the VIM installation (e.g. http://192.168.43.65/VIM)"
+      echo
+      read -p "Enter VIM server URL: " vimServer
+      if [[ ! -n ${vimServer} ]]; then
+        echo "You must enter an URL. If you have changed your mind, you may also enter Q to continue without VIM."
+        vimServerPrompt
+      fi
+      if [[ ${vimServer} == "Q" ]]; then
+        vimSetup="false"
+        vimServer=""
+      fi
+    }
+    vimServerPrompt
+  fi
+fi
+
 echo "Enabling opencvserver as a service"
 echo "[Unit]" >opencv-ifc.service
 echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
@@ -94,6 +136,27 @@ cat opencv-ifc.service
 mv opencv-ifc.service /lib/systemd/system/
 systemctl daemon-reload
 systemctl enable opencv-ifc
+
+if [[ ${vimSetup} == "true" ]]; then
+  echo "Enabling VIM Local Server as a service. This is needed to receive messages."
+  echo "[Unit]" >vectorx-vim.service
+  echo "Description=VectorX VIM Server" >>vectorx-vim.service
+  echo >>vectorx-vim.service
+  echo "[Service]" >>vectorx-vim.service
+  echo "Type=simple" >>vectorx-vim.service
+  echo "WorkingDirectory=$(readlink -f ./vim)" >>vectorx-vim.service
+  echo "ExecStart=/usr/bin/python $(readlink -f ./vim/vimserver.py)" >>vectorx-vim.service
+  echo >>vectorx-vim.service
+  echo "[Install]" >>vectorx-vim.service
+  echo "WantedBy=multi-user.target" >>vectorx-vim.service
+  cat vectorx-vim.service
+  mv vectorx-vim.service /lib/systemd/system/
+  systemctl daemon-reload
+  systemctl enable vectorx-vim
+else
+  echo "Disabling VIM Local Server service."
+  systemctl disable vectorx-vim
+fi
 
 echo "Creating source.sh"
 rm -fr source.sh
@@ -111,6 +174,12 @@ if [[ ${weatherSetup} == "true" ]]; then
   echo "export WEATHERAPI_UNIT=${weatherUnit}" >>source.sh
 else
   echo "export WEATHERAPI_ENABLED=false" >>source.sh
+fi
+if [[ ${vimSetup} == "true" ]]; then
+  echo "export VIM_ENABLED=true" >>source.sh
+  echo "export VIM_SERVER=$vimServer" >>source.sh
+else
+  echo "export VIM_ENABLED=false" >>source.sh
 fi
 echo
 echo "Created source.sh file!"
