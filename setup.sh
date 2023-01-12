@@ -152,7 +152,7 @@ if [[ ${vimSetup} == "true" ]]; then
   echo "[Service]" >>vectorx-vim.service
   echo "Type=simple" >>vectorx-vim.service
   echo "WorkingDirectory=$(readlink -f .)" >>vectorx-vim.service
-  echo "ExecStart=$(readlink -f ./startVIMServer.sh)" >>vectorx-vim.service
+  echo "ExecStart=$(readlink -f ./startVIMServer.sh) &" >>vectorx-vim.service
   echo >>vectorx-vim.service
   echo "[Install]" >>vectorx-vim.service
   echo "WantedBy=multi-user.target" >>vectorx-vim.service
