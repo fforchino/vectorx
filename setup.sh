@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+    echo "This script must be run as root. sudo ./setup.sh"
+    exit 1
+fi
+
 # Assuming GO is already installed...
 echo "Getting Vector GO SDK..."
 /usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
@@ -121,6 +126,7 @@ if [[ ${vimSetup} == "true" ]]; then
   fi
 fi
 
+echo ""
 echo "Enabling opencvserver as a service"
 echo "[Unit]" >opencv-ifc.service
 echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
@@ -138,14 +144,15 @@ systemctl daemon-reload
 systemctl enable opencv-ifc
 
 if [[ ${vimSetup} == "true" ]]; then
+  echo ""
   echo "Enabling VIM Local Server as a service. This is needed to receive messages."
   echo "[Unit]" >vectorx-vim.service
   echo "Description=VectorX VIM Server" >>vectorx-vim.service
   echo >>vectorx-vim.service
   echo "[Service]" >>vectorx-vim.service
   echo "Type=simple" >>vectorx-vim.service
-  echo "WorkingDirectory=$(readlink -f ./vim)" >>vectorx-vim.service
-  echo "ExecStart=/usr/bin/python $(readlink -f ./vim/vimserver.py)" >>vectorx-vim.service
+  echo "WorkingDirectory=$(readlink -f .)" >>vectorx-vim.service
+  echo "ExecStart=$(readlink -f ./startVIMServer.sh)" >>vectorx-vim.service
   echo >>vectorx-vim.service
   echo "[Install]" >>vectorx-vim.service
   echo "WantedBy=multi-user.target" >>vectorx-vim.service

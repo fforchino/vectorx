@@ -9,4 +9,4 @@ if [[ ! -f ./source.sh ]]; then
 fi
 
 source source.sh
-/usr/local/go/bin/go run cmd/vimserver.go --serial $1
+/usr/local/go/bin/go run cmd/vimserver.go

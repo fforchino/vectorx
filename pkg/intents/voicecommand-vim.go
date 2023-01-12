@@ -401,33 +401,28 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 	return info[0], errors.New("Unknown user")
 }
 
-func VIMAPICheckMessages() ([]VIMChatMessage, error) {
+func VIMAPICheckMessages(robotSerialNo string) ([]VIMChatMessage, error) {
 	var arr []VIMChatMessage
-	robotName := sdk_wrapper.GetRobotName()
 
-	if len(robotName) > 0 {
-		myself, e1 := VIMAPIGetUserInfo(robotName)
+	if len(robotSerialNo) > 0 {
+		theUrl := fmt.Sprintf(VIM_SERVER_URL+"/php/get-chat-vector.php?unique_id=%s", robotSerialNo)
+		resp, err := http.Get(theUrl)
 
-		if e1 == nil {
-			theUrl := fmt.Sprintf(VIM_SERVER_URL+"/php/get-chat-vector.php?unique_id=%d", myself.UserId)
-			resp, err := http.Get(theUrl)
-
-			if err != nil {
-				if VIMDebug {
-					println("FATAL: " + err.Error())
-				}
-			} else {
-				var responseText []byte
-				responseText, err = ioutil.ReadAll(resp.Body)
-				//println("RESPONSE: " + string(responseText))
-				err = json.Unmarshal([]byte(responseText), &arr)
-				if err != nil && VIMDebug {
-					println(err.Error())
-				}
-				return arr, err
+		if err != nil {
+			if VIMDebug {
+				println("FATAL: " + err.Error())
+			}
+		} else {
+			var responseText []byte
+			responseText, err = ioutil.ReadAll(resp.Body)
+			//println("RESPONSE: " + string(responseText))
+			err = json.Unmarshal([]byte(responseText), &arr)
+			if err != nil && VIMDebug {
+				println(err.Error())
 			}
 			return arr, err
 		}
+		return arr, err
 	}
 	return arr, errors.New("Unknown user")
 }
