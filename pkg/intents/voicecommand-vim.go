@@ -66,7 +66,7 @@ func signUpToChat(intent IntentDef, speechText string, params IntentParams) stri
 	errorMessage := getText("STR_VIM_ERROR")
 
 	if len(robotName) > 0 {
-		err := VIMAPISignup(robotName)
+		err := VIMAPISignup(sdk_wrapper.GetRobotName(), sdk_wrapper.GetRobotSerial())
 		if err == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_SIGN_UP_SUCCESSFUL", []string{robotName}))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
@@ -106,7 +106,7 @@ func loginToChat(intent IntentDef, speechText string, params IntentParams) strin
 	robotName := sdk_wrapper.GetRobotName()
 
 	if len(robotName) > 0 {
-		if VIMAPILogin(robotName) == nil {
+		if VIMAPILogin(robotName, sdk_wrapper.GetRobotSerial()) == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_LOGIN_SUCCESSFUL", []string{robotName}))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 		}
@@ -267,12 +267,13 @@ type VIMUserInfoData struct {
 	IsHuman     bool   `json:"is_human"`
 }
 
-func VIMAPISignup(robotName string) error {
+func VIMAPISignup(robotName string, serialNo string) error {
 	data := url.Values{
-		"fname":    {"Vector"},
-		"lname":    {robotName},
-		"email":    {robotName + "@vectorx.org"},
-		"password": {robotName},
+		"fname":     {"Vector"},
+		"lname":     {robotName},
+		"email":     {robotName + "@vectorx.org"},
+		"password":  {serialNo},
+		"serial_no": {serialNo},
 	}
 
 	resp, err := http.PostForm(VIM_SERVER_URL+"/php/signup.php", data)
@@ -293,10 +294,10 @@ func VIMAPISignup(robotName string) error {
 	return err
 }
 
-func VIMAPILogin(robotName string) error {
+func VIMAPILogin(robotName string, serialNo string) error {
 	data := url.Values{
 		"email":    {robotName + "@vectorx.org"},
-		"password": {robotName},
+		"password": {serialNo},
 	}
 
 	resp, err := http.PostForm(VIM_SERVER_URL+"/php/login.php", data)
