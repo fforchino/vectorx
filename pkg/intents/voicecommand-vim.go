@@ -13,6 +13,8 @@ import (
 
 const VIM_SERVER_URL = "http://192.168.43.65/VIM"
 
+var VIMDebug = true
+
 func VIM_Register(intentList *[]IntentDef) error {
 	registerSignUpToChat(intentList)
 	registerLoginToChat(intentList)
@@ -108,13 +110,13 @@ func loginToChat(intent IntentDef, speechText string, params IntentParams) strin
 }
 
 /**********************************************************************************************************************/
-/*                                         SET CHAT TARGET                                                            */
+/*                                         QUERY CHAT TARGET                                                           */
 /**********************************************************************************************************************/
 
-func registerSetChatTarget(intentList *[]IntentDef) error {
+func registerQueryChatTarget(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
-	utterances[LOCALE_ENGLISH] = []string{"chat with"}
-	utterances[LOCALE_ITALIAN] = []string{"parla con"}
+	utterances[LOCALE_ENGLISH] = []string{"who are you chatting with"}
+	utterances[LOCALE_ITALIAN] = []string{"con chi stai parlando"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_vim_set_chat_target",
@@ -139,16 +141,16 @@ func queryChatTarget(intent IntentDef, speechText string, params IntentParams) s
 }
 
 /**********************************************************************************************************************/
-/*                                         QUERY CHAT TARGET                                                          */
+/*                                         SET CHAT TARGET                                                          */
 /**********************************************************************************************************************/
 
-func registerQueryChatTarget(intentList *[]IntentDef) error {
+func registerSetChatTarget(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
-	utterances[LOCALE_ENGLISH] = []string{"who are you chatting with"}
-	utterances[LOCALE_ITALIAN] = []string{"con chi stai parlando"}
+	utterances[LOCALE_ENGLISH] = []string{"chat with"}
+	utterances[LOCALE_ITALIAN] = []string{"parla con"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_query_chat_target",
+		IntentName: "extended_intent_vim_set_chat_target",
 		Utterances: utterances,
 		Parameters: []string{PARAMETER_CHAT_TARGET},
 		Handler:    setChatTarget,
@@ -159,8 +161,8 @@ func registerQueryChatTarget(intentList *[]IntentDef) error {
 
 func setChatTarget(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
-	if len(params.RobotName) > 0 {
-		sdk_wrapper.SetRobotName(params.ChatTargetName)
+	if len(params.ChatTargetName) > 0 {
+		sdk_wrapper.SetChatTarget(params.ChatTargetName)
 		sdk_wrapper.SayText(getTextEx("STR_CHAT_TARGET_SET", []string{params.ChatTargetName}))
 		returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 	}
@@ -218,7 +220,7 @@ type VIMChatMessage struct {
 
 type VIMUserInfoData struct {
 	DisplayName string `json:"display_name"`
-	UserId      int    `json:"userid"`
+	UserId      int    `json:"user_id"`
 	IsHuman     bool   `json:"is_human"`
 }
 
@@ -311,13 +313,14 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 }
 
 func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
-	var info VIMUserInfoData
-	theUrl := VIM_SERVER_URL + "/php/userInfo.php?displayname=" + userName
+	var info []VIMUserInfoData
+	theUrl := VIM_SERVER_URL + "/php/userInfo.php?displayName=" + userName
 	resp, err := http.Get(theUrl)
 
 	if err != nil {
-		log.Fatal(err)
-		println("FATAL: " + err.Error())
+		if VIMDebug {
+			println("FATAL: " + err.Error())
+		}
 	} else {
 		var responseText []byte
 		responseText, err = ioutil.ReadAll(resp.Body)
@@ -326,11 +329,11 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 		if err != nil {
 			println(err.Error())
 		}
-		return info, err
+		return info[0], err
 	}
-	return info, err
+	return info[0], err
 
-	return info, errors.New("Unknown user")
+	return info[0], errors.New("Unknown user")
 }
 
 func VIMAPICheckMessages() ([]VIMChatMessage, error) {
@@ -345,14 +348,15 @@ func VIMAPICheckMessages() ([]VIMChatMessage, error) {
 			resp, err := http.Get(theUrl)
 
 			if err != nil {
-				log.Fatal(err)
-				println("FATAL: " + err.Error())
+				if VIMDebug {
+					println("FATAL: " + err.Error())
+				}
 			} else {
 				var responseText []byte
 				responseText, err = ioutil.ReadAll(resp.Body)
 				//println("RESPONSE: " + string(responseText))
 				err = json.Unmarshal([]byte(responseText), &arr)
-				if err != nil {
+				if err != nil && VIMDebug {
 					println(err.Error())
 				}
 				return arr, err
