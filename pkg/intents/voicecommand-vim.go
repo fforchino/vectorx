@@ -263,7 +263,7 @@ type VIMChatMessage struct {
 
 type VIMUserInfoData struct {
 	DisplayName string `json:"display_name"`
-	UserId      int    `json:"user_id"`
+	UserId      string `json:"user_id"`
 	IsHuman     bool   `json:"is_human"`
 }
 
@@ -352,10 +352,10 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 		myself, e1 := VIMAPIGetUserInfo(robotName)
 		other, e2 := VIMAPIGetUserInfo(botTo)
 		if e1 == nil && e2 == nil {
-			println(fmt.Sprintf("Sending message '%s' from %d to %d", botMessage, myself.UserId, other.UserId))
+			println(fmt.Sprintf("Sending message '%s' from %s to %s", botMessage, myself.UserId, other.UserId))
 			data := url.Values{
-				"incoming_id": {fmt.Sprintf("%d", other.UserId)},
-				"unique_id":   {fmt.Sprintf("%d", myself.UserId)},
+				"incoming_id": {other.UserId},
+				"unique_id":   {myself.UserId},
 				"message":     {botMessage},
 			}
 
