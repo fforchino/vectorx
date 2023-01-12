@@ -126,7 +126,6 @@ func RegisterIntents() {
 	//FollowCube_Register(&intents)
 	Lottery_Register(&intents)
 	VIM_Register(&intents)
-	Urmet_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {
