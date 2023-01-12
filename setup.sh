@@ -142,6 +142,7 @@ cat opencv-ifc.service
 mv opencv-ifc.service /lib/systemd/system/
 systemctl daemon-reload
 systemctl enable opencv-ifc
+systemctl start opencv-ifc
 
 if [[ ${vimSetup} == "true" ]]; then
   echo ""
@@ -160,6 +161,7 @@ if [[ ${vimSetup} == "true" ]]; then
   mv vectorx-vim.service /lib/systemd/system/
   systemctl daemon-reload
   systemctl enable vectorx-vim
+  systemctl start vectorx-vim
 else
   echo "Disabling VIM Local Server service."
   systemctl disable vectorx-vim

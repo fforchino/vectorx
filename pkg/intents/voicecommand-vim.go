@@ -429,5 +429,6 @@ func VIMAPICheckMessages(robotSerialNo string) ([]VIMChatMessage, error) {
 }
 
 func VIMAPIPlayMessage(msg VIMChatMessage) {
+	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
 	sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
 }
