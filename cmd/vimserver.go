@@ -23,42 +23,50 @@ func main() {
 	// Just called to add VIM localized strings to the engine
 	intents.RegisterIntents()
 
-	// Load the Vector Serial Numbers for which we are going to check messages from Wirepod
-	serials := getMyBotSerials()
-
 	// Check for new messages forever
 	for {
-		for _, serial := range serials {
-			messages, err := intents.VIMAPICheckMessages(serial)
-			if err == nil && len(messages) > 0 {
-				for i := 0; i < len(messages); i++ {
-					if !messages[i].Read {
-						println(fmt.Sprintf("[%d] New message from %s: %s", messages[i].Timestamp, messages[i].From, messages[i].Message))
-						var ctx = context.Background()
-						var start = make(chan bool)
-						var stop = make(chan bool)
+		// Load the Vector Serial Numbers for which we are going to check messages from Wirepod
+		serials := getMyBotSerials()
 
-						sdk_wrapper.InitSDKForWirepod(serial)
-						go func() {
-							_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
-						}()
-						done := false
-						for done == false {
-							select {
-							case <-start:
-								intents.VIMAPIPlayMessage(messages[i])
-								stop <- true
-								done = true
+		if intents.VIMEnabled {
+			for _, serial := range serials {
+				isChatty, lastMessageId := isBotInChatMood(serial)
+				if isChatty {
+					messages, err := intents.VIMAPICheckMessages(serial, lastMessageId)
+					if err == nil && len(messages) > 0 {
+						for i := 0; i < len(messages); i++ {
+							if !messages[i].Read {
+								println(fmt.Sprintf("[%d] New message from %s: %s", messages[i].Timestamp, messages[i].From, messages[i].Message))
+								var ctx = context.Background()
+								var start = make(chan bool)
+								var stop = make(chan bool)
+
+								sdk_wrapper.InitSDKForWirepod(serial)
+								go func() {
+									_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
+								}()
+								done := false
+								for done == false {
+									select {
+									case <-start:
+										intents.VIMAPIPlayMessage(messages[i])
+										stop <- true
+										done = true
+									}
+								}
+								println("Message processed")
 							}
 						}
-						println("Message processed")
 					}
 				}
 			}
 		}
+
 		time.Sleep(time.Duration(1000) * time.Millisecond)
 	}
 }
+
+// Gets a list of serials managed by this instance of wirepod
 
 func getMyBotSerials() []string {
 	wirepodPath := os.Getenv("WIREPOD_HOME")
@@ -78,4 +86,23 @@ func getMyBotSerials() []string {
 		serials = append(serials, botConfig.ESN)
 	}
 	return serials
+}
+
+// Checks whether the given bot is logged into chat
+
+func isBotInChatMood(serial string) (bool, int32) {
+	// Peek into the given vector custom settings and read the value
+	customSettingsPath := sdk_wrapper.SDKConfig.NvmPath
+	customSettingsPath = filepath.Join(customSettingsPath, serial)
+	customSettingsPath = filepath.Join(customSettingsPath, "custom_settings.json")
+
+	botCustomSettingsJSONFile, err := os.ReadFile(customSettingsPath)
+	if err == nil {
+		var botCustomSettings sdk_wrapper.CustomSettings
+		err := json.Unmarshal(botCustomSettingsJSONFile, &botCustomSettings)
+		if err == nil {
+			return botCustomSettings.LoggedInToChat, botCustomSettings.LastChatMessageRead
+		}
+	}
+	return false, -1
 }

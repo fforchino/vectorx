@@ -108,6 +108,8 @@ func loginToChat(intent IntentDef, speechText string, params IntentParams) strin
 	if len(robotName) > 0 {
 		if VIMAPILogin(robotName, sdk_wrapper.GetRobotSerial()) == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_LOGIN_SUCCESSFUL", []string{robotName}))
+			sdk_wrapper.GetCustomSettings().LoggedInToChat = true
+			sdk_wrapper.SaveCustomSettings()
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 		}
 	}
@@ -143,6 +145,8 @@ func logoutChat(intent IntentDef, speechText string, params IntentParams) string
 	if len(robotName) > 0 {
 		if VIMAPILogout(robotName) == nil {
 			sdk_wrapper.SayText(getTextEx("STR_VIM_LOGOUT_SUCCESSFUL", []string{robotName}))
+			sdk_wrapper.GetCustomSettings().LoggedInToChat = false
+			sdk_wrapper.SaveCustomSettings()
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 		}
 	}
@@ -254,6 +258,7 @@ func sendMessageToChat(intent IntentDef, speechText string, params IntentParams)
 /**********************************************************************************************************************/
 
 type VIMChatMessage struct {
+	Id        int32  `json:"id"`
 	From      string `json:"from"`
 	FromId    string `json:"from_id"`
 	Message   string `json:"message"`
@@ -402,11 +407,13 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 	return info[0], errors.New("Unknown user")
 }
 
-func VIMAPICheckMessages(robotSerialNo string) ([]VIMChatMessage, error) {
+func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int) ([]VIMChatMessage, error) {
 	var arr []VIMChatMessage
 
 	if len(robotSerialNo) > 0 {
-		theUrl := fmt.Sprintf(VIM_SERVER_URL+"/php/get-chat-vector.php?unique_id=%s", robotSerialNo)
+		theUrl := fmt.Sprintf(VIM_SERVER_URL+"/php/get-chat-vector.php?unique_id=%s&last_message_id=%d",
+			robotSerialNo,
+			lastReadMessageId)
 		resp, err := http.Get(theUrl)
 
 		if err != nil {
@@ -431,4 +438,6 @@ func VIMAPICheckMessages(robotSerialNo string) ([]VIMChatMessage, error) {
 func VIMAPIPlayMessage(msg VIMChatMessage) {
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
 	sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
+	sdk_wrapper.GetCustomSettings().LastChatMessageRead = msg.Id
+	sdk_wrapper.SaveCustomSettings()
 }
