@@ -407,7 +407,7 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 	return info[0], errors.New("Unknown user")
 }
 
-func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int) ([]VIMChatMessage, error) {
+func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMChatMessage, error) {
 	var arr []VIMChatMessage
 
 	if len(robotSerialNo) > 0 {
