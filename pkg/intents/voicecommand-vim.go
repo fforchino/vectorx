@@ -255,9 +255,7 @@ func sendMessageToChat(intent IntentDef, speechText string, params IntentParams)
 
 type VIMChatMessage struct {
 	From      string `json:"from"`
-	FromId    string `json:"from_id"`
-	To        string `json:"to"`
-	ToId      string `json:"to_id"`
+	FromId    int    `json:"from_id"`
 	Message   string `json:"message"`
 	Read      bool   `json:"read"`
 	Timestamp int    `json:"timestamp"`
@@ -428,16 +426,6 @@ func VIMAPICheckMessages(robotSerialNo string) ([]VIMChatMessage, error) {
 		return arr, err
 	}
 	return arr, errors.New("Unknown user")
-}
-
-func VIMAPIParseIncomingMessages(req *http.Request) ([]VIMChatMessage, error) {
-	var arr []VIMChatMessage
-	decoder := json.NewDecoder(req.Body)
-	err := decoder.Decode(&arr)
-	if err != nil && VIMDebug {
-		println(err.Error())
-	}
-	return arr, err
 }
 
 func VIMAPIPlayMessage(msg VIMChatMessage) {
