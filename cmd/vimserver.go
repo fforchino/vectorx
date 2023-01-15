@@ -74,7 +74,7 @@ func getMyBotSerials() []string {
 
 	var serials []string
 	botConfigFile := filepath.Join(wirepodPath, "chipper/botConfig.json")
-	println("Looking at " + botConfigFile + "...")
+	//println("Looking at " + botConfigFile + "...")
 	if _, err := os.Stat(botConfigFile); err == nil {
 		botConfigJSONFile, err := os.ReadFile(botConfigFile)
 		if err == nil {
@@ -82,7 +82,7 @@ func getMyBotSerials() []string {
 		}
 	}
 	for _, botConfig := range botConfigJSON {
-		println("Will take care of bot # " + botConfig.ESN)
+		//println("Will take care of bot # " + botConfig.ESN)
 		serials = append(serials, botConfig.ESN)
 	}
 	return serials
@@ -96,11 +96,13 @@ func isBotInChatMood(serial string) (bool, int32) {
 	customSettingsPath = filepath.Join(customSettingsPath, serial)
 	customSettingsPath = filepath.Join(customSettingsPath, "custom_settings.json")
 
+	print("Open file: " + customSettingsPath)
 	botCustomSettingsJSONFile, err := os.ReadFile(customSettingsPath)
 	if err == nil {
 		var botCustomSettings sdk_wrapper.CustomSettings
 		err := json.Unmarshal(botCustomSettingsJSONFile, &botCustomSettings)
 		if err == nil {
+			print("OK")
 			return botCustomSettings.LoggedInToChat, botCustomSettings.LastChatMessageRead
 		}
 	}
