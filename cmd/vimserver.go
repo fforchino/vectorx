@@ -92,11 +92,11 @@ func getMyBotSerials() []string {
 
 func isBotInChatMood(serial string) (bool, int32) {
 	// Peek into the given vector custom settings and read the value
-	customSettingsPath := sdk_wrapper.SDKConfig.NvmPath
+	customSettingsPath := filepath.Join(os.Getenv("VECTORX_HOME"), "vectorfs")
+	customSettingsPath = filepath.Join(customSettingsPath, sdk_wrapper.SDKConfig.NvmPath)
 	customSettingsPath = filepath.Join(customSettingsPath, serial)
 	customSettingsPath = filepath.Join(customSettingsPath, "custom_settings.json")
 
-	print("Open file: " + customSettingsPath)
 	botCustomSettingsJSONFile, err := os.ReadFile(customSettingsPath)
 	if err == nil {
 		var botCustomSettings sdk_wrapper.CustomSettings

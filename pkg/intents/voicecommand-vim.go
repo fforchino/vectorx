@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"image/color"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -435,9 +436,19 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 	return arr, errors.New("Unknown user")
 }
 
+// <a href="https://www.freepik.com/free-vector/mixed-emoji-set_4159931.htm#query=emoticon&position=0&from_view=keyword">Image by rawpixel.com</a> on Freepik
+
 func VIMAPIPlayMessage(msg VIMChatMessage) {
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
-	sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
+	if msg.Message == ":-)" || msg.Message == ":)" {
+		sdk_wrapper.MoveHead(3.0)
+		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
+		sdk_wrapper.UseVectorEyeColorInImages(true)
+		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
+		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/smile.png"), 5000, true)
+	} else {
+		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
+	}
 	sdk_wrapper.GetCustomSettings().LastChatMessageRead = msg.Id
 	sdk_wrapper.SaveCustomSettings()
 }
