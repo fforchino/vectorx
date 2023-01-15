@@ -34,28 +34,23 @@ func main() {
 				if isChatty {
 					messages, err := intents.VIMAPICheckMessages(serial, lastMessageId)
 					if err == nil && len(messages) > 0 {
-						for i := 0; i < len(messages); i++ {
-							if !messages[i].Read {
-								println(fmt.Sprintf("[%d] New message from %s: %s", messages[i].Timestamp, messages[i].From, messages[i].Message))
-								var ctx = context.Background()
-								var start = make(chan bool)
-								var stop = make(chan bool)
-
-								sdk_wrapper.InitSDKForWirepod(serial)
-								go func() {
-									_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
-								}()
-								done := false
-								for done == false {
-									select {
-									case <-start:
-										intents.VIMAPIPlayMessage(messages[i])
-										stop <- true
-										done = true
-									}
+						var ctx = context.Background()
+						var start = make(chan bool)
+						var stop = make(chan bool)
+						sdk_wrapper.InitSDKForWirepod(serial)
+						go func() {
+							_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
+						}()
+						select {
+						case <-start:
+							for i := 0; i < len(messages); i++ {
+								if !messages[i].Read {
+									println(fmt.Sprintf("[%d] New message from %s: %s", messages[i].Timestamp, messages[i].From, messages[i].Message))
+									intents.VIMAPIPlayMessage(messages[i])
 								}
-								println("Message processed")
 							}
+							println("Messages for bot processed")
+							stop <- true
 						}
 					}
 				}

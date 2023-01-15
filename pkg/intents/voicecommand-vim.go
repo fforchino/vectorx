@@ -440,12 +440,25 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 
 func VIMAPIPlayMessage(msg VIMChatMessage) {
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
+
 	if msg.Message == ":-)" || msg.Message == ":)" {
 		sdk_wrapper.MoveHead(3.0)
 		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
 		sdk_wrapper.UseVectorEyeColorInImages(true)
 		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
 		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/smile.png"), 5000, true)
+	} else if msg.Message == ":-(" || msg.Message == ":(" {
+		sdk_wrapper.MoveHead(3.0)
+		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
+		sdk_wrapper.UseVectorEyeColorInImages(true)
+		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
+		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/sad.png"), 5000, true)
+	} else if msg.Message == "<B" {
+		sdk_wrapper.MoveHead(3.0)
+		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
+		sdk_wrapper.UseVectorEyeColorInImages(true)
+		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
+		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/love.png"), 5000, true)
 	} else {
 		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
 	}
