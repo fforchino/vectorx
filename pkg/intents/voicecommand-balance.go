@@ -39,7 +39,7 @@ func doBalance(intent IntentDef, speechText string, params IntentParams) string 
 	sdk_wrapper.MoveHead(3.0)
 	sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
 	sdk_wrapper.UseVectorEyeColorInImages(true)
-	sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/balance/balance.png"), 5000, false)
+	sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/balance/balance.png"), 5000, true)
 
 	// Read input asynchronously
 	go func() {
@@ -55,13 +55,14 @@ func doBalance(intent IntentDef, speechText string, params IntentParams) string 
 		}
 	}()
 
-	for i := 0; i <= 15; i++ {
-		sdk_wrapper.WriteText(fmt.Sprintf("%f", maxAcc), 64, true, 200, false)
+	weight := "0.0"
+	for i := 0; i <= 30; i++ {
+		weight = fmt.Sprintf("%.1f", math.Round(maxAcc))
+		sdk_wrapper.WriteText(weight, 64, true, 200, false)
 		time.Sleep(time.Duration(200) * time.Millisecond)
 	}
-	weight := fmt.Sprintf("%d", math.Round(maxAcc))
 	sdk_wrapper.SayText(getTextEx("STR_BALANCE_WEIGHT", []string{weight}))
-	sdk_wrapper.WriteText(fmt.Sprintf("%f", maxAcc), 64, true, 3000, true)
+	sdk_wrapper.WriteText(weight, 64, true, 3000, true)
 
 	return returnIntent
 }
