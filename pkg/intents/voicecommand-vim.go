@@ -255,7 +255,7 @@ func sendMessageToChat(intent IntentDef, speechText string, params IntentParams)
 
 type VIMChatMessage struct {
 	From      string `json:"from"`
-	FromId    int    `json:"from_id"`
+	FromId    string `json:"from_id"`
 	Message   string `json:"message"`
 	Read      bool   `json:"read"`
 	Timestamp int    `json:"timestamp"`
