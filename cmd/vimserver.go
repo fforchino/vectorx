@@ -29,11 +29,11 @@ func main() {
 		serials := getMyBotSerials()
 
 		if intents.VIMEnabled {
-			println("VIM Enabled")
+			//println("VIM Enabled")
 			for _, serial := range serials {
 				isChatty, lastMessageId := isBotInChatMood(serial)
 				if isChatty {
-					println(fmt.Sprintf("Checking messages for %s %d", serial, lastMessageId))
+					//println(fmt.Sprintf("Checking messages for %s %d", serial, lastMessageId))
 					messages, err := intents.VIMAPICheckMessages(serial, lastMessageId)
 					if err == nil && len(messages) > 0 {
 						var ctx = context.Background()
@@ -100,7 +100,7 @@ func isBotInChatMood(serial string) (bool, int32) {
 		var botCustomSettings sdk_wrapper.CustomSettings
 		err := json.Unmarshal(botCustomSettingsJSONFile, &botCustomSettings)
 		if err == nil {
-			println("OK")
+			//println("OK")
 			return botCustomSettings.LoggedInToChat, botCustomSettings.LastChatMessageRead
 		}
 	}
