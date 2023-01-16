@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 )
 
 var VIM_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VIM" //"http://192.168.43.65/VIM"
@@ -441,27 +442,44 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 func VIMAPIPlayMessage(msg VIMChatMessage) {
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
 
-	if msg.Message == ":-)" || msg.Message == ":)" {
-		sdk_wrapper.MoveHead(3.0)
-		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
-		sdk_wrapper.UseVectorEyeColorInImages(true)
-		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/smile.png"), 5000, true)
-	} else if msg.Message == ":-(" || msg.Message == ":(" {
-		sdk_wrapper.MoveHead(3.0)
-		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
-		sdk_wrapper.UseVectorEyeColorInImages(true)
-		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/sad.png"), 5000, true)
-	} else if msg.Message == "<B" {
-		sdk_wrapper.MoveHead(3.0)
-		sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
-		sdk_wrapper.UseVectorEyeColorInImages(true)
-		sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
-		sdk_wrapper.DisplayImage(sdk_wrapper.GetDataPath("images/vim/love.png"), 5000, true)
+	if strings.HasPrefix(msg.Message, "*") && strings.HasSuffix(msg.Message, "*") {
+		// Emoticon
+		specialFileName := trimLeftChar(msg.Message)
+		specialFileName = trimSuffix(specialFileName, "*")
+		specialFileName = "images/vim/" + specialFileName + ".png"
+		specialFileName = sdk_wrapper.GetDataPath(specialFileName)
+		_, err := os.Stat(specialFileName)
+		if err == nil {
+			sdk_wrapper.MoveHead(3.0)
+			sdk_wrapper.SetBackgroundColor(color.RGBA{0, 0, 0, 0})
+			sdk_wrapper.UseVectorEyeColorInImages(true)
+			sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, ""}))
+			go func() {
+				sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/specialMessageIn.wav"))
+			}()
+			sdk_wrapper.DisplayImage(specialFileName, 5000, true)
+		} else {
+			sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
+		}
 	} else {
 		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
 	}
 	sdk_wrapper.GetCustomSettings().LastChatMessageRead = msg.Id
 	sdk_wrapper.SaveCustomSettings()
+}
+
+func trimLeftChar(s string) string {
+	for i := range s {
+		if i > 0 {
+			return s[i:]
+		}
+	}
+	return s[:0]
+}
+
+func trimSuffix(s, suffix string) string {
+	if strings.HasSuffix(s, suffix) {
+		s = s[:len(s)-len(suffix)]
+	}
+	return s
 }

@@ -29,9 +29,11 @@ func main() {
 		serials := getMyBotSerials()
 
 		if intents.VIMEnabled {
+			println("VIM Enabled")
 			for _, serial := range serials {
 				isChatty, lastMessageId := isBotInChatMood(serial)
 				if isChatty {
+					println(fmt.Sprintf("Checking messages for %s %d", serial, lastMessageId))
 					messages, err := intents.VIMAPICheckMessages(serial, lastMessageId)
 					if err == nil && len(messages) > 0 {
 						var ctx = context.Background()
@@ -88,16 +90,17 @@ func getMyBotSerials() []string {
 func isBotInChatMood(serial string) (bool, int32) {
 	// Peek into the given vector custom settings and read the value
 	customSettingsPath := filepath.Join(os.Getenv("VECTORX_HOME"), "vectorfs")
-	customSettingsPath = filepath.Join(customSettingsPath, sdk_wrapper.SDKConfig.NvmPath)
+	customSettingsPath = filepath.Join(customSettingsPath, "nvm")
 	customSettingsPath = filepath.Join(customSettingsPath, serial)
 	customSettingsPath = filepath.Join(customSettingsPath, "custom_settings.json")
 
+	println(customSettingsPath)
 	botCustomSettingsJSONFile, err := os.ReadFile(customSettingsPath)
 	if err == nil {
 		var botCustomSettings sdk_wrapper.CustomSettings
 		err := json.Unmarshal(botCustomSettingsJSONFile, &botCustomSettings)
 		if err == nil {
-			print("OK")
+			println("OK")
 			return botCustomSettings.LoggedInToChat, botCustomSettings.LastChatMessageRead
 		}
 	}
