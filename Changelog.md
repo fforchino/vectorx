@@ -1,3 +1,8 @@
+RELEASE_07
+- Introducing VIM: Vector Instant Messaging, with emoticons. Using a shared server on the internet, different Vectors 
+all around the world can communicate! Or you can keep it into your local network and just exchange messages
+with your local bots.
+
 RELEASE_06
 - Added "bingo" intent: Vector pulls out the numbers from 1 to 90. 
   To pull a number, touch Vector. You can also shake it or just caress it, it reacts to touch on
