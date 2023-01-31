@@ -1,3 +1,6 @@
+RELEASE_08
+- Updating the go sdk version in order to fix a bug with InitSDKForWirepod()
+
 RELEASE_07
 - Introducing VIM: Vector Instant Messaging, with emoticons. Using a shared server on the internet, different Vectors 
 all around the world can communicate! Or you can keep it into your local network and just exchange messages
