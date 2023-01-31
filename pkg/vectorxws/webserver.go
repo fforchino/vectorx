@@ -14,7 +14,7 @@ import (
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
-	case r.URL.Path == "/api/get_kg_api":
+	case r.URL.Path == "/api/consistency_check":
 		mapConfig, err := wirepodConfigToJson()
 		if err != nil {
 			fmt.Fprintf(w, "{}")
