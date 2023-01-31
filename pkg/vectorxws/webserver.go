@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/kercre123/chipper/pkg/vars"
 	"log"
 	"net/http"
 	"os"
@@ -26,7 +25,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			} else {
 				fmt.Fprintf(w, string(jsonStr))
 			}
-	    }
+		}
 	default:
 		http.Error(w, "not found", http.StatusNotFound)
 		return
@@ -58,7 +57,7 @@ func wirepodConfigToJson() (map[string]string, error) {
 	wirepodPath := os.Getenv("WIREPOD_HOME")
 	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
 	println("Looking at " + wirepodCFG + "...")
-	mapConfig := map[string]string
+	mapConfig := map[string]string{}
 
 	file, err := os.Open(wirepodCFG)
 	if err != nil {
