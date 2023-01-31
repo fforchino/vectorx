@@ -36,7 +36,11 @@ func main() {
 		intents.RegisterIntents()
 		intents.GetWirepodBotInfo(*serial)
 
-		sdk_wrapper.InitSDKForWirepod(*serial)
+		err := sdk_wrapper.InitSDKForWirepod(*serial)
+		if err != nil {
+			println("FATAL: could not load Vector settings from JDOCS")
+			return
+		}
 
 		robotLocale := sdk_wrapper.GetLocale()
 		if Debug {

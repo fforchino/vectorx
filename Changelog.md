@@ -1,5 +1,8 @@
 RELEASE_08
-- Updating the go sdk version in order to fix a bug with InitSDKForWirepod()
+- Updating the go sdk version in order to fix a bug with InitSDKForWirepod().
+  In Wirepod earlier versions a single GUID was used for every bot, but now the GUID is robot-specific. 
+  I didn't know this, so I was using the global GUID for GRPC communication, this caused an authentication
+  error and nothing worked. 
 
 RELEASE_07
 - Introducing VIM: Vector Instant Messaging, with emoticons. Using a shared server on the internet, different Vectors 
