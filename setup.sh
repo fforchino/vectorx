@@ -173,6 +173,7 @@ echo "export WIREPOD_HOME=${wirepodHome}" >source.sh
 echo "export WIREPOD_EX_TMP_PATH=vectorfs/tmp" >>source.sh
 echo "export WIREPOD_EX_DATA_PATH=vectorfs/data" >>source.sh
 echo "export WIREPOD_EX_NVM_PATH=vectorfs/nvm" >>source.sh
+echo "export VECTORX_WEBSERVER_PORT=8070" >> source.sh
 echo "export GOPATH=/usr/local/go" >>source.sh
 echo "export GOCACHE=/usr/local/go/pkg/mod" >>source.sh
 echo "export VECTORX_HOME=${vectorxHome}" >>source.sh
