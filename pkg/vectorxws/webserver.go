@@ -77,12 +77,15 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			if !checkAndFixVosk() {
 				fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 			} else {
-				if enableDaemons() {
-					fmt.Fprintf(w, "{ \"result\": \"OK\"}")
-					_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
-				} else {
-					fmt.Fprintf(w, "{ \"result\": \"KO\"}")
-				}
+				/*
+					if enableDaemons() {
+						fmt.Fprintf(w, "{ \"result\": \"OK\"}")
+						_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
+					} else {
+						fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+					}
+				*/
+				fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 			}
 		}
 		break
@@ -152,6 +155,7 @@ func JSONToVectorxConfig(cfg map[string]string) error {
 func enableDaemons() bool {
 	// Enable Wirepod as a daemon
 	isOk := true
+
 	wirepodPath := filepath.Join(os.Getenv("WIREPOD_HOME"))
 	var cmds = []string{
 		"cd " + wirepodPath + " && sudo ./setup.sh daemon-enable",
