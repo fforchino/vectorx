@@ -85,6 +85,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 						fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 					}
 				*/
+				_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
 				fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 			}
 		}
