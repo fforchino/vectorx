@@ -114,14 +114,16 @@ a:hover {
 ------------------------------------------------------------*/
 
 button, [type=submit] {
-  padding: 1.1rem 3.5rem;
+  padding: 2.0rem 3.5rem;
   margin: 1rem 0;
   background: #111111;
   color: #f5f5f5;
   border-radius: 2px;
-  border: none;
+  border: 1px solid darkgray;
   font-size: 1.3rem;
   transition: all .2s ease;
+  border-radius: 10px;
+  font-size: 110%;
 }
 
 button.outline, [type=submit].outline {

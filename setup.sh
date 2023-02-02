@@ -127,6 +127,24 @@ if [[ ${vimSetup} == "true" ]]; then
 fi
 
 echo ""
+echo "Enabling VectorX Web Server as a service"
+echo "[Unit]" >vectorx-web.service
+echo "Description=VectorX Web Server" >>vectorx-web.service
+echo >>vectorx-web.service
+echo "[Service]" >>vectorx-web.service
+echo "Type=simple" >>vectorx-web.service
+echo "WorkingDirectory=$(readlink -f .)" >>vectorx-web.service
+echo "ExecStart=$(readlink -f ./startWebServer.sh) &" >>vectorx-web.service
+echo >>vectorx-web.service
+echo "[Install]" >>vectorx-web.service
+echo "WantedBy=multi-user.target" >>vectorx-web.service
+cat vectorx-web.service
+mv vectorx-web.service /lib/systemd/system/
+systemctl daemon-reload
+systemctl enable vectorx-web
+systemctl start vectorx-web
+
+echo ""
 echo "Enabling opencvserver as a service"
 echo "[Unit]" >opencv-ifc.service
 echo "Description=VectorX OpenCV Server" >>opencv-ifc.service

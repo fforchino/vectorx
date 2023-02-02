@@ -27,7 +27,7 @@ button:disabled {
   color : var(--bg-color-alt);
 }
 button {
-  width: 170px;
+  width: 250px;
 }
 
 .dropdown-content {
@@ -63,7 +63,7 @@ p, small {
 }
 
 .content {
-  display: none;
+  color: #fff;
 }
 
 .wrap {
@@ -191,4 +191,29 @@ input[type='radio']:checked:after {
 
 .main-nav-child a img {
   width:50%;
+}
+
+.ok {
+  color: green;
+  font-weight: bold;
+}
+
+.ko {
+  color: red;
+  font-weight: bold;
+}
+
+label {
+  display: block;
+}
+
+.tutorial {
+  display: none;
+}
+
+.special {
+  padding: 20px;
+  background-color: #444;
+  border: 1px solid lightgray;
+  border-radius: 10px;
 }
