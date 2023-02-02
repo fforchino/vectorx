@@ -1,3 +1,6 @@
+RELEASE_09
+- Added webserver for initial setup, runs on http://escapepod.local:8070 
+
 RELEASE_08
 - Updating the go sdk version in order to fix a bug with InitSDKForWirepod().
   In Wirepod earlier versions a single GUID was used for every bot, but now the GUID is robot-specific. 
