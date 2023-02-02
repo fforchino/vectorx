@@ -18,7 +18,7 @@ const VECTORX_VERSION = "RELEASE_09"
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.URL.Path == "/api/consistency_check":
-		mapConfig, err := wirepodConfigToJson()
+		mapConfig, err := WirepodConfigToJSON()
 		if err != nil {
 			fmt.Fprintf(w, "{}")
 		} else {
@@ -37,19 +37,23 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		break
 	case r.URL.Path == "/api/initial_setup":
-		mapConfig, err := wirepodConfigToJson()
+		mapConfig, err := WirepodConfigToJSON()
+		mapConfigVectorX, err := VectorxConfigToJSON()
 		if err != nil {
 			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 		} else {
 			mapConfig["WEATHERAPI_KEY"] = r.FormValue("weatherapi")
+			mapConfigVectorX["WEATHERAPI_KEY"] = r.FormValue("weatherapi")
 			mapConfig["KNOWLEDGE_KEY"] = r.FormValue("kgapi")
 			mapConfig["STT_LANGUAGE"] = r.FormValue("language")
 			if mapConfig["WEATHERAPI_KEY"] != "" {
 				mapConfig["WEATHERAPI_PROVIDER"] = "openweathermap.org"
 				mapConfig["WEATHERAPI_ENABLED"] = "true"
+				mapConfigVectorX["WEATHERAPI_ENABLED"] = "true"
 			} else {
 				mapConfig["WEATHERAPI_PROVIDER"] = ""
 				mapConfig["WEATHERAPI_ENABLED"] = "false"
+				mapConfigVectorX["WEATHERAPI_ENABLED"] = "false"
 			}
 			if mapConfig["KNOWLEDGE_KEY"] != "" {
 				mapConfig["KNOWLEDGE_PROVIDER"] = r.FormValue("kgprovider")
@@ -63,7 +67,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			mapConfig["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfig["STT_SERVICE"] = "vosk"
 
-			err = jsonToWirepodConfig(mapConfig)
+			err = JSONToVectorxConfig(mapConfigVectorX)
+			err = JSONToWirepodConfig(mapConfig)
+
 			if err != nil {
 				fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 			}
@@ -115,6 +121,34 @@ func StartWebServer() {
 	}
 }
 
+func WirepodConfigToJSON() (map[string]string, error) {
+	wirepodPath := os.Getenv("WIREPOD_HOME")
+	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
+	return configToJson(wirepodCFG)
+}
+
+func JSONToWirepodConfig(cfg map[string]string) error {
+	wirepodPath := os.Getenv("WIREPOD_HOME")
+	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
+	return jsonToConfig(wirepodCFG, cfg)
+}
+
+func VectorxConfigToJSON() (map[string]string, error) {
+	vPath := os.Getenv("VECTORX_HOME")
+	vCFG := filepath.Join(vPath, "source.sh")
+	return configToJson(vCFG)
+}
+
+func JSONToVectorxConfig(cfg map[string]string) error {
+	vPath := os.Getenv("VECTORX_HOME")
+	vCFG := filepath.Join(vPath, "source.sh")
+	return jsonToConfig(vCFG, cfg)
+}
+
+/********************************************************************************/
+/*                            PRIVATE FUNCTIONS                                 */
+/********************************************************************************/
+
 func enableDaemons() bool {
 	// Enable Wirepod as a daemon
 	isOk := true
@@ -154,13 +188,10 @@ func checkAndFixVosk() bool {
 	return isOk
 }
 
-func jsonToWirepodConfig(cfg map[string]string) error {
-	var err error
-	wirepodPath := os.Getenv("WIREPOD_HOME")
-	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
-	println("Saving " + wirepodCFG + "...")
+func jsonToConfig(fileName string, cfg map[string]string) error {
+	println("Saving " + fileName + "...")
 
-	file, err := os.OpenFile(wirepodCFG, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		print("failed opening file")
 		return err
@@ -180,13 +211,11 @@ func jsonToWirepodConfig(cfg map[string]string) error {
 	return nil
 }
 
-func wirepodConfigToJson() (map[string]string, error) {
-	wirepodPath := os.Getenv("WIREPOD_HOME")
-	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
-	println("Looking at " + wirepodCFG + "...")
+func configToJson(fileName string) (map[string]string, error) {
+	println("Parsing " + fileName + "...")
 	mapConfig := map[string]string{}
 
-	file, err := os.Open(wirepodCFG)
+	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
