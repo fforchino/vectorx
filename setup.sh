@@ -218,5 +218,9 @@ echo "Injecting extended intents into wirepod custom intents"
 echo
 /usr/local/go/bin/go run cmd/setup.go
 echo
+echo "Compiling VectorX to speed up execution"
+echo
+/usr/local/go/bin/go build cmd/main.go
+mv main vectorx
 echo "Done. The extended intents are now active."
 echo

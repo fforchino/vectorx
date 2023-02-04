@@ -9,12 +9,13 @@ import (
 	"vectorx/pkg/intents"
 )
 
-var Debug = false
+var Debug = true
 var Ctx = context.Background()
 var Start = make(chan bool)
 var Stop = make(chan bool)
 
 func main() {
+	sdkInit := false
 	var serial = flag.String("serial", "", "Vector's Serial Number")
 	var locale = flag.String("locale", "", "STT Locale in use")
 	var speechText = flag.String("speechText", "", "Speech text")
@@ -24,6 +25,10 @@ func main() {
 		println("SERIAL: " + *serial)
 		println("LOCALE: " + *locale)
 		println("SPEECH TEXT: " + *speechText)
+	}
+	language := *locale
+	if strings.Contains(language, "-") {
+		language = strings.Split(language, "-")[0]
 	}
 
 	if len(*speechText) > 0 {
@@ -36,37 +41,34 @@ func main() {
 		intents.RegisterIntents()
 		intents.GetWirepodBotInfo(*serial)
 
-		err := sdk_wrapper.InitSDKForWirepod(*serial)
-		if err != nil {
-			println("FATAL: could not load Vector settings from JDOCS")
-			return
-		}
-
-		robotLocale := sdk_wrapper.GetLocale()
-		if Debug {
-			println("ROBOT LOCALE: " + robotLocale)
-		}
-		if robotLocale != *locale {
-			if Debug {
-				println("Different locales! Setting " + *locale)
-			}
-			sdk_wrapper.SetLocale(*locale)
-		}
-		if Debug {
-			println("ROBOT LOCALE: " + robotLocale)
-		}
-		sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
-
-		// Make sure "locale" is just the language name
-		if strings.Contains(*locale, "-") {
-			*locale = strings.Split(*locale, "-")[0]
-		}
 		// Find out whether the speech text matches any registered intent
-		xIntent, err := intents.IntentMatch(*speechText, *locale)
+		xIntent, err := intents.IntentMatch(*speechText, language)
 
 		if err == nil {
 			// Ok, we have a match. Then extract the parameters (if any) from the intent...
 			params := intents.ParseParams(*speechText, xIntent)
+
+			// Init SDK
+			err := sdk_wrapper.InitSDKForWirepod(*serial)
+			if err != nil {
+				println("FATAL: could not load Vector settings from JDOCS")
+				return
+			}
+
+			robotLocale := sdk_wrapper.GetLocale()
+			if Debug {
+				println("ROBOT LOCALE: " + robotLocale)
+			}
+			if robotLocale != *locale {
+				if Debug {
+					println("Different locales! Setting " + *locale)
+				}
+				sdk_wrapper.SetLocale(*locale)
+			}
+			if Debug {
+				println("ROBOT LOCALE: " + robotLocale)
+			}
+			sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
 
 			go func() {
 				_ = sdk_wrapper.Robot.BehaviorControl(Ctx, Start, Stop)
@@ -86,9 +88,10 @@ func main() {
 			}
 		} else {
 			// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
-			sdk_wrapper.SetLocale("en_US")
+			if sdkInit {
+				sdk_wrapper.SetLocale("en_US")
+			}
 			fmt.Println("{\"status\": \"ko\", \"returnIntent\": \"\"}")
-			sdk_wrapper.SetLocale("en_US")
 		}
 	} else {
 		// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain

@@ -9,4 +9,10 @@ if [[ ! -f ./source.sh ]]; then
 fi
 
 source source.sh
-/usr/local/go/bin/go run cmd/main.go --serial $1 --locale $2 --speechText "${@:3}"
+if [[ -f ./vectorx ]]; then
+    ./vectorx --serial $1 --locale $2 --speechText "${@:3}"
+else
+    /usr/local/go/bin/go run cmd/main.go --serial $1 --locale $2 --speechText "${@:3}"
+fi
+
+

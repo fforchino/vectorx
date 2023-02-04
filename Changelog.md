@@ -1,3 +1,7 @@
+RELEASE_10
+- Increase VectorX performance by building the go code to binary. Also initialize go SDK only if there is
+  an intent match.
+
 RELEASE_09
 - Added webserver for initial setup, runs on http://escapepod.local:8070 
 
