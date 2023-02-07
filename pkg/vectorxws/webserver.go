@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-const VECTORX_VERSION = "RELEASE_10g"
+const VECTORX_VERSION = "RELEASE_10f"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
@@ -332,34 +332,16 @@ func getSSID() string {
 }
 
 func runUpdateScript() (string, string) {
-	script := filepath.Join(os.Getenv("VECTORX_HOME"), "updateWrapper.sh")
-	cmd := exec.Command("/bin/sh", script)
-	err := cmd.Start()
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		return "error", "error"
+	_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
+	if err1 != nil {
+		return "error", "Run web setup first!"
 	}
-	fmt.Printf("Process started with PID: %d\n", cmd.Process.Pid)
-
-	// Wait for the process to complete
-	err = cmd.Wait()
+	out, err := exec.Command("/bin/sh", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		print("failed opening file")
+		return "error", "update.sh not found"
 	}
-	fmt.Println("Process completed.")
-	/*
-		_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
-		if err1 != nil {
-			return "error", "Run web setup first!"
-		}
-		out, err := exec.Command("/usr/bin/nohup", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
-		if err != nil {
-			print("failed opening file")
-			return "error", "update.sh not found"
-		}
-		return "ok", strings.ReplaceAll(string(out), "\n", "")
-	*/
-	return "ok", "ok"
+	return "ok", strings.ReplaceAll(string(out), "\n", "")
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
