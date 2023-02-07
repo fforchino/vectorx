@@ -333,7 +333,7 @@ func getSSID() string {
 
 func runUpdateScript() (string, string) {
 	script := filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")
-	_ = exec.Command("nohup", "sh", script)
+	_ = exec.Command("nohup", "sh", script, "&")
 	/*
 		_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
 		if err1 != nil {
