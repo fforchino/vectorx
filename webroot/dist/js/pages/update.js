@@ -12,7 +12,8 @@ async function CheckUpdates() {
 
 async function RunUpdateScript() {
     var retVal = "";
-    await fetch("/api/update")
+    document.getElementById("update_running").style.display = "block";
+    fetch("/api/update")
         .then(response => response.text())
         .then((response) => {
             try {
@@ -20,6 +21,7 @@ async function RunUpdateScript() {
                 retVal = obj.result;
             } catch { retVal = "unknown"; }
         })
-    await new Promise(r => setTimeout(r, 20000));
+    await new Promise(r => setTimeout(r, 30000));
+    document.getElementById("update_running").style.display = "none";
     return Promise.resolve(retVal);
 }

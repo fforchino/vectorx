@@ -337,7 +337,7 @@ func runUpdateScript() (string, string) {
 		return "error", "Run web setup first!"
 	}
 
-	out, err := exec.Command("/bin/sh", "-c", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
+	out, err := exec.Command("/bin/sh", "-c", "nohup "+filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
 	if err != nil {
 		return "error", "update.sh not found"
 	}
