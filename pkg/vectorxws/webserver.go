@@ -163,9 +163,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		break
 	case r.URL.Path == "/api/update":
 		output := make(map[string]string)
-		result, txt := runUpdateScript()
+		result, commandOutput := runUpdateScript()
 		output["result"] = result
-		output["output"] = txt
+		output["output"] = commandOutput
 		data, err := json.Marshal(output)
 		if err == nil {
 			fmt.Fprintf(w, string(data))
@@ -340,19 +340,16 @@ func getSSID() string {
 }
 
 func runUpdateScript() (string, string) {
-	ret := ""
 	_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
 	if err1 != nil {
-		return "error", ""
+		return "error", "Run web setup first!"
 	}
 
-	out, err := exec.Command("/bin/sh", "-c", "update.sh").Output()
+	out, err := exec.Command("/bin/sh", "-c", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
 	if err != nil {
-		return "error", ""
-	} else {
-		ret = strings.ReplaceAll(string(out), "\n", "")
+		return "error", "update.sh not found"
 	}
-	return ret, string(out)
+	return "ok", string(out)
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
