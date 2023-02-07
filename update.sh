@@ -5,7 +5,7 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Checking for updates..."
   echo "Stopping Services"
   sudo systemctl stop wire-pod
-  sudo systemctl stop vectorx-web
+  #sudo systemctl stop vectorx-web
   sudo systemctl stop opencv-ifc
   sleep 5
   cd ../wire-pod
