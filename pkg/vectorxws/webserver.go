@@ -332,16 +332,21 @@ func getSSID() string {
 }
 
 func runUpdateScript() (string, string) {
-	_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
-	if err1 != nil {
-		return "error", "Run web setup first!"
-	}
-	out, err := exec.Command("/usr/bin/nohup", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
-	if err != nil {
-		print("failed opening file")
-		return "error", "update.sh not found"
-	}
-	return "ok", strings.ReplaceAll(string(out), "\n", "")
+	script := filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")
+	_ = exec.Command("nohup", "sh", script)
+	/*
+		_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
+		if err1 != nil {
+			return "error", "Run web setup first!"
+		}
+		out, err := exec.Command("/usr/bin/nohup", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
+		if err != nil {
+			print("failed opening file")
+			return "error", "update.sh not found"
+		}
+		return "ok", strings.ReplaceAll(string(out), "\n", "")
+	*/
+	return "ok", "ok"
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
