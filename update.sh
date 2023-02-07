@@ -18,6 +18,6 @@ echo "Setupping VectorX..."
 sudo ./setup.sh -h
 echo "Starting Wire-Pod"
 sudo systemctl start wire-pod
-echo "Restarting VectorX services"
-sudo systemctl restart vectorx-web
+#echo "Restarting VectorX services"
+#sudo systemctl restart vectorx-web
 echo "Done"
