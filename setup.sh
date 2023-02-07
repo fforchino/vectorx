@@ -1,5 +1,16 @@
 #!/bin/bash
 
+silentMode="false"
+while getopts 'lha:' OPTION; do
+  case "$OPTION" in
+    h)
+      silentMode="true"
+      echo "*** Silent mode on ***"
+      ;;
+  esac
+done
+shift "$(($OPTIND -1))"
+
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root. sudo ./setup.sh"
     exit 1
@@ -18,111 +29,131 @@ pip install mediapipe
 pip install requests-toolbelt
 pip install numpy
 
-# Locate Wirepod
-function wirepodPrompt() {
-	WIREPOD_HOME="/home/pi/wire-pod"
-	read -p "Please enter the path to wirepod installation directory (${WIREPOD_HOME}): " wirepodhome
-	if [[ ! -n ${wirepodHome} ]]; then
-		wirepodHome=${WIREPOD_HOME}
-	else
-		wirepodHome=${wirepodhome}
-	fi
-}
-vectorxHome=`pwd`
-wirepodPrompt
+if [[ -f ./source.sh ]]; then
+    echo "Found an existing source.sh, exporting"
+    source source.sh
+    SOURCEEXPORTED="true"
+fi
 
-function weatherPrompt() {
-  echo "Would you like to setup weather commands? This involves creating a free account at one of the weather providers' websites and putting in your API key."
-  echo "Otherwise, placeholder values will be used."
-  echo
-  echo "1: Yes, and I want to use openweathermap.org (with forecast support)"
-  echo "2: No"
-  read -p "Enter a number (2): " yn
-  case $yn in
-  "1") weatherSetup="true" weatherProvider="openweathermap.org";;
-  "2") weatherSetup="false" ;;
-  "") weatherSetup="false" ;;
-  *)
-    echo "Please answer with 1 or 2."
-    weatherPrompt
-    ;;
-  esac
-}
-weatherPrompt
-if [[ ${weatherSetup} == "true" ]]; then
-  function weatherKeyPrompt() {
-    echo
-    echo "Create an account at https://$weatherProvider and enter the API key it gives you."
-    echo "If you have changed your mind, enter Q to continue without weather commands."
-    echo
-    read -p "Enter your API key: " weatherAPI
-    if [[ ! -n ${weatherAPI} ]]; then
-      echo "You must enter an API key. If you have changed your mind, you may also enter Q to continue without weather commands."
-      weatherKeyPrompt
-    fi
-    if [[ ${weatherAPI} == "Q" ]]; then
-      weatherSetup="false"
+if [[ ${silentMode} == "false" ]]; then
+  # Locate Wirepod
+  function wirepodPrompt() {
+    WIREPOD_HOME="/home/pi/wire-pod"
+    read -p "Please enter the path to wirepod installation directory (${WIREPOD_HOME}): " wirepodhome
+    if [[ ! -n ${wirepodHome} ]]; then
+      wirepodHome=${WIREPOD_HOME}
+    else
+      wirepodHome=${wirepodhome}
     fi
   }
-  weatherKeyPrompt
-  function weatherUnitPrompt() {
-    echo "What temperature unit would you like to use?"
+  vectorxHome=`pwd`
+  wirepodPrompt
+
+  function weatherPrompt() {
+    echo "Would you like to setup weather commands? This involves creating a free account at one of the weather providers' websites and putting in your API key."
+    echo "Otherwise, placeholder values will be used."
     echo
-    echo "1: Fahrenheit"
-    echo "2: Celsius"
-    read -p "Enter a number (1): " yn
+    echo "1: Yes, and I want to use openweathermap.org (with forecast support)"
+    echo "2: No"
+    if [[ ${SOURCEEXPORTED} == "true" ]]; then
+        echo "3: Do not change weather configuration"
+    fi
+    read -p "Enter a number (2): " yn
     case $yn in
-    "1") weatherUnit="F" ;;
-    "2") weatherUnit="C" ;;
-    "") weatherUnit="F" ;;
+    "1") weatherSetup="true" weatherProvider="openweathermap.org";;
+    "2") weatherSetup="false" ;;
+    "3") weatherSetup="true" noChangeWeather="true" ;;
+    "") weatherSetup="false" ;;
     *)
-      echo "Please answer with 1 or 2."
-      weatherUnitPrompt
+      echo "Please answer with 1, 2 or 3."
+      weatherPrompt
       ;;
     esac
   }
-  weatherUnitPrompt
-fi
+  weatherPrompt
+  if [[ ${weatherSetup} == "true" ]]; then
+    if [[ ! ${noChangeWeather} == "true" ]]; then
+      function weatherKeyPrompt() {
+        echo
+        echo "Create an account at https://$weatherProvider and enter the API key it gives you."
+        echo "If you have changed your mind, enter Q to continue without weather commands."
+        echo
+        read -p "Enter your API key: " weatherAPI
+        if [[ ! -n ${weatherAPI} ]]; then
+          echo "You must enter an API key. If you have changed your mind, you may also enter Q to continue without weather commands."
+          weatherKeyPrompt
+        fi
+        if [[ ${weatherAPI} == "Q" ]]; then
+          weatherSetup="false"
+        fi
+      }
+      weatherKeyPrompt
+      function weatherUnitPrompt() {
+        echo "What temperature unit would you like to use?"
+        echo
+        echo "1: Fahrenheit"
+        echo "2: Celsius"
+        read -p "Enter a number (1): " yn
+        case $yn in
+        "1") weatherUnit="F" ;;
+        "2") weatherUnit="C" ;;
+        "") weatherUnit="F" ;;
+        *)
+          echo "Please answer with 1 or 2."
+          weatherUnitPrompt
+          ;;
+        esac
+      }
+      weatherUnitPrompt
+    fi
+  fi
 
-function vimPrompt() {
-  echo "Would you like to enable VIM (Vector Instant Messaging)? You can then send and receive messages with other bots."
-  echo "You can choose to use a global server or to host it on your own machine."
-  echo
-  echo "1: Yes, and I want to use VIM global server (shared among all users)"
-  echo "2: Yes, and I want to use another server (local network or on the internet)"
-  echo "3: No, I don't want to use VIM"
-  read -p "Enter a number (1): " yn
-  case $yn in
-  "1") vimSetup="true" vimServer="https://www.wondergarden.app/VIM";;
-  "2") vimSetup="true" vimServer="";;
-  "3") vimSetup="false" vimServer="";;
-  "") vimSetup="false" vimServer="";;
-  *)
-    echo "Please answer with 1,2 or 3."
-    weatherPrompt
-    ;;
-  esac
-}
-vimPrompt
+  function vimPrompt() {
+    echo "Would you like to enable VIM (Vector Instant Messaging)? You can then send and receive messages with other bots."
+    echo "You can choose to use a global server or to host it on your own machine."
+    echo
+    echo "1: Yes, and I want to use VIM global server (shared among all users)"
+    echo "2: Yes, and I want to use another server (local network or on the internet)"
+    echo "3: No, I don't want to use VIM"
+    if [[ ${SOURCEEXPORTED} == "true" ]]; then
+        echo "4: Do not change VIM configuration"
+    fi
+    read -p "Enter a number (3): " yn
+    case $yn in
+    "1") vimSetup="true" vimServer="https://www.wondergarden.app/VIM";;
+    "2") vimSetup="true" vimServer="";;
+    "3") vimSetup="false" vimServer="";;
+    "4") vimSetup="true" noChangeVIM="true" ;;
+    "") vimSetup="false" vimServer="";;
+    *)
+      echo "Please answer with 1,2, 3 or 4."
+      vimPrompt
+      ;;
+    esac
+  }
+  vimPrompt
 
-if [[ ${vimSetup} == "true" ]]; then
-  if [[ ${vimServer} == "" ]]; then
-    function vimServerPrompt() {
-      echo
-      echo "Download VIM Server from github and host it on a website or local server in a /VIM folder."
-      echo "Then enter the full path of the VIM installation (e.g. http://192.168.43.65/VIM)"
-      echo
-      read -p "Enter VIM server URL: " vimServer
-      if [[ ! -n ${vimServer} ]]; then
-        echo "You must enter an URL. If you have changed your mind, you may also enter Q to continue without VIM."
+  if [[ ${vimSetup} == "true" ]]; then
+    if [[ ! ${noChangeVIM} == "true" ]]; then
+      if [[ ${vimServer} == "" ]]; then
+        function vimServerPrompt() {
+          echo
+          echo "Download VIM Server from github and host it on a website or local server in a /VIM folder."
+          echo "Then enter the full path of the VIM installation (e.g. http://192.168.43.65/VIM)"
+          echo
+          read -p "Enter VIM server URL: " vimServer
+          if [[ ! -n ${vimServer} ]]; then
+            echo "You must enter an URL. If you have changed your mind, you may also enter Q to continue without VIM."
+            vimServerPrompt
+          fi
+          if [[ ${vimServer} == "Q" ]]; then
+            vimSetup="false"
+            vimServer=""
+          fi
+        }
         vimServerPrompt
       fi
-      if [[ ${vimServer} == "Q" ]]; then
-        vimSetup="false"
-        vimServer=""
-      fi
-    }
-    vimServerPrompt
+    fi
   fi
 fi
 
@@ -222,5 +253,6 @@ echo "Compiling VectorX to speed up execution"
 echo
 /usr/local/go/bin/go build cmd/main.go
 mv main vectorx
+touch .setup
 echo "Done. The extended intents are now active."
 echo

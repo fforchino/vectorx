@@ -1,0 +1,30 @@
+.ok {
+    color: green;
+    font-weight: bold;
+}
+
+.ko {
+    color: red;
+    font-weight: bold;
+}
+
+label {
+    display: block;
+}
+
+.tutorial {
+    display: none;
+    min-height:400px;
+    min-width:500px;
+}
+
+.special {
+    padding: 20px;
+    background-color: #444;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+
+#update_running {
+    display:none;
+}

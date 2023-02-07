@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +15,23 @@ import (
 	"strings"
 )
 
-const VECTORX_VERSION = "RELEASE_09"
+const VECTORX_VERSION = "RELEASE_10"
+
+type WirePodConfig struct {
+	GlobalGuid string `json:"global_guid"`
+	Robots     []struct {
+		Esn       string `json:"esn"`
+		IpAddress string `json:"ip_address"`
+		Guid      string `json:"guid"`
+		Activated bool   `json:"activated"`
+	} `json:"robots"`
+}
+
+type BotInfo struct {
+	ESN            string                     `json:"esn"`
+	IPAddress      string                     `json:"ip_address"`
+	CustomSettings sdk_wrapper.CustomSettings `json:"custom_settings"`
+}
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
@@ -96,6 +114,63 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 		} else {
 			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+		}
+		break
+	case r.URL.Path == "/api/get_robots":
+		wirepodPath := os.Getenv("WIREPOD_HOME")
+		vPath := os.Getenv("VECTORX_HOME")
+		botConfigJson := filepath.Join(wirepodPath, "chipper/jdocs/botSdkInfo.json")
+		data, err := ioutil.ReadFile(botConfigJson)
+		if err != nil {
+			fmt.Fprintf(w, "{}")
+		} else {
+			var botsForWeb []BotInfo
+			var jsonObj WirePodConfig
+			json.Unmarshal(data, &jsonObj)
+
+			for _, bot := range jsonObj.Robots {
+				botCustomConfigJson := filepath.Join(vPath, "vectorfs/nvm/"+bot.Esn+"/custom_settings.json")
+				data, err := ioutil.ReadFile(botCustomConfigJson)
+				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}}
+				if err == nil {
+					var customSettings sdk_wrapper.CustomSettings
+					err = json.Unmarshal(data, &customSettings)
+					if err == nil {
+						bi.CustomSettings = customSettings
+					}
+				}
+				botsForWeb = append(botsForWeb, bi)
+			}
+			data, err = json.Marshal(botsForWeb)
+			if err != nil {
+				fmt.Fprintf(w, "{}")
+			} else {
+				fmt.Fprintf(w, string(data))
+			}
+		}
+		break
+	case r.URL.Path == "/api/get_stats":
+		uptime := getUptime()
+		status := "Connected"
+		network := getSSID()
+		commands := "TODO"
+		data := "{ \"uptime\": \"" + uptime + "\"," +
+			"\"network\": \"" + network + "\"," +
+			"\"status\": \"" + status + "\"," +
+			"\"commands\": \"" + commands + "\"" +
+			" }"
+		fmt.Fprintf(w, data)
+		break
+	case r.URL.Path == "/api/update":
+		output := make(map[string]string)
+		result, txt := runUpdateScript()
+		output["result"] = result
+		output["output"] = txt
+		data, err := json.Marshal(output)
+		if err == nil {
+			fmt.Fprintf(w, string(data))
+		} else {
+			fmt.Fprintf(w, "{ \"result\": \"error\", \"output\": \"\"}")
 		}
 		break
 	default:
@@ -244,6 +319,40 @@ func resetWirepod() error {
 	cmd := exec.Command("/bin/sh", "-c", "sudo systemctl restart wire-pod")
 	err := cmd.Run()
 	return err
+}
+
+func getUptime() string {
+	ret := ""
+	out, err := exec.Command("/bin/sh", "-c", "uptime -p").Output()
+	if err == nil {
+		ret = strings.ReplaceAll(string(out), "\n", "")
+	}
+	return ret
+}
+
+func getSSID() string {
+	ret := ""
+	out, err := exec.Command("/bin/sh", "-c", "iwgetid -r").Output()
+	if err == nil {
+		ret = strings.ReplaceAll(string(out), "\n", "")
+	}
+	return ret
+}
+
+func runUpdateScript() (string, string) {
+	ret := ""
+	_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
+	if err1 != nil {
+		return "error", ""
+	}
+
+	out, err := exec.Command("/bin/sh", "-c", "update.sh").Output()
+	if err != nil {
+		return "error", ""
+	} else {
+		ret = strings.ReplaceAll(string(out), "\n", "")
+	}
+	return ret, string(out)
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {

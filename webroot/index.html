@@ -1,34 +1,297 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VectorX Control Panel</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <script src="https://kit.fontawesome.com/8cdc8cbed9.js" crossorigin="anonymous"></script>
 </head>
-<body>
-  <div id="outer">
-    <div id="content" class="">
-    <h1>VectorX Control Panel</h1>
-    <hr>
+<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<div class="wrapper">
 
-    <div class="main-nav-parent">
-      <div class="main-nav-child"><a href="initial_setup.html"><i class="fa-solid fa-gear"></i><br/>VectorX Setup</a></div>
-      <div class="main-nav-child"><a href="http://escapepod:8080/" id="wirepod-home"><i class="fa-solid fa-server"></i><br/>Wire Pod</a></div>
-      <div class="main-nav-child"><a href="updates.html"><i class="fa solid fa-download"></i><br/>Check for updates</a></div>
-    </div>
-    <hr>
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__wobble" src="dist/img/VectorXLogo.png" alt="VectorXLogo" height="60" width="60">
+  </div>
 
-    <div id="section-checks">
-    <h3><center>Consistency Check</center></h3>
-    <div class="content" id="checks">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark" id="navbar">
+  </nav>
+  <!-- /.navbar -->
 
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <span  id="brand-logo">
+    </span>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+       <!--loaded with javascript: LoadSidebar() -->
     </div>
-    <div class="content" id="fix-problems" style="display: none">
-      Problems? Fix them by running the <a href="initial_setup.html">Initial Setup</a>.
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Available Robots</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Control Panel</a></li>
+              <li class="breadcrumb-item active">Home</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
     </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Info boxes -->
+        <div class="row" id="row_homepage_bots">
+          <!-- Loaded by JS LoadHomePageBots() -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">What's New</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <!-- /.card-body -->
+              <div class="card-body">
+                These are the release notes for RELEASE_10
+              </div>
+              <div class="card-footer" style="text-align: right">
+                VectorX RELEASE_10
+              </div>
+              <!-- /.footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Consistency Check</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <!-- /.card-body -->
+              <div class="card-footer p-0">
+                <ul class="nav nav-pills flex-column">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      VOSK has all the needed language models
+                      <span id="span_cc1" class="float-right">
+                        <i id="i_cc1" class="fa-solid text-sm"></i>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Wirepod uses OpenWeatherMap.org
+                      <span id="span_cc2" class="float-right">
+                        <i id="i_cc2" class="fa-solid text-sm"></i>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Wirepod uses a Knowledge Provider
+                      <span id="span_cc3" class="float-right">
+                        <i id="i_cc3" class="fa-solid text-sm"></i>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      VOSK has all the needed language models
+                      <span id="span_cc4" class="float-right">
+                        <i id="i_cc4" class="fa-solid text-sm"></i>
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Wirepod uses port 8080
+                      <span id="span_cc5" class="float-right">
+                        <i id="i_cc5" class="fa-solid text-sm"></i>
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <!-- /.footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <!-- Right col -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">System Stats</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <!-- /.card-body -->
+              <div class="card-footer p-0">
+                <ul class="nav nav-pills flex-column">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Uptime
+                      <span id="home_uptime" class="float-right text-success">
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      WiFi SSID
+                      <span id="home_ssid" class="float-right text-success">
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Internet Connection Status
+                      <span id="home_status" class="float-right text-success">
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Voice Commands Handled
+                      <span id="home_commands" class="float-right text-success">
+                      </span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      Current Locale
+                      <span id="home_locale" class="float-right text-success">
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <!-- /.footer -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- Left col -->
+          <div class="col-md-12">
+          <!-- /.info-box -->
+          <div class="info-box mb-3 bg-info">
+            <span class="info-box-icon"><i class="far fa-comment"></i></span>
+
+            <a href="initial_setup.html">
+            <div class="info-box-content">
+              <span class="info-box-text">Problems?</span>
+              <span class="info-box-number">Fix them by running Initial Setup</span>
+            </div>
+            </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+          </div>
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+      </div><!--/. container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" id="footer">
+  </footer>
 </div>
-</body>
+<!-- ./wrapper -->
 
-<script src="./js/home.js"></script>
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.js"></script>
+
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="plugins/raphael/raphael.min.js"></script>
+<script src="plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="plugins/chart.js/Chart.min.js"></script>
+<script src="dist/js/utility.js"></script>
+<script src="dist/js/pages/home.js"></script>
+<script src="dist/js/sidebar.js"></script>
+<script src="dist/js/header.js"></script>
+<script src="dist/js/footer.js"></script>
+<script>LoadSite("nav_page_home");</script>
+</body>
 </html>

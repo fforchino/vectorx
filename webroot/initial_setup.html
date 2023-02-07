@@ -1,45 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>VectorX Initial Setup</title>
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://kit.fontawesome.com/8cdc8cbed9.js" crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" type="text/css" href="dist/css/vectorx.css">
 </head>
-<body>
-  <div id="outer">
-    <div id="content" class="">
-    <h1>Welcome to VectorX!</h1>
-    <hr>
-
-    <div class="tutorial" id="tut00" style="display:block">
-      <h3><center>VectorX Initial Setup</center></h3>
-      <p>
-        We'll make sure you have everything you need to enjoy all the new features VectorX adds to your Vector.
-        There are just a few things to set.
-      </p>
-      <p align="right">(1/5)</p>
-      <center><button id="btut00" onclick="goToTutorial(1);">Let"s go!</button></center>
-    </div>
-    <div class="tutorial" id="tut01">
-      <h3><center>Weather Setup</center></h3>
-      <p><b>Temperature Unit</b></p>
-        <label for="weatherunits">UNITS</label>
-        <select name="weatherunits" id="weatherunits">
-          <option value="C">Celsius</option>
-          <option value="F">Faranheit</option>
-        </select>
-
-      <p><b>Weather API Key</b></p>
-      <p>Do you want Vector to have access to current weather and weather forecast all over the world? Then go to
-      <a href="https://home.openweathermap.org/users/sign_up" target="_blank">openweathermap.org</a>, sign up and requesta free API key, then
-      paste it here.<br/><br/>
-        <label for="weatherapi">OPENWEATHERMAP.ORG API KEY</label>
-        <input type="password" name="weatherapi" id="weatherapi" />
-      </p>
-      <p align="right">(2/5)</p>
-      <center><button id="btut01" onclick="goToTutorial(2);">Next</button></center>
-    </div>
+<body class="hold-transition login-page dark-mode">
+<div class="content">
+  <div class="login-logo">
+    <b>VectorX Setup Wizard</b>
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <div class="tutorial" id="tut00" style="display:block">
+        <h3><center>Welcome to VectorX</center></h3>
+        <p>
+          We'll make sure you have everything you need to enjoy all the new features VectorX adds to your Vector.
+          There are just a few things to set.
+        </p>
+        <div style="height:200px"></div>
+        <p align="right">(1/5)</p>
+        <button id="btut00" onclick="goToTutorial(1);" type="submit" class="btn btn-primary btn-block">Let's go!</button>
+      </div>
+      <div class="tutorial" id="tut01">
+        <h3><center>Weather Setup</center></h3>
+        <p><b>Temperature Unit</b></p>
+        <div class="form-group">
+          <label>UNITS</label>
+          <select name="weatherunits" id="weatherunits" class="form-control">
+            <option value="C">Celsius</option>
+            <option value="F">Faranheit</option>
+          </select>
+        </div>
+        <p><b>Weather API Key</b></p>
+        <p>Do you want Vector to have access to current weather and weather forecast all over the world? Then go to
+          <a href="https://home.openweathermap.org/users/sign_up" target="_blank">openweathermap.org</a>, sign up and requesta free API key, then
+          paste it here.<br/><br/>
+        </p>
+        <div class="form-group">
+          <label for="weatherapi">OPENWEATHERMAP.ORG API KEY</label>
+          <input name="weatherapi" id="weatherapi" type="password" class="form-control" placeholder="OPENWEATHERMAP.ORG API KEY">
+        </div>
+        <p align="right">(2/5)</p>
+        <button id="btut01" onclick="goToTutorial(2);" type="submit" class="btn btn-primary btn-block">Next</button>
+      </div>
       <div class="tutorial" id="tut02">
         <h3><center>Knowledge Graph Setup</center></h3>
         <p>Who powers the cloud brain of your Vector?</p>
@@ -47,54 +62,70 @@
         <p>OpenAI (the new frontier). Sign up here: <a target="_blank" href="https://beta.openai.com/signup">https://beta.openai.com/signup</a></p>
         <p>You need to sign up with one of these providers and then paste your API key here.</p>
         <p><b>Knowledge Graph Provider</b></p>
-        <label for="kgprovider">KG PROVIDER</label>
-        <select name="kgprovider" id="kgprovider">
-          <option value="houndify">Houndify</option>
-          <option value="openai">OpenAI</option>
-        </select>
+        <div class="form-group">
+          <label>KG PROVIDER</label>
+          <select name="kgprovider" id="kgprovider" class="form-control">
+            <option value="houndify">Houndify</option>
+            <option value="openai">OpenAI</option>
+          </select>
+        </div>
 
         <p><b>Knowledge Graph API Key</b></p>
-        <p>Paste here the API Key you've got from the provider you have signed up with.<br/><br/>
+        <p>Paste here the API Key you've got from the provider you have signed up with.<br/><br/></p>
+        <div class="form-group">
           <label for="kgapi">KG API KEY</label>
-          <input type="password" name="kgapi" id="kgapi" />
-        </p>
+          <input name="kgapi" id="kgapi" type="password" class="form-control" placeholder="KG API KEY">
+        </div>
         <p align="right">(3/5)</p>
-        <center><button id="btut03" onclick="goToTutorial(3);">Next</button></center>
+        <button id="btut02" onclick="goToTutorial(3);" type="submit" class="btn btn-primary btn-block">Next</button>
       </div>
       <div class="tutorial" id="tut03">
         <h3><center>Localization</center></h3>
         <p>Language you want to use for Text-to-Speech and Speech-to-Text.</p>
-        <label for="language">LANGUAGE</label>
-        <select name="language" id="language">
-          <option value="en-US">English (US)</option>
-          <option value="it-IT">Italian</option>
-          <option value="es-ES">Spanish</option>
-          <option value="fr-FR">French</option>
-          <option value="de-DE">German</option>
-        </select>
+        <div class="form-group">
+          <label>LANGUAGE</label>
+          <select name="language" id="language" class="form-control">
+            <option value="en-US">English (US)</option>
+            <option value="it-IT">Italian</option>
+            <option value="es-ES">Spanish</option>
+            <option value="fr-FR">French</option>
+            <option value="de-DE">German</option>
+          </select>
+        </div>
+        <div style="height:200px"></div>
         <p align="right">(4/5)</p>
-        <center><button id="btut04" onclick="goToTutorial(4);">Next</button></center>
+        <button id="btut03" onclick="goToTutorial(4);" type="submit" class="btn btn-primary btn-block">Next</button>
       </div>
       <div class="tutorial" id="tut04">
         <h3><center>Saving data</center></h3>
         <p>Alright! To complete setup click the button below.</p>
+        <div style="height:200px"></div>
         <p align="right">(5/5)</p>
-        <center><button id="btut05" onclick="saveData();">Save and complete setup</button></center>
+        <button id="btut04" onclick="saveData();" type="submit" class="btn btn-primary btn-block">Save and complete setup</button>
       </div>
       <div class="tutorial" id="tut05">
         <h3><center>Setup Completed</center></h3>
         <p>Setup completed. Now you should onboard your Vectors to Wirepod.<br>
-        If you have done that already, click "Finish" to quit setup, you're done.
+          If you have done that already, click "Finish" to quit setup, you're done.
         </p>
         <p align="right">(Setup Completed)</p>
         <center>
-          <button id="btut06a" onclick="goOnboarding()">Onboarding</button>
-          <button id="btut06b" onclick="goHome()">Finish</button>
+          <button id="btut05a" onclick="goOnboarding();" type="submit" class="btn btn-primary btn-block">Onboarding</button>
+          <button id="btut05b" onclick="goHome();" type="submit" class="btn btn-primary btn-block">Finish</button>
         </center>
       </div>
+    </div>
+    <!-- /.login-card-body -->
+  </div>
 </div>
-</div>
-</body>
+<!-- /.login-box -->
 
-<script src="./js/initial_setup.js"></script>
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<script src="dist/js/pages/initial_setup.js"></script>
+</body>
 </html>

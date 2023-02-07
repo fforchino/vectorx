@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VectorX | Add Custom Intent</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+</head>
+<body class="dark-mode hold-transition sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark" id="navbar">
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <span  id="brand-logo">
+    </span>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Add New Custom Intent</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Custom Intents</a></li>
+              <li class="breadcrumb-item active">Add New</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <form name="intentAddForm" id="intentAddForm">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Intent Details</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>
+                It is recommended you read the <a href="https://github.com/kercre123/wire-pod/wiki/Things-to-Know#web-interface">wiki</a>
+              </p>
+              <div class="form-group">
+                <label for="nameAdd">Custom intent name</label>
+                <input type="text" name="nameAdd" id="nameAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="descriptionAdd">Custom intent description</label>
+                <input type="text" name="descriptionAdd" id="descriptionAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="utterancesAdd">Utterances that will trigger the intent (separated by ,)</label>
+                <input type="text" name="utterancesAdd" id="utterancesAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="intentAddSelectintents">Intent to send to robot after script executed</label>
+                  <select class="form-control custom-select" name="intentAddSelectintents" id="intentAddSelectintents"><option value="intent_greeting_hello">intent_greeting_hello</option><option value="intent_names_ask">intent_names_ask</option><option value="intent_imperative_eyecolor">intent_imperative_eyecolor</option><option value="intent_character_age">intent_character_age</option><option value="intent_explore_start">intent_explore_start</option><option value="intent_system_charger">intent_system_charger</option><option value="intent_system_sleep">intent_system_sleep</option><option value="intent_greeting_goodmorning">intent_greeting_goodmorning</option><option value="intent_greeting_goodnight">intent_greeting_goodnight</option><option value="intent_greeting_goodbye">intent_greeting_goodbye</option><option value="intent_seasonal_happynewyear">intent_seasonal_happynewyear</option><option value="intent_seasonal_happyholidays">intent_seasonal_happyholidays</option><option value="intent_amazon_signin">intent_amazon_signin</option><option value="intent_amazon_signin">intent_amazon_signin</option><option value="intent_imperative_forward">intent_imperative_forward</option><option value="intent_imperative_turnaround">intent_imperative_turnaround</option><option value="intent_imperative_turnleft">intent_imperative_turnleft</option><option value="intent_imperative_turnright">intent_imperative_turnright</option><option value="intent_play_rollcube">intent_play_rollcube</option><option value="intent_play_popawheelie">intent_play_popawheelie</option><option value="intent_play_fistbump">intent_play_fistbump</option><option value="intent_play_blackjack">intent_play_blackjack</option><option value="intent_imperative_affirmative">intent_imperative_affirmative</option><option value="intent_imperative_negative">intent_imperative_negative</option><option value="intent_photo_take_extend">intent_photo_take_extend</option><option value="intent_imperative_praise">intent_imperative_praise</option><option value="intent_imperative_abuse">intent_imperative_abuse</option><option value="intent_weather_extend">intent_weather_extend</option><option value="intent_imperative_apologize">intent_imperative_apologize</option><option value="intent_imperative_backup">intent_imperative_backup</option><option value="intent_imperative_volumedown">intent_imperative_volumedown</option><option value="intent_imperative_volumeup">intent_imperative_volumeup</option><option value="intent_imperative_lookatme">intent_imperative_lookatme</option><option value="intent_imperative_volumelevel_extend">intent_imperative_volumelevel_extend</option><option value="intent_imperative_shutup">intent_imperative_shutup</option><option value="intent_names_username_extend">intent_names_username_extend</option><option value="intent_imperative_come">intent_imperative_come</option><option value="intent_imperative_love">intent_imperative_love</option><option value="intent_knowledge_promptquestion">intent_knowledge_promptquestion</option><option value="intent_clock_checktimer">intent_clock_checktimer</option><option value="intent_global_stop_extend">intent_global_stop_extend</option><option value="intent_clock_settimer_extend">intent_clock_settimer_extend</option><option value="intent_clock_time">intent_clock_time</option><option value="intent_imperative_quiet">intent_imperative_quiet</option><option value="intent_imperative_dance">intent_imperative_dance</option><option value="intent_play_pickupcube">intent_play_pickupcube</option><option value="intent_imperative_fetchcube">intent_imperative_fetchcube</option><option value="intent_imperative_findcube">intent_imperative_findcube</option><option value="intent_play_anytrick">intent_play_anytrick</option><option value="intent_message_recordmessage_extend">intent_message_recordmessage_extend</option><option value="intent_message_playmessage_extend">intent_message_playmessage_extend</option><option value="intent_blackjack_hit">intent_blackjack_hit</option><option value="intent_blackjack_stand">intent_blackjack_stand</option><option value="intent_play_keepaway">intent_play_keepaway</option></select>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="paramnameAdd">Intent parameter name (not required)</label>
+                <input type="text" name="paramnameAdd" id="paramnameAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="paramvalueAdd">Intent parameter value (not required)</label>
+                <input type="text" name="paramvalueAdd" id="paramvalueAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="execAdd">Path to script/program to execute after sending intent</label>
+                <input type="text" name="execAdd" id="execAdd" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="execAddArgs">Arguments for program (seperated by ,)</label>
+                <input type="text" name="execAddArgs" id="execAddArgs" class="form-control">
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <a href="index.html" class="btn btn-secondary">Cancel</a>
+          <input type="submit" onclick="sendIntentAdd()" value="Add Intent" class="btn btn-success float-right">
+        </div>
+      </div>
+      </form>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer" id="footer">
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<script src="dist/js/utility.js"></script>
+<script src="dist/js/sidebar.js"></script>
+<script src="dist/js/header.js"></script>
+<script src="dist/js/footer.js"></script>
+<script src="dist/js/customIntents.js"></script>
+<script>LoadSite("nav_page_intent_add");</script>
+</body>
+</html>
