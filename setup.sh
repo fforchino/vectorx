@@ -260,9 +260,7 @@ echo
 /usr/local/go/bin/go build cmd/main.go
 mv main vectorx
 echo "Adding update script to the crontab"
-croncmd="$vectorxHome/update.sh 2>&1"
-cronjob="0 */5 * * * $croncmd"
-( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+crontab -l | grep -v -F "${vectorxHome}/update.sh" | { cat; echo "0 */5 * * * ${vectorxHome}/update.sh"; } | crontab -
 
 touch .setup
 echo "Done. The extended intents are now active."
