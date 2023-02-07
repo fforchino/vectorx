@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-const VECTORX_VERSION = "RELEASE_10b"
+const VECTORX_VERSION = "RELEASE_10c"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
