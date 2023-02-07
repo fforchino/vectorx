@@ -6,13 +6,13 @@ sudo systemctl stop wire-pod
 sleep 5
 cd ../wire-pod
 echo "Updating Wire-Pod..."
-git reset --hard main
-git checkout main
+#git reset --hard main
+#git checkout main
 git pull --ff-only
 cd $BASEDIR
 echo "Updating VectorX..."
-git reset --hard main
-git checkout main
+#git reset --hard main
+#git checkout main
 git pull --ff-only
 echo "Setupping VectorX..."
 sudo ./setup.sh -h
