@@ -35,6 +35,8 @@ if [[ -f ./source.sh ]]; then
     SOURCEEXPORTED="true"
 fi
 
+wirepodHome="/home/pi/wire-pod"
+
 if [[ ${silentMode} == "false" ]]; then
   # Locate Wirepod
   function wirepodPrompt() {
