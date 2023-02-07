@@ -3,7 +3,6 @@ BASEDIR=`pwd`
 
 echo "Stopping Services"
 sudo systemctl stop wire-pod
-sudo systemctl stop vectorx-web
 sleep 5
 cd ../wire-pod
 echo "Updating Wire-Pod..."
