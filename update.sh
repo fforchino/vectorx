@@ -8,12 +8,12 @@ cd ../wire-pod
 echo "Updating Wire-Pod..."
 git reset --hard main
 git checkout main
-git pull
+git pull --ff-only
 cd $BASEDIR
 echo "Updating VectorX..."
 git reset --hard main
 git checkout main
-git pull
+git pull --ff-only
 echo "Setupping VectorX..."
 sudo ./setup.sh -h
 echo "Starting Wire-Pod"
