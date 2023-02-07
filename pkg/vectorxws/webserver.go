@@ -162,16 +162,8 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, data)
 		break
 	case r.URL.Path == "/api/update":
-		output := make(map[string]string)
 		result, commandOutput := runUpdateScript()
-		output["result"] = result
-		output["output"] = commandOutput
-		data, err := json.Marshal(output)
-		if err == nil {
-			fmt.Fprintf(w, string(data))
-		} else {
-			fmt.Fprintf(w, "{ \"result\": \"error\", \"output\": \"\"}")
-		}
+		fmt.Fprintf(w, "{ \"result\": \""+result+"\", \"output\": \""+commandOutput+"\"}")
 		break
 	default:
 		http.Error(w, "not found", http.StatusNotFound)
@@ -349,7 +341,7 @@ func runUpdateScript() (string, string) {
 	if err != nil {
 		return "error", "update.sh not found"
 	}
-	return "ok", string(out)
+	return "ok", strings.ReplaceAll(string(out), "\n", "")
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
