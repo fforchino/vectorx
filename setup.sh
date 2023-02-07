@@ -36,6 +36,7 @@ if [[ -f ./source.sh ]]; then
 fi
 
 wirepodHome="/home/pi/wire-pod"
+vectorxHome=`pwd`
 
 if [[ ${silentMode} == "false" ]]; then
   # Locate Wirepod
@@ -48,7 +49,6 @@ if [[ ${silentMode} == "false" ]]; then
       wirepodHome=${wirepodhome}
     fi
   }
-  vectorxHome=`pwd`
   wirepodPrompt
 
   function weatherPrompt() {
