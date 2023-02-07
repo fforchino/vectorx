@@ -1,23 +1,21 @@
 #!/bin/bash
-BASEDIR=$(dirname "$0")
+BASEDIR=`pwd`
 
-cd $BASEDIR
-
-if [[ ! -f ./source.sh ]]; then
-  echo "You need to make a source.sh file. This can be done with the setup.sh script."
-  exit 0
-fi
-
-echo "Updating VectorX..."
-git reset --hard master
-git checkout master
-git pull
+echo "Stopping Wire-Pod"
+sudo systemctl stop wire-pod
+sleep 5
 cd ../wire-pod
 echo "Updating Wire-Pod..."
-git reset --hard master
-git checkout master
+git reset --hard main
+git checkout main
 git pull
 cd $BASEDIR
+echo "Updating VectorX..."
+git reset --hard main
+git checkout main
+git pull
 echo "Setupping VectorX..."
-./setup.sh -h
+sudo ./setup.sh -h
+echo "Starting Wire-Pod"
+sudo systemctl start wire-pod
 echo "Done"
