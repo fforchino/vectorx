@@ -1,8 +1,7 @@
 #!/bin/bash
 BASEDIR=`pwd`
 
-sleep 30
-if ping -c 1 "$sitename" &>/dev/null ; then
+if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Checking for updates..."
   echo "Stopping Services"
   sudo systemctl stop wire-pod

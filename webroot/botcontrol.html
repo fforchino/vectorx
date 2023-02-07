@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VectorX | Check for Updates</title>
+  <title>VectorX | Bot Control</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -40,12 +40,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 id="intent_edit_title">Check for Updates</h1>
+            <h1 id="bc_title">Play with </h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item"><a href="#">Check for Updates</a></li>
+              <li class="breadcrumb-item"><a href="#">Bot Control</a></li>
+              <li class="breadcrumb-item"><a href="#" id="bc_serial_no"></a></li>
             </ol>
           </div>
         </div>
@@ -71,9 +72,7 @@
                   <img src="dist/img/wait.gif">
                 </div>
                 <div id="updates_update_status" style="min-height:200px;">
-                Updates are checked and applied automatically every hour via a crontab task. A better update system may be implemented in the future.<br/><br/>
-                If you are a developer and want to turn off auto-updates, edit your crontab and disable the vectorx update task (but note that it will be re-added at every
-                run of setup.sh)
+                  Ciao
                 </div>
               </center>
               <!--
@@ -112,7 +111,7 @@
 <script src="dist/js/sidebar.js"></script>
 <script src="dist/js/header.js"></script>
 <script src="dist/js/footer.js"></script>
-<script src="dist/js/pages/update.js"></script>
-<script>LoadSite("nav_page_update");</script>
+<script src="dist/js/pages/botcontrol.js"></script>
+<script>LoadSite("nav_page_botcontrol_"+QueryParams.id);</script>
 </body>
 </html>

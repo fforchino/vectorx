@@ -9,6 +9,9 @@ function LoadSite(selectedPage) {
         LoadHomePageBots();
         checkSetupMissing();
       }
+      if (selectedPage.startsWith("nav_page_botcontrol")) {
+        LoadBotControlPage();
+      }
       // Handle selection
       document.getElementById(selectedPage).classList.add("active");
       LoadFooter();
