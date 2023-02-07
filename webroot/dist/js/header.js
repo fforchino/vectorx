@@ -7,6 +7,7 @@ function LoadSite(selectedPage) {
       SidebarGetRobotList();
       if (selectedPage == "nav_page_home") {
         LoadHomePageBots();
+        doConsistencyCheck();
       }
       // Handle selection
       document.getElementById(selectedPage).classList.add("active");
