@@ -333,7 +333,20 @@ func getSSID() string {
 
 func runUpdateScript() (string, string) {
 	script := filepath.Join(os.Getenv("VECTORX_HOME"), "updateWrapper.sh")
-	_ = exec.Command("nohup", "sh", script)
+	cmd := exec.Command("/bin/sh", script)
+	err := cmd.Start()
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return "error", "error"
+	}
+	fmt.Printf("Process started with PID: %d\n", cmd.Process.Pid)
+
+	// Wait for the process to complete
+	err = cmd.Wait()
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
+	fmt.Println("Process completed.")
 	/*
 		_, err1 := os.Stat(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
 		if err1 != nil {
