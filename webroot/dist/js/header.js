@@ -8,9 +8,6 @@ function LoadSite(selectedPage) {
       if (selectedPage == "nav_page_home") {
         LoadHomePageBots();
       }
-      if (selectedPage == "nav_page_update") {
-        CheckUpdates();
-      }
       // Handle selection
       document.getElementById(selectedPage).classList.add("active");
       LoadFooter();
