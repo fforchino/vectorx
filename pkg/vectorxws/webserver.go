@@ -346,7 +346,7 @@ func runUpdateScript() (string, string) {
 		return "error", ""
 	}
 
-	out, err := exec.Command("/bin/sh", "-c", "update.sh &").Output()
+	out, err := exec.Command("/bin/sh", "-c", "update.sh").Output()
 	if err != nil {
 		return "error", ""
 	} else {
