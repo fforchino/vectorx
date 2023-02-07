@@ -9,4 +9,8 @@ if [[ ! -f ./source.sh ]]; then
 fi
 
 source source.sh
-/usr/local/go/bin/go run cmd/webserver.go
+if [[ -f ./vectorx-web ]]; then
+    ./vectorx-web
+else
+    /usr/local/go/bin/go run cmd/webserver.go
+fi

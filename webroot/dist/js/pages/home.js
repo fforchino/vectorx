@@ -67,7 +67,6 @@ function checkSetupMissing() {
                     } catch { goInitialSetup(); }
             })
 }
-checkSetupMissing();
 
 function LoadHomePageBots() {
     var data = "";

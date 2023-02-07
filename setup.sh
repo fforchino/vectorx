@@ -157,6 +157,12 @@ if [[ ${silentMode} == "false" ]]; then
   fi
 fi
 
+echo
+echo "Compiling VectorX Web Server to speed up execution"
+echo
+/usr/local/go/bin/go build cmd/webserver.go
+mv main vectorx-web
+
 echo ""
 echo "Enabling VectorX Web Server as a service"
 echo "[Unit]" >vectorx-web.service
@@ -253,6 +259,11 @@ echo "Compiling VectorX to speed up execution"
 echo
 /usr/local/go/bin/go build cmd/main.go
 mv main vectorx
+echo "Adding update script to the crontab"
+croncmd="$vectorxHome/update.sh 2>&1"
+cronjob="0 */5 * * * $croncmd"
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+
 touch .setup
 echo "Done. The extended intents are now active."
 echo
