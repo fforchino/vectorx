@@ -161,7 +161,7 @@ echo
 echo "Compiling VectorX Web Server to speed up execution"
 echo
 /usr/local/go/bin/go build cmd/webserver.go
-mv main vectorx-web
+mv webserver vectorx-web
 
 echo ""
 echo "Enabling VectorX Web Server as a service"
