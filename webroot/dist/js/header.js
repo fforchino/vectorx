@@ -46,7 +46,7 @@ function LoadNavBar() {
     '        <a href="index.html" class="nav-link">Home</a>\n' +
     '      </li>\n' +
     '      <li class="nav-item d-none d-sm-inline-block">\n' +
-    '        <a href="#" class="nav-link">Contact</a>\n' +
+    '        <a href="https://github.com/fforchino/vectorx" target="_blank" class="nav-link">Contact</a>\n' +
     '      </li>\n' +
     '    </ul>\n' +
     '\n' +

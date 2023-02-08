@@ -21,6 +21,7 @@ async function CheckUpdates() {
                 }
             });
         }
+        document.getElementById("btut04").disabled = false;
     });
 }
 
