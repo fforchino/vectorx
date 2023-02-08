@@ -13,7 +13,7 @@ async function RunUpdateScript() {
     var retVal = "";
     var obj = null;
     document.getElementById("update_running").style.display = "block";
-    fetch("/api/update")
+    await fetch("/api/update")
         .then(response => response.text())
         .then((response) => {
             try {
@@ -23,7 +23,11 @@ async function RunUpdateScript() {
             } catch { retVal = "unknown"; }
         })
     if (obj!=null && obj.result=="ok") {
-        await new Promise(r => setTimeout(r, 30000));
+        for (var i=30;i>=0;i--) {
+            await new Promise(r => setTimeout(r, 1000));
+            document.getElementById("updates_update_status").innerHTML += ".";
+        }
+
     }
     document.getElementById("update_running").style.display = "none";
     return Promise.resolve(retVal);
