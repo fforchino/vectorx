@@ -397,11 +397,12 @@ func runIntentCommand(intentName string, serialNo string) error {
 		return errors.New("unknown intent name")
 	}
 
-	vPath := os.Getenv("VECTORX_HOME")
+	vPath := "/home/pi/vectorx/" //os.Getenv("VECTORX_HOME")
 	var cmds = []string{
 		"sudo " + vPath + "runCmd.sh " + serialNo + " en-US \"" + txt + "\"",
 	}
 	for _, cmd := range cmds {
+		println(cmd)
 		e := exec.Command("/bin/sh", "-c", cmd).Run()
 		if e != nil {
 			return e
