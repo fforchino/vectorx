@@ -2,7 +2,7 @@
 # This script is started as a service from webserver.go when the user wants to update
 # This service is NOT meant to be enabled, just run on demand
 
-BASEDIR=`pwd`
+source source.sh
 
 if ping -c 1 "www.google.com" &>/dev/null ; then
   sleep 5
@@ -11,12 +11,12 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   sudo systemctl stop wire-pod
   sudo systemctl stop vectorx-web
   sudo systemctl stop opencv-ifc
-  cd ../wire-pod
+  cd $WIREPOD_HOME
   echo "Updating Wire-Pod..."
   #git reset --hard main
   #git checkout main
   git pull --ff-only
-  cd $BASEDIR
+  cd $VECTORX_HOME
   echo "Updating VectorX..."
   #git reset --hard main
   #git checkout main

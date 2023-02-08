@@ -338,6 +338,8 @@ func runUpdateScript() (string, string) {
 	}
 	isOk := true
 	var cmds = []string{
+		"git config --global --add safe.directory " + os.Getenv("WIREPOD_HOME"),
+		"git config --global --add safe.directory " + os.Getenv("VECTORX_HOME"),
 		"sudo systemctl start vectorx-update",
 	}
 	for _, cmd := range cmds {
