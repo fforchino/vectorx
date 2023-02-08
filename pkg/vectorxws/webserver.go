@@ -3,6 +3,7 @@ package vectorxws
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"io/ioutil"
@@ -173,10 +174,10 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		e := runIntentCommand(name, serialNo)
-		if e == true {
+		if e == nil {
 			fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 		} else {
-			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+			fmt.Fprintf(w, "{ \"result\": \"KO\", \"reason\": \""+e.Error()+"\"}")
 		}
 		break
 	default:
@@ -387,23 +388,24 @@ func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
 	return isOk
 }
 
-func runIntentCommand(intentName string, serialNo string) bool {
+func runIntentCommand(intentName string, serialNo string) error {
 	txt := ""
 	if intentName == "roll-a-die" {
 		txt = "roll a die"
 	}
 	if txt == "" {
-		return false
+		return errors.New("unknown intent name")
 	}
 
 	vPath := os.Getenv("VECTORX_HOME")
 	var cmds = []string{
 		"sudo " + vPath + "runCmd.sh " + serialNo + " en-US \"" + txt + "\"",
 	}
-	isOk := true
 	for _, cmd := range cmds {
 		e := exec.Command("/bin/sh", "-c", cmd).Run()
-		isOk = isOk && (e == nil)
+		if e != nil {
+			return e
+		}
 	}
-	return isOk
+	return nil
 }
