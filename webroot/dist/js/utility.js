@@ -52,3 +52,14 @@ function goHome() {
     document.location.replace("index.html")
 }
 
+function GetRobotInfo(esn) {
+    var theBot = null;
+    for (var i = 0; i < Robots.length; i++) {
+        var bot = Robots[i];
+        if (bot.esn==esn) {
+            theBot = bot;
+            break;
+        }
+    }
+    return theBot;
+}

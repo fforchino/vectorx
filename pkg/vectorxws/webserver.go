@@ -165,6 +165,20 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		result, commandOutput := runUpdateScript()
 		fmt.Fprintf(w, "{ \"result\": \""+result+"\", \"output\": \""+commandOutput+"\"}")
 		break
+	case r.URL.Path == "/api/send_intent":
+		name := r.FormValue("name")
+		serialNo := r.FormValue("esn")
+		if name == "" || serialNo == "" {
+			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+			return
+		}
+		e := runIntentCommand(name, serialNo)
+		if e == true {
+			fmt.Fprintf(w, "{ \"result\": \"OK\"}")
+		} else {
+			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+		}
+		break
 	default:
 		http.Error(w, "not found", http.StatusNotFound)
 		return
@@ -369,6 +383,27 @@ func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
 			e := exec.Command("/bin/sh", "-c", cmd).Run()
 			isOk = isOk && (e == nil)
 		}
+	}
+	return isOk
+}
+
+func runIntentCommand(intentName string, serialNo string) bool {
+	txt := ""
+	if intentName == "roll-a-die" {
+		txt = "roll a die"
+	}
+	if txt == "" {
+		return false
+	}
+
+	vPath := os.Getenv("VECTORX_HOME")
+	var cmds = []string{
+		"sudo " + vPath + "runCmd.sh " + serialNo + " en-US \"" + txt + "\"",
+	}
+	isOk := true
+	for _, cmd := range cmds {
+		e := exec.Command("/bin/sh", "-c", cmd).Run()
+		isOk = isOk && (e == nil)
 	}
 	return isOk
 }

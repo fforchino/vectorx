@@ -54,7 +54,7 @@ function LoadSidebar(selectedPage) {
     '                </a>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
-    '                <a href="#" class="nav-link">\n' +
+    '                <a href="#" class="nav-link" id="nav_page_robots">\n' +
     '                  <i class="nav-icon fas fa-robot"></i>\n' +
     '                  <p>\n' +
     '                    Robots\n' +
@@ -70,12 +70,14 @@ function LoadSidebar(selectedPage) {
     '                  <p>Check for updates</p>\n' +
     '                </a>\n' +
     '              </li>\n' +
+    '<!--'+
     '              <li class="nav-item">\n' +
     '                <a href="./index.html" class="nav-link">\n' +
     '                  <i class="fas fa-file-lines nav-icon"></i>\n' +
     '                  <p>Log</p>\n' +
     '                </a>\n' +
     '              </li>\n' +
+    '-->'+
     '            </ul>\n' +
     '          </li>\n' +
     '        </ul>\n' +
@@ -90,7 +92,7 @@ function SidebarGetRobotList() {
     var bot = Robots[i];
     data +=
         '                  <li class="nav-item">\n' +
-        '                    <a href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
+        '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
         '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +
         '                      <p>'+bot.custom_settings.RobotName.toUpperCase()+'</p>\n' +
         '                    </a>\n' +

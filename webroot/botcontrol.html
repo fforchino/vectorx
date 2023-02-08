@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <script src="https://kit.fontawesome.com/8cdc8cbed9.js" crossorigin="anonymous"></script>
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <link rel="stylesheet" href="dist/css/vectorx.css">
@@ -45,7 +46,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-              <li class="breadcrumb-item"><a href="#">Bot Control</a></li>
+              <li class="breadcrumb-item">Bot Control</li>
               <li class="breadcrumb-item"><a href="#" id="bc_serial_no"></a></li>
             </ol>
           </div>
@@ -55,33 +56,191 @@
 
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">VectorX Updates</h3>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
+      <div class="col-sm-6">
+        <h1 class="m-0">Games</h1>
+        <br/>
+      </div>
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Roll a die</h3>
+
+                <p>Vector rolls a 6 sided die</p>
               </div>
+              <div class="icon">
+                <i class="fa-solid fa-dice"></i>
+              </div>
+              <div class="bot-control-reveal" id="bot-control-games-roll-a-die">
+                <i>Voice command:</i> Hey Vector, <b>roll a die!</b>
+                <br/>
+                Vector will roll a 6-sided die and tell the outcome.
+                <br/><br/>
+                <button onclick="BotControlSendIntent('roll-a-die');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+              </div>
+              <a id="" href="#" onclick="BotControlReveal(this, 'bot-control-games-roll-a-die'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
-            <div class="card-body">
-              <center>
-                <div id="update_running">
-                  <img src="dist/img/wait.gif">
-                </div>
-                <div id="updates_update_status" style="min-height:200px;">
-                  Ciao
-                </div>
-              </center>
-              <!--
-              <button id="btut04" onclick="CheckUpdates();" type="submit" class="btn btn-primary btn-block">Check and apply updates</button>
-              -->
-            </div>
-            <!-- /.card-body -->
           </div>
-          <!-- /.card -->
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Bingo!</h3>
+
+                <p>Vector pulls out random numbers 1-90</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-clover"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Pong</h3>
+
+                <p>Play Pong against Vector using the cube</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Rock Paper Scissors</h3>
+
+                <p>Play Rock Paper Scissors against Vector</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-hand-back-fist"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <div class="col-sm-6">
+          <h1 class="m-0">Language</h1>
+          <br/>
+        </div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>How do you say...</h3>
+
+                <p>Vector as an instant translator</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-language"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Let's talk in</h3>
+
+                <p>Change STT & TTS language</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-earth-europe"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- /.row -->
+        <div class="col-sm-6">
+          <h1 class="m-0">Weather</h1>
+          <br/>
+        </div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>How's the weather now</h3>
+
+                <p>Check weather all around the world!</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-cloud-sun"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Weather forecast</h3>
+
+                <p>Weather forecast using Vector</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-rainbow"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+        </div>
+        <!-- /.row -->
+        <div class="col-sm-6">
+          <h1 class="m-0">Chat & Personality</h1>
+          <br/>
+        </div>
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Set Robot Name</h3>
+
+                <p>Name your Vector!</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-6 col-12">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Pills of Wisdom</h3>
+
+                <p>Get a random quote</p>
+              </div>
+              <div class="icon">
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

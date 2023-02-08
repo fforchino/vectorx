@@ -28,3 +28,7 @@ label {
 #update_running {
     display:none;
 }
+
+.bot-control-reveal {
+    display: none;
+}

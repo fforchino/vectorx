@@ -11,9 +11,10 @@ function LoadSite(selectedPage) {
       }
       if (selectedPage.startsWith("nav_page_botcontrol")) {
         LoadBotControlPage();
+      } else {
+        // Handle selection for normal pages
+        document.getElementById(selectedPage).classList.add("active");
       }
-      // Handle selection
-      document.getElementById(selectedPage).classList.add("active");
       LoadFooter();
       /*
       LoadIntents().then(() => {
