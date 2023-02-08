@@ -12,6 +12,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <link rel="stylesheet" href="dist/css/vectorx.css">
+  <script src="https://kit.fontawesome.com/8cdc8cbed9.js" crossorigin="anonymous"></script>
 </head>
 <body class="dark-mode hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -70,6 +71,15 @@
                 <div id="update_running">
                   <img src="dist/img/wait.gif">
                   <p>Please wait <span id="updates_counter">60</span> seconds...</p>
+                </div>
+                <div id="update_result_no_update" style="display:none;">
+                    <i style="font-size:64px; color: #3f6791;" class="fa-solid fa-minus-circle"></i>
+                </div>
+                <div id="update_result_error" style="display:none;">
+                  <i style="font-size:64px; color: #3f6791;" class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div id="update_result_updated" style="display:none;">
+                  <i style="font-size:64px; color: #3f6791;" class="fa-solid fa-check-circle"></i>
                 </div>
                 <div id="updates_update_status" style="min-height:200px;">
                 </div>

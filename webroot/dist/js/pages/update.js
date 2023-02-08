@@ -1,10 +1,21 @@
 async function CheckUpdates() {
+    document.getElementById("update_result_error").style.display="none";
+    document.getElementById("update_result_no_update").style.display="none";
+    document.getElementById("update_result_updated").style.display="none";
+
     currentVersion = Settings.VECTORX_VERSION;
     document.getElementById("updates_update_status").innerHTML = "Current VectorX version is "+currentVersion+"<br/>";
     document.getElementById("updates_update_status").innerHTML += "Checking for updates, please wait...<br/>";
     RunUpdateScript().then((message) => {
         LoadSettings().then(() => {
-            document.getElementById("updates_update_status").innerHTML += "<br/>Current VectorX version is now "+Settings.VECTORX_VERSION;
+            if (Settings.VECTORX_VERSION == currentVersion) {
+                document.getElementById("update_result_no_update").style.display="block";
+                document.getElementById("updates_update_status").innerHTML += "<br/>No update found.";
+            }
+            else {
+                document.getElementById("update_result_updated").style.display="block";
+                document.getElementById("updates_update_status").innerHTML += "<br/>Current VectorX version is now "+Settings.VECTORX_VERSION;
+            }
         });
     });
 }
@@ -28,6 +39,8 @@ async function RunUpdateScript() {
             document.getElementById("updates_counter").innerHTML = ""+i;
         }
 
+    } else {
+        document.getElementById("update_result_error").style.display="block";
     }
     document.getElementById("update_running").style.display = "none";
     return Promise.resolve(retVal);
