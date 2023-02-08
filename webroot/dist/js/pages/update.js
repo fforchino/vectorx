@@ -13,7 +13,7 @@ async function RunUpdateScript() {
     var retVal = "";
     var obj = null;
     document.getElementById("update_running").style.display = "block";
-    await fetch("/api/update")
+    await fetch("/api/update", {cache: "no-store"})
         .then(response => response.text())
         .then((response) => {
             try {

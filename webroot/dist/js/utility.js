@@ -8,7 +8,7 @@ var Intents = {}
 var Settings = {}
 
 async function LoadRobots() {
-    await fetch("/api/get_robots")
+    await fetch("/api/get_robots", {cache: "no-store"})
         .then(response => response.text())
         .then((response) => {
             try {
@@ -19,7 +19,7 @@ async function LoadRobots() {
 }
 
 async function LoadIntents() {
-    await fetch(WIREPOD_HOME+"/api/get_custom_intents_json")
+    await fetch(WIREPOD_HOME+"/api/get_custom_intents_json", {cache: "no-store"})
         .then(response => response.text())
         .then((response) => {
             try {
@@ -30,7 +30,7 @@ async function LoadIntents() {
 }
 
 async function LoadSettings() {
-    fetch("/api/consistency_check")
+    fetch("/api/consistency_check", {cache: "no-store"})
         .then(response => response.text())
         .then((response) => {
             try {
