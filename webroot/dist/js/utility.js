@@ -30,7 +30,7 @@ async function LoadIntents() {
 }
 
 async function LoadSettings() {
-    fetch("/api/consistency_check", {cache: "no-store"})
+    await fetch("/api/consistency_check", {cache: "no-store"})
         .then(response => response.text())
         .then((response) => {
             try {
