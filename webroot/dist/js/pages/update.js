@@ -23,9 +23,9 @@ async function RunUpdateScript() {
             } catch { retVal = "unknown"; }
         })
     if (obj!=null && obj.result=="ok") {
-        for (var i=30;i>=0;i--) {
+        for (var i=60;i>=0;i--) {
             await new Promise(r => setTimeout(r, 1000));
-            document.getElementById("updates_update_status").innerHTML += ".";
+            document.getElementById("updates_counter").innerHTML = ""+i;
         }
 
     }
