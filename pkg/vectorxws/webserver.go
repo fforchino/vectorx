@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-const VECTORX_VERSION = "RELEASE_10"
+const VECTORX_VERSION = "RELEASE_10A"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
@@ -338,8 +338,6 @@ func runUpdateScript() (string, string) {
 	}
 	isOk := true
 	var cmds = []string{
-		"git config --global --add safe.directory " + os.Getenv("WIREPOD_HOME"),
-		"git config --global --add safe.directory " + os.Getenv("VECTORX_HOME"),
 		"sudo systemctl start vectorx-update",
 	}
 	for _, cmd := range cmds {

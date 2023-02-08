@@ -15,12 +15,12 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Updating Wire-Pod..."
   #git reset --hard main
   #git checkout main
-  git pull --ff-only
+  sudo runuser -l pi -c "cd $WIREPOD_HOME && git pull --ff-only"
   cd $VECTORX_HOME
   echo "Updating VectorX..."
   #git reset --hard main
   #git checkout main
-  git pull --ff-only
+  sudo runuser -l pi -c "cd $VECTORX_HOME && git pull --ff-only"
   echo "Setupping VectorX..."
   sudo ./setup.sh -h
   echo "Starting Wire-Pod"
