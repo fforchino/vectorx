@@ -9,6 +9,7 @@ async function CheckUpdates() {
     document.getElementById("updates_update_status").innerHTML += "Checking for updates, please wait...<br/>";
     RunUpdateScript().then((message) => {
         if (message=="ok") {
+            document.getElementById("updates_update_status").innerHTML = "";
             LoadSettings().then(() => {
                 if (Settings.VECTORX_VERSION == currentVersion) {
                     document.getElementById("update_result_no_update").style.display="block";
@@ -38,8 +39,8 @@ async function RunUpdateScript() {
         })
     if (obj!=null && obj.result=="ok") {
         for (var i=60;i>=0;i--) {
-            await new Promise(r => setTimeout(r, 1000));
             document.getElementById("updates_counter").innerHTML = ""+i;
+            await new Promise(r => setTimeout(r, 1000));
         }
 
     } else {
