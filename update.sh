@@ -1,13 +1,16 @@
 #!/bin/bash
+# This script is started as a service from webserver.go when the user wants to update
+# This service is NOT meant to be enabled, just run on demand
+
 BASEDIR=`pwd`
 
 if ping -c 1 "www.google.com" &>/dev/null ; then
+  sleep 5
   echo "Checking for updates..."
   echo "Stopping Services"
   sudo systemctl stop wire-pod
-  #sudo systemctl stop vectorx-web
+  sudo systemctl stop vectorx-web
   sudo systemctl stop opencv-ifc
-  sleep 5
   cd ../wire-pod
   echo "Updating Wire-Pod..."
   #git reset --hard main
@@ -29,5 +32,4 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Done"
 else
   echo "No internet connection, doing nothing"
-  exit 0
 fi

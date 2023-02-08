@@ -336,12 +336,20 @@ func runUpdateScript() (string, string) {
 	if err1 != nil {
 		return "error", "Run web setup first!"
 	}
-	out, err := exec.Command("/bin/sh", filepath.Join(os.Getenv("VECTORX_HOME"), "update.sh")).Output()
-	if err != nil {
-		print("failed opening file")
-		return "error", "update.sh not found"
+	isOk := true
+	var cmds = []string{
+		"sudo systemctl start vectorx-update",
 	}
-	return "ok", strings.ReplaceAll(string(out), "\n", "")
+	for _, cmd := range cmds {
+		println(cmd)
+		e := exec.Command("/bin/sh", "-c", cmd).Run()
+		isOk = isOk && (e == nil)
+	}
+
+	if !isOk {
+		return "error", "Error running update service!"
+	}
+	return "ok", "Update service started"
 }
 
 func getVoskLanguage(lang string, fileUrl string, fileName string) bool {

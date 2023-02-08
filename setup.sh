@@ -166,7 +166,22 @@ echo
 mv webserver vectorx-web
 
 echo ""
-echo "Enabling VectorX Web Server as a service"
+echo "Adding VectorX Updater as a service"
+echo "[Unit]" >vectorx-update.service
+echo "Description=VectorX Update Service" >>vectorx-update.service
+echo >>vectorx-update.service
+echo "[Service]" >>vectorx-update.service
+echo "Type=simple" >>vectorx-update.service
+echo "WorkingDirectory=$(readlink -f .)" >>vectorx-update.service
+echo "ExecStart=$(readlink -f ./update.sh) &" >>vectorx-update.service
+echo >>vectorx-update.service
+echo "[Install]" >>vectorx-update.service
+echo "WantedBy=multi-user.target" >>vectorx-update.service
+cat vectorx-update.service
+mv vectorx-update.service /lib/systemd/system/
+
+echo ""
+echo "Adding VectorX Web Server as a service"
 echo "[Unit]" >vectorx-web.service
 echo "Description=VectorX Web Server" >>vectorx-web.service
 echo >>vectorx-web.service
@@ -179,12 +194,9 @@ echo "[Install]" >>vectorx-web.service
 echo "WantedBy=multi-user.target" >>vectorx-web.service
 cat vectorx-web.service
 mv vectorx-web.service /lib/systemd/system/
-systemctl daemon-reload
-systemctl enable vectorx-web
-systemctl start vectorx-web
 
 echo ""
-echo "Enabling opencvserver as a service"
+echo "Adding opencvserver as a service"
 echo "[Unit]" >opencv-ifc.service
 echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
 echo >>opencv-ifc.service
@@ -197,9 +209,13 @@ echo "[Install]" >>opencv-ifc.service
 echo "WantedBy=multi-user.target" >>opencv-ifc.service
 cat opencv-ifc.service
 mv opencv-ifc.service /lib/systemd/system/
+
+echo "Enabling and starting VectorX services..."
 systemctl daemon-reload
 systemctl enable opencv-ifc
 systemctl start opencv-ifc
+systemctl enable vectorx-web
+systemctl start vectorx-web
 
 if [[ ${vimSetup} == "true" ]]; then
   echo ""
