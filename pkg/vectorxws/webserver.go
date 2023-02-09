@@ -68,10 +68,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			if mapConfig["WEATHERAPI_KEY"] != "" {
 				mapConfig["WEATHERAPI_PROVIDER"] = "openweathermap.org"
 				mapConfig["WEATHERAPI_ENABLED"] = "true"
+				mapConfigVectorX["WEATHERAPI_PROVIDER"] = "openweathermap.org"
 				mapConfigVectorX["WEATHERAPI_ENABLED"] = "true"
 			} else {
 				mapConfig["WEATHERAPI_PROVIDER"] = ""
 				mapConfig["WEATHERAPI_ENABLED"] = "false"
+				mapConfigVectorX["WEATHERAPI_PROVIDER"] = ""
 				mapConfigVectorX["WEATHERAPI_ENABLED"] = "false"
 			}
 			if mapConfig["KNOWLEDGE_KEY"] != "" {
@@ -84,6 +86,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 				mapConfig["KNOWLEDGE_INTENT_GRAPH"] = "false"
 			}
 			mapConfig["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
+			mapConfigVectorX["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfig["STT_SERVICE"] = "vosk"
 
 			err = JSONToVectorxConfig(mapConfigVectorX)
