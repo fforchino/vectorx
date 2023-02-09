@@ -40,7 +40,6 @@ func main() {
 
 		// Register vectorx intents
 		intents.RegisterIntents()
-		intents.GetWirepodBotInfo(*serial)
 
 		// Find out whether the speech text matches any registered intent
 		xIntent, err := intents.IntentMatch(*speechText, language)
@@ -58,6 +57,7 @@ func main() {
 			}
 
 			// Extract params
+			intents.GetWirepodBotInfo(*serial)
 			params := intents.ParseParams(*speechText, xIntent)
 
 			robotLocale := sdk_wrapper.GetLocale()
