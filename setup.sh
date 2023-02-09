@@ -202,8 +202,8 @@ echo "Description=VectorX OpenCV Server" >>opencv-ifc.service
 echo >>opencv-ifc.service
 echo "[Service]" >>opencv-ifc.service
 echo "Type=simple" >>opencv-ifc.service
-echo "WorkingDirectory=$(readlink -f ./opencv-ifc)" >>opencv-ifc.service
-echo "ExecStart=/usr/bin/python $(readlink -f ./opencv-ifc/opencvserver.py)" >>opencv-ifc.service
+echo "WorkingDirectory=$(readlink -f ./opencv)" >>opencv-ifc.service
+echo "ExecStart=/usr/bin/python $(readlink -f ./opencv/opencvserver.py)" >>opencv-ifc.service
 echo >>opencv-ifc.service
 echo "[Install]" >>opencv-ifc.service
 echo "WantedBy=multi-user.target" >>opencv-ifc.service
