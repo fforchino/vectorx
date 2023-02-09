@@ -119,12 +119,22 @@
               <div class="inner">
                 <h3>Pong</h3>
 
-                <p>Play Pong against Vector using the cube</p>
+                <p>Play Pong against Vector using its light cube</p>
+                <div class="bot-control-reveal" id="bot-control-games-pong">
+                  <br>
+                  <i>Voice command:</i> Hey Vector, <b>let's play a classic!</b>
+                  <br/>
+                  Vector will start a Pong game. Place the light cube in front of Vector's screen and move it up or down to shift your paddle. The firt one to score 10 points wins.
+                  <br/><br/>
+                  <span id="bot-control-games-pong-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('pong', 'bot-control-games-pong-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-table-tennis-paddle-ball"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-games-pong'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -135,11 +145,21 @@
                 <h3>Rock Paper Scissors</h3>
 
                 <p>Play Rock Paper Scissors against Vector</p>
+                <div class="bot-control-reveal" id="bot-control-games-rps">
+                  <br>
+                  <i>Voice command:</i> Hey Vector, <b>let's play a new game!</b>
+                  <br/>
+                  Vector will challenge you at "Rock, Paper, Scissors", trying to read your hand. Open hand = paper, fist = rock, two raised fingers = scissors.
+                  <br/><br/>
+                  <span id="bot-control-games-rps-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('rps', 'bot-control-games-rps-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-hand-back-fist"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-games-rps'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -170,7 +190,7 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>Let's talk in</h3>
+                <h3>Let's talk in...</h3>
 
                 <p>Change STT & TTS language</p>
               </div>

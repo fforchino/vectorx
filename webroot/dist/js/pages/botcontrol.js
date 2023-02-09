@@ -2,7 +2,7 @@ var CurrentRobot = null;
 
 function LoadBotControlPage() {
     CurrentRobot = GetRobotInfo(QueryParams.esn)
-    if (bot!=null) {
+    if (CurrentRobot!=null) {
         let botName = CurrentRobot.custom_settings.RobotName.toUpperCase();
         document.getElementById("nav_page_robots").click();
         document.getElementById("nav_page_botcontrol_"+CurrentRobot.esn).classList.add("active");
@@ -13,7 +13,7 @@ function LoadBotControlPage() {
 
 function BotControlReveal(element, elementIdToShow) {
     element.style.display = "none";
-    var elementsToHide = getElementsByClassName("bot-control-reveal");
+    var elementsToHide = document.getElementsByClassName("bot-control-reveal");
     for (var i=0;i<elementsToHide.length;i++) {
         elementsToHide[i].style.display = "none";
     }
@@ -22,7 +22,9 @@ function BotControlReveal(element, elementIdToShow) {
 
 async function BotControlSendIntent(intentName, resultElement) {
     if (intentName=="roll-a-die" ||
-        intentName=="bingo") {
+        intentName=="bingo" ||
+        intentName=="pong" ||
+        intentName=="rps") {
         var data = "name=" + intentName+"&esn="+CurrentRobot.esn;
         fetch("/api/send_intent?" + data)
             .then(response => response.text())
