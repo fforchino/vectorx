@@ -7,6 +7,7 @@ import (
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"strings"
 	"vectorx/pkg/intents"
+	"vectorx/pkg/stats"
 )
 
 var Debug = true
@@ -45,6 +46,7 @@ func main() {
 		xIntent, err := intents.IntentMatch(*speechText, language)
 
 		if err == nil {
+			stats.StatsIntentHandled(true)
 			// Ok, we have a match. Then extract the parameters (if any) from the intent...
 			params := intents.ParseParams(*speechText, xIntent)
 
@@ -87,6 +89,7 @@ func main() {
 				return
 			}
 		} else {
+			stats.StatsIntentHandled(false)
 			// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
 			if sdkInit {
 				sdk_wrapper.SetLocale("en_US")

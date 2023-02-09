@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"vectorx/pkg/stats"
 )
 
 const VECTORX_VERSION = "RELEASE_11"
@@ -157,7 +158,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		uptime := getUptime()
 		status := "Connected"
 		network := getSSID()
-		commands := "TODO"
+		usageStats, err := stats.GetStats()
+		commands := "---"
+		if err == nil {
+			commands = fmt.Sprintf("%d/%d", usageStats.IntentsMatched, usageStats.IntentsReceived)
+		}
+
 		data := "{ \"uptime\": \"" + uptime + "\"," +
 			"\"network\": \"" + network + "\"," +
 			"\"status\": \"" + status + "\"," +
