@@ -71,7 +71,6 @@
 
                 <p>Vector rolls a 6 sided die</p>
                 <div class="bot-control-reveal" id="bot-control-games-roll-a-die">
-                  <br>
                   <i>Voice command:</i> Hey Vector, <b>roll a die!</b>
                   <br/>
                   Vector will roll a 6-sided die and tell the outcome.
@@ -96,7 +95,6 @@
 
                 <p>Vector hosts a bingo game</p>
                 <div class="bot-control-reveal" id="bot-control-games-bingo">
-                  <br>
                   <i>Voice command:</i> Hey Vector, <b>bingo!</b>
                   <br/>
                   Vector will pull out numbers from 1 to 90 in random order. Rub Vector's back to get a new number. Click Vector's back button to quit.
@@ -121,7 +119,6 @@
 
                 <p>Play Pong against Vector using its light cube</p>
                 <div class="bot-control-reveal" id="bot-control-games-pong">
-                  <br>
                   <i>Voice command:</i> Hey Vector, <b>let's play a classic!</b>
                   <br/>
                   Vector will start a Pong game. Place the light cube in front of Vector's screen and move it up or down to shift your paddle. The firt one to score 10 points wins.
@@ -146,7 +143,6 @@
 
                 <p>Play Rock Paper Scissors against Vector</p>
                 <div class="bot-control-reveal" id="bot-control-games-rps">
-                  <br>
                   <i>Voice command:</i> Hey Vector, <b>let's play a new game!</b>
                   <br/>
                   Vector will challenge you at "Rock, Paper, Scissors", trying to read your hand. Open hand = paper, fist = rock, two raised fingers = scissors.
@@ -178,11 +174,38 @@
                 <h3>How do you say...</h3>
 
                 <p>Vector as an instant translator</p>
+                <div class="bot-control-reveal" id="bot-control-language-hds">
+                  <i>Voice command:</i> Hey Vector, <b>how do you say &lt;<i>word</i>&gt; in &lt;<i>language</i>&gt; ?</b>
+                  <br/>
+                  Vector translates a given word in the given language.
+                  <br/><br/>
+                  <div class="form-group row">
+                    <label for="language-hds-word" class="col-sm-2 col-form-label">word</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="language-hds-word" placeholder="English word">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="language-hds-language" class="col-sm-2 col-form-label">language</label>
+                    <div class="col-sm-10">
+                      <select class="custom-select rounded-0" id="language-hds-language">
+                        <option value="english">English (US)</option>
+                        <option value="italian">Italian</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="german">German</option>
+                      </select>
+                    </div>
+                  </div>
+                  <span id="bot-control-language-hds-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('how-do-you-say', 'bot-control-language-hds-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-language"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-language-hds'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -193,11 +216,32 @@
                 <h3>Let's talk in...</h3>
 
                 <p>Change STT & TTS language</p>
+                <div class="bot-control-reveal" id="bot-control-language-ls">
+                  <i>Voice command:</i> Hey Vector, <b>let's talk in &lt;<i>language</i>&gt; !</b>
+                  <br/>
+                  Talk to Vector and get replies in the given language.
+                  <br/><br/>
+                  <div class="form-group row">
+                    <label for="language-ls-language" class="col-sm-2 col-form-label">language</label>
+                    <div class="col-sm-10">
+                      <select class="custom-select rounded-0" id="language-ls-language">
+                        <option value="english">English (US)</option>
+                        <option value="italian">Italian</option>
+                        <option value="spanish">Spanish</option>
+                        <option value="french">French</option>
+                        <option value="german">German</option>
+                      </select>
+                    </div>
+                  </div>
+                  <span id="bot-control-language-ls-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('lets-speak', 'bot-control-language-ls-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-earth-europe"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-language-ls'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
         </div>
@@ -215,11 +259,26 @@
                 <h3>How's the weather now</h3>
 
                 <p>Check weather all around the world!</p>
+                <div class="bot-control-reveal" id="bot-control-weather-now">
+                  <i>Voice command:</i> Hey Vector, <b>how's the weather [in &lt;<i>location</i>&gt;] ?</b>
+                  <br/>
+                  Vector checks the weather in the given location. Don't specify a location to use Vector's default location.
+                  <br/><br/>
+                  <div class="form-group row">
+                    <label for="weather-now-location" class="col-sm-2 col-form-label">location</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="weather-now-location" placeholder="Location">
+                    </div>
+                  </div>
+                  <span id="bot-control-weather-now-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('weather', 'bot-control-weather-now-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-cloud-sun"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-weather-now'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -230,11 +289,37 @@
                 <h3>Weather forecast</h3>
 
                 <p>Weather forecast using Vector</p>
+                <div class="bot-control-reveal" id="bot-control-weather-fc">
+                  <i>Voice command:</i> Hey Vector, <b>how's the weather [in &lt;<i>location</i>&gt;]  &lt;<i>time</i>&gt; ?</b>
+                  <br/>
+                  Vector checks the weather forecast in the given location at the given time. Don't specify a location to use Vector's default location.
+                  <br/><br/>
+                  <div class="form-group row">
+                    <label for="weather-fc-location" class="col-sm-2 col-form-label">location</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="weather-fc-location" placeholder="Location">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="language-ls-language" class="col-sm-2 col-form-label">language</label>
+                    <div class="col-sm-10">
+                      <select class="custom-select rounded-0" id="weather-fc-dt">
+                        <option value="afternoon">This Afternoon</option>
+                        <option value="tonight">Tonight</option>
+                        <option value="tomorrow">Tomorrow</option>
+                        <option value="day after tomorrow">The Day After Tomorrow</option>
+                      </select>
+                    </div>
+                  </div>
+                  <span id="bot-control-weather-fc-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('weather-forecast', 'bot-control-weather-fc-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-rainbow"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-weather-fc'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
         </div>

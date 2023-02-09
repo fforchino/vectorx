@@ -1,3 +1,7 @@
+RELEASE_11
+- Adding a whole new GUI for the VectorX control panel
+- Fix OpenCV service not starting correctly
+
 RELEASE_10
 - Increase VectorX performance by building the go code to binary. Also initialize go SDK only if there is
   an intent match. Existing VectorX users should re-run setup.sh in order to have the code compiled.
