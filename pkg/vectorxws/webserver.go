@@ -279,7 +279,7 @@ func checkAndFixVosk() bool {
 func jsonToConfig(fileName string, cfg map[string]string) error {
 	println("Saving " + fileName + "...")
 
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		print("failed opening file")
 		return err
