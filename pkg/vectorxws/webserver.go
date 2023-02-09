@@ -32,7 +32,6 @@ type BotInfo struct {
 	ESN            string                     `json:"esn"`
 	IPAddress      string                     `json:"ip_address"`
 	CustomSettings sdk_wrapper.CustomSettings `json:"custom_settings"`
-	RobotSettings  map[string]interface{}     `json:"robot_settings"`
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
@@ -136,13 +135,10 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			for _, bot := range jsonObj.Robots {
 				botCustomConfigJson := filepath.Join(vPath, "vectorfs/nvm/"+bot.Esn+"/custom_settings.json")
 				data, err := ioutil.ReadFile(botCustomConfigJson)
-				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}, sdk_wrapper.GetVectorSettings()}
+				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}}
 				if err == nil {
 					var customSettings sdk_wrapper.CustomSettings
 					err = json.Unmarshal(data, &customSettings)
-					if err == nil {
-						bi.CustomSettings = customSettings
-					}
 				}
 				botsForWeb = append(botsForWeb, bi)
 			}
