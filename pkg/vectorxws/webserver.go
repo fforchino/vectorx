@@ -33,6 +33,7 @@ type BotInfo struct {
 	ESN            string                     `json:"esn"`
 	IPAddress      string                     `json:"ip_address"`
 	CustomSettings sdk_wrapper.CustomSettings `json:"custom_settings"`
+	VectorSettings map[string]interface{}     `json:"vector_settings"`
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
@@ -136,7 +137,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			for _, bot := range jsonObj.Robots {
 				botCustomConfigJson := filepath.Join(vPath, "vectorfs/nvm/"+bot.Esn+"/custom_settings.json")
 				data, err := ioutil.ReadFile(botCustomConfigJson)
-				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}}
+				var vectorSettings map[string]interface{} = nil
+				errSDK := sdk_wrapper.InitSDKForWirepod(bot.Esn)
+				if errSDK != nil {
+					vectorSettings = sdk_wrapper.GetVectorSettings()
+				}
+				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}, vectorSettings}
 				if err == nil {
 					var customSettings sdk_wrapper.CustomSettings
 					err = json.Unmarshal(data, &customSettings)
