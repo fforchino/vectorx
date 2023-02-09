@@ -1,4 +1,11 @@
+var CurrentPage = "";
+
+function ReloadSite() {
+  LoadSite(CurrentPage);
+}
+
 function LoadSite(selectedPage) {
+  CurrentPage = selectedPage;
   LoadNavBar();
   LoadBrandLogo();
   LoadSidebar(selectedPage);

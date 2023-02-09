@@ -74,6 +74,17 @@ async function BotControlSendIntent(intentName, resultElement) {
             extraData += "&p2="+location;
         }
     }
+    else if (intentName=="set-name") {
+        var name = document.getElementById("chat-name").value;
+        name = name.replaceAll('&', '');
+        name = name.replaceAll('?', '');
+        if (name!="") {
+            extraData += "&p1="+name;
+        } else {
+            document.getElementById(resultElement).innerHTML="Input error. Check parameters.";
+            return
+        }
+    }
     if (intentName=="roll-a-die" ||
         intentName=="bingo" ||
         intentName=="pong" ||
@@ -85,18 +96,22 @@ async function BotControlSendIntent(intentName, resultElement) {
         intentName=="set-name" ||
         intentName=="pills-of-wisdom") {
         var data = "name=" + intentName+"&esn="+CurrentRobot.esn+extraData;
-        fetch("/api/send_intent?" + data)
+        await fetch("/api/send_intent?" + data)
             .then(response => response.text())
             .then((response) => {
+                var res = "Error sending command.";
                 try {
                     //alert(response);
                     obj = JSON.parse(response);
                     if (obj.result=="OK") {
-                        document.getElementById(resultElement).innerHTML="Command sent to Vector.";
-                        return;
+                        res="Command sent to Vector.";
                     }
                 } catch {}
-                document.getElementById(resultElement).innerHTML="Error sending command.";
+                document.getElementById(resultElement).innerHTML=res;
             })
+        if (intentName=="set-name") {
+            await new Promise(r => setTimeout(r, 5000));
+            ReloadSite();
+        }
     }
 }

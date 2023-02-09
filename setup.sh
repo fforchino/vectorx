@@ -107,6 +107,10 @@ if [[ ${silentMode} == "false" ]]; then
         esac
       }
       weatherUnitPrompt
+    else
+      weatherUnit=$WEATHERAPI_UNIT
+      weatherAPI=$WEATHERAPI_KEY
+      weatherProvider=$WEATHERAPI_PROVIDER
     fi
   fi
 
@@ -155,6 +159,8 @@ if [[ ${silentMode} == "false" ]]; then
         }
         vimServerPrompt
       fi
+    else
+      vimServer=$VIM_SERVER
     fi
   fi
 fi
@@ -240,33 +246,36 @@ else
   systemctl disable vectorx-vim
 fi
 
-echo "Creating source.sh"
-rm -fr source.sh
-echo "export WIREPOD_HOME=${wirepodHome}" >source.sh
-echo "export WIREPOD_EX_TMP_PATH=vectorfs/tmp" >>source.sh
-echo "export WIREPOD_EX_DATA_PATH=vectorfs/data" >>source.sh
-echo "export WIREPOD_EX_NVM_PATH=vectorfs/nvm" >>source.sh
-echo "export VECTORX_WEBSERVER_PORT=8070" >> source.sh
-echo "export GOPATH=/usr/local/go" >>source.sh
-echo "export GOCACHE=/usr/local/go/pkg/mod" >>source.sh
-echo "export VECTORX_HOME=${vectorxHome}" >>source.sh
-if [[ ${weatherSetup} == "true" ]]; then
-  echo "export WEATHERAPI_ENABLED=true" >>source.sh
-  echo "export WEATHERAPI_PROVIDER=$weatherProvider" >>source.sh
-  echo "export WEATHERAPI_KEY=${weatherAPI}" >>source.sh
-  echo "export WEATHERAPI_UNIT=${weatherUnit}" >>source.sh
-else
-  echo "export WEATHERAPI_ENABLED=false" >>source.sh
+if [[ ${silentMode} == "false" ]]; then
+  # Creating source.sh only if we are not updating (-h), else we'd be overwriting data
+  echo "Creating source.sh"
+  rm -fr source.sh
+  echo "export WIREPOD_HOME=${wirepodHome}" >source.sh
+  echo "export WIREPOD_EX_TMP_PATH=vectorfs/tmp" >>source.sh
+  echo "export WIREPOD_EX_DATA_PATH=vectorfs/data" >>source.sh
+  echo "export WIREPOD_EX_NVM_PATH=vectorfs/nvm" >>source.sh
+  echo "export VECTORX_WEBSERVER_PORT=8070" >> source.sh
+  echo "export GOPATH=/usr/local/go" >>source.sh
+  echo "export GOCACHE=/usr/local/go/pkg/mod" >>source.sh
+  echo "export VECTORX_HOME=${vectorxHome}" >>source.sh
+  if [[ ${weatherSetup} == "true" ]]; then
+    echo "export WEATHERAPI_ENABLED=true" >>source.sh
+    echo "export WEATHERAPI_PROVIDER=$weatherProvider" >>source.sh
+    echo "export WEATHERAPI_KEY=${weatherAPI}" >>source.sh
+    echo "export WEATHERAPI_UNIT=${weatherUnit}" >>source.sh
+  else
+    echo "export WEATHERAPI_ENABLED=false" >>source.sh
+  fi
+  if [[ ${vimSetup} == "true" ]]; then
+    echo "export VIM_ENABLED=true" >>source.sh
+    echo "export VIM_SERVER=$vimServer" >>source.sh
+  else
+    echo "export VIM_ENABLED=false" >>source.sh
+  fi
+  echo
+  echo "Created source.sh file!"
+  echo
 fi
-if [[ ${vimSetup} == "true" ]]; then
-  echo "export VIM_ENABLED=true" >>source.sh
-  echo "export VIM_SERVER=$vimServer" >>source.sh
-else
-  echo "export VIM_ENABLED=false" >>source.sh
-fi
-echo
-echo "Created source.sh file!"
-echo
 export WIREPOD_HOME=${wirepodHome}
 echo
 echo "Injecting extended intents into wirepod custom intents"

@@ -337,11 +337,26 @@
                 <h3>Set Robot Name</h3>
 
                 <p>Name your Vector!</p>
+                <div class="bot-control-reveal" id="bot-control-chat-name">
+                  <i>Voice command:</i> Hey Vector, <b>your name is &lt;<i>name</i>&gt;.</b>
+                  <br/>
+                  Vector will remember its name. It will be used for chat, or you can simply ask, "What's your name?"
+                  <br/><br/>
+                  <div class="form-group row">
+                    <label for="chat-name" class="col-sm-2 col-form-label">name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="chat-name" placeholder="Name">
+                    </div>
+                  </div>
+                  <span id="bot-control-chat-name-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('set-name', 'bot-control-chat-name-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-robot"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="#" onclick="BotControlReveal(this, 'bot-control-chat-name'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -352,11 +367,20 @@
                 <h3>Pills of Wisdom</h3>
 
                 <p>Get a random quote</p>
+                <div class="bot-control-reveal" id="bot-control-chat-pills">
+                  <i>Voice command:</i> Hey Vector, <b>roll a die!</b>
+                  <br/>
+                  Vector will roll a 6-sided die and tell the outcome.
+                  <br/><br/>
+                  <span id="bot-control-chat-pills-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('pills-of-wisdom', 'bot-control-chat-pills');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-star"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-chat-pills'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
         </div>

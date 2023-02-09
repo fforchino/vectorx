@@ -125,7 +125,8 @@ func RegisterIntents() {
 	Pong_Register(&intents)
 	//FollowCube_Register(&intents)
 	Lottery_Register(&intents)
-	Balance_Register(&intents)
+	//Balance_Register(&intents)
+	PillsOfWisdom_Register(&intents)
 	VIM_Register(&intents)
 }
 
