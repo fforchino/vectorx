@@ -18,7 +18,7 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   sudo runuser -l pi -c "cd $WIREPOD_HOME && git pull"
   echo "Building chipper just in case..."
   cd $VECTORX_HOME
-  sudo buildChipper.sh
+  sudo ./buildChipper.sh
   cd $VECTORX_HOME
   echo "Updating VectorX..."
   #git reset --hard main
