@@ -139,6 +139,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 				if err == nil {
 					var customSettings sdk_wrapper.CustomSettings
 					err = json.Unmarshal(data, &customSettings)
+					if err == nil {
+						bi.CustomSettings = customSettings
+					}
 				}
 				botsForWeb = append(botsForWeb, bi)
 			}
