@@ -152,7 +152,7 @@ func doWeatherForecast(intent IntentDef, speechText string, params IntentParams)
 			}
 		}
 	}()
-	sdk_wrapper.DisplayAnimatedGif("vectorfs/"+params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 2, true)
+	sdk_wrapper.DisplayAnimatedGif(params.Weather.Icon, sdk_wrapper.ANIMATED_GIF_SPEED_FAST, 2, true)
 	return returnIntent
 }
 
