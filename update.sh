@@ -17,6 +17,7 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   #git checkout main
   sudo runuser -l pi -c "cd $WIREPOD_HOME && git pull"
   echo "Building chipper just in case..."
+  cd $WIREPOD_HOME/chipper
   export CGO_ENABLED=1
   export CGO_CFLAGS="-I$HOME/.vosk/libvosk"
   export CGO_LDFLAGS="-L $HOME/.vosk/libvosk -lvosk -ldl -lpthread"
