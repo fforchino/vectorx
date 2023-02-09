@@ -139,7 +139,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 				data, err := ioutil.ReadFile(botCustomConfigJson)
 				var vectorSettings map[string]interface{} = nil
 				errSDK := sdk_wrapper.InitSDKForWirepod(bot.Esn)
-				if errSDK != nil {
+				if errSDK == nil {
 					vectorSettings = sdk_wrapper.GetVectorSettings()
 				}
 				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}, vectorSettings}
