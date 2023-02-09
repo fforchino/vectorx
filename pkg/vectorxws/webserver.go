@@ -418,6 +418,8 @@ func runIntentCommand(intentName string, serialNo string, params []string) error
 		}
 	} else if intentName == "set-name" {
 		txt = "your name is " + params[0]
+	} else if intentName == "pills-of-wisdom" {
+		txt = "tell me something"
 	}
 
 	if txt == "" {
