@@ -1,9 +1,11 @@
 package intents
 
 import (
+	"encoding/json"
 	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -171,41 +173,37 @@ func IntentMatch(speechText string, locale string) (IntentDef, error) {
 
 // Try to get Wirepod config for this bot if any. Else get params from the robot itself
 func GetWirepodBotInfo(serialNo string) {
-	/*
-		botConfigPath := os.Getenv("WIREPOD_HOME")
-		botConfigPath = path.Join(botConfigPath, "chipper", "botConfig.json")
-		if _, err := os.Stat(botConfigPath); err == nil {
-			type botConfigJSON []struct {
-				ESN             string `json:"ESN"`
-				Location        string `json:"location"`
-				Units           string `json:"units"`
-				UsePlaySpecific bool   `json:"use_play_specific"`
-				IsEarlyOpus     bool   `json:"is_early_opus"`
-			}
+	botConfigPath := os.Getenv("WIREPOD_HOME")
+	botConfigPath = path.Join(botConfigPath, "chipper", "botConfig.json")
+	if _, err := os.Stat(botConfigPath); err == nil {
+		type botConfigJSON []struct {
+			ESN             string `json:"ESN"`
+			Location        string `json:"location"`
+			Units           string `json:"units"`
+			UsePlaySpecific bool   `json:"use_play_specific"`
+			IsEarlyOpus     bool   `json:"is_early_opus"`
+		}
 
-			var botConfig botConfigJSON
+		var botConfig botConfigJSON
 
-			byteValue, err := os.ReadFile(botConfigPath)
-			if err != nil {
-				println(err)
-			}
+		byteValue, err := os.ReadFile(botConfigPath)
+		if err != nil {
+			println(err)
+		}
 
-			json.Unmarshal(byteValue, &botConfig)
-			for _, bot := range botConfig {
-				if strings.ToLower(bot.ESN) == serialNo {
-					println("Found bot config for " + bot.ESN)
-					BotLocation = bot.Location
-					BotUnits = bot.Units
-				}
-			}
-			if BotLocation == "" {
-				BotLocation = sdk_wrapper.GetVectorSettings()["default_location"].(string)
-				BotUnits = os.Getenv("WEATHERAPI_UNIT")
+		json.Unmarshal(byteValue, &botConfig)
+		for _, bot := range botConfig {
+			if strings.ToLower(bot.ESN) == serialNo {
+				println("Found bot config for " + bot.ESN)
+				BotLocation = bot.Location
+				BotUnits = bot.Units
 			}
 		}
-	*/
-	BotLocation = sdk_wrapper.GetVectorSettings()["default_location"].(string)
-	BotUnits = os.Getenv("WEATHERAPI_UNIT")
+		if BotLocation == "" {
+			BotLocation = sdk_wrapper.GetVectorSettings()["default_location"].(string)
+			BotUnits = os.Getenv("WEATHERAPI_UNIT")
+		}
+	}
 }
 
 /**********************************************************************************************************************/

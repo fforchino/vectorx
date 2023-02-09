@@ -46,16 +46,19 @@ func main() {
 		xIntent, err := intents.IntentMatch(*speechText, language)
 
 		if err == nil {
-			stats.StatsIntentHandled(true)
-			// Ok, we have a match. Then extract the parameters (if any) from the intent...
-			params := intents.ParseParams(*speechText, xIntent)
+			// Ok, we have a match. Then extract the parameters (if any) from the intent, but before that init the
+			// SDK because we may need to get Vector's settings (e.g. for weather forecast we need the default location)
 
+			stats.StatsIntentHandled(true)
 			// Init SDK
 			err := sdk_wrapper.InitSDKForWirepod(*serial)
 			if err != nil {
 				println("FATAL: could not load Vector settings from JDOCS")
 				return
 			}
+
+			// Extract params
+			params := intents.ParseParams(*speechText, xIntent)
 
 			robotLocale := sdk_wrapper.GetLocale()
 			if Debug {
