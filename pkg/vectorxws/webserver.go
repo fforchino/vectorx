@@ -403,7 +403,8 @@ func runIntentCommand(intentName string, serialNo string) error {
 	}
 	for _, cmd := range cmds {
 		println(cmd)
-		e := exec.Command("/bin/sh", "-c", cmd).Run()
+		// Use Start() instead of Run() so we don't wait until completion
+		e := exec.Command("/bin/sh", "-c", cmd).Start()
 		if e != nil {
 			return e
 		}

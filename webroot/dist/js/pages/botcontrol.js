@@ -1,10 +1,11 @@
+var CurrentRobot = null;
+
 function LoadBotControlPage() {
-    let botSerialNo = QueryParams.esn;
-    let bot = GetRobotInfo(botSerialNo)
+    CurrentRobot = GetRobotInfo(QueryParams.esn)
     if (bot!=null) {
-        let botName = bot.custom_settings.RobotName.toUpperCase();
+        let botName = CurrentRobot.custom_settings.RobotName.toUpperCase();
         document.getElementById("nav_page_robots").click();
-        document.getElementById("nav_page_botcontrol_"+botSerialNo).classList.add("active");
+        document.getElementById("nav_page_botcontrol_"+CurrentRobot.esn).classList.add("active");
         document.getElementById("bc_serial_no").innerHTML = botName
         document.getElementById("bc_title").innerHTML = "Play with "+botName;
     }
@@ -15,13 +16,21 @@ function BotControlReveal(element, elementIdToShow) {
     document.getElementById(elementIdToShow).style.display = "block";
 }
 
-async function BotControlSendIntent(intentName, esn) {
+async function BotControlSendIntent(intentName, resultElement) {
     if (intentName=="roll-a-die") {
-        var data = "name=" + intentName+"&esn="+esn;
-        fetch(WIREPOD_HOME + "/api/send_intent?" + data)
+        var data = "name=" + intentName+"&esn="+CurrentRobot.esn;
+        fetch("/api/send_intent?" + data)
             .then(response => response.text())
             .then((response) => {
-                alert(response)
+                try {
+                    //alert(response);
+                    obj = JSON.parse(response);
+                    if (obj.result=="OK") {
+                        document.getElementById(resultElement).innerHTML="Command successfully sent to Vector.";
+                        return;
+                    }
+                } catch {}
+                document.getElementById(resultElement).innerHTML="Error sending command.";
             })
     }
 }
