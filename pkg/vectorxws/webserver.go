@@ -169,11 +169,12 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	case r.URL.Path == "/api/send_intent":
 		name := r.FormValue("name")
 		serialNo := r.FormValue("esn")
+		params := []string{r.FormValue("p1"), r.FormValue("p2")}
 		if name == "" || serialNo == "" {
 			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 			return
 		}
-		e := runIntentCommand(name, serialNo)
+		e := runIntentCommand(name, serialNo, params)
 		if e == nil {
 			fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 		} else {
@@ -388,11 +389,34 @@ func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
 	return isOk
 }
 
-func runIntentCommand(intentName string, serialNo string) error {
+func runIntentCommand(intentName string, serialNo string, params []string) error {
 	txt := ""
 	if intentName == "roll-a-die" {
 		txt = "roll a die"
+	} else if intentName == "bingo" {
+		txt = "bingo"
+	} else if intentName == "pong" {
+		txt = "let's play a classic"
+	} else if intentName == "rps" {
+		txt = "let's play a new game"
+	} else if intentName == "how-do-you-say" {
+		txt = "how do you say " + params[0] + " in " + params[1]
+	} else if intentName == "lets-speak" {
+		txt = "let's talk " + params[0]
+	} else if intentName == "weather" {
+		txt = "weather"
+		if params[0] != "" {
+			txt += " in " + params[0]
+		}
+	} else if intentName == "weather-forecast" {
+		txt = "weather " + params[0]
+		if params[1] != "" {
+			txt += " in " + params[1]
+		}
+	} else if intentName == "set-name" {
+		txt = "your name is " + params[0]
 	}
+
 	if txt == "" {
 		return errors.New("unknown intent name")
 	}

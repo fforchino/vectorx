@@ -13,11 +13,16 @@ function LoadBotControlPage() {
 
 function BotControlReveal(element, elementIdToShow) {
     element.style.display = "none";
+    var elementsToHide = getElementsByClassName("bot-control-reveal");
+    for (var i=0;i<elementsToHide.length;i++) {
+        elementsToHide[i].style.display = "none";
+    }
     document.getElementById(elementIdToShow).style.display = "block";
 }
 
 async function BotControlSendIntent(intentName, resultElement) {
-    if (intentName=="roll-a-die") {
+    if (intentName=="roll-a-die" ||
+        intentName=="bingo") {
         var data = "name=" + intentName+"&esn="+CurrentRobot.esn;
         fetch("/api/send_intent?" + data)
             .then(response => response.text())

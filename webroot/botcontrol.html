@@ -84,7 +84,7 @@
               <div class="icon">
                 <i class="fa-solid fa-dice"></i>
               </div>
-              <a id="" href="#" onclick="BotControlReveal(this, 'bot-control-games-roll-a-die'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-games-roll-a-die'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -94,12 +94,22 @@
               <div class="inner">
                 <h3>Bingo!</h3>
 
-                <p>Vector pulls out random numbers 1-90</p>
+                <p>Vector hosts a bingo game</p>
+                <div class="bot-control-reveal" id="bot-control-games-bingo">
+                  <br>
+                  <i>Voice command:</i> Hey Vector, <b>bingo!</b>
+                  <br/>
+                  Vector will pull out numbers from 1 to 90 in random order. Rub Vector's back to get a new number. Click Vector's back button to quit.
+                  <br/><br/>
+                  <span id="bot-control-games-bingo-result"></span>
+                  <br/><br/>
+                  <button onclick="BotControlSendIntent('bingo', 'bot-control-games-bingo-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+                </div>
               </div>
               <div class="icon">
                 <i class="fa-solid fa-clover"></i>
               </div>
-              <a href="#" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="#" onclick="BotControlReveal(this, 'bot-control-games-bingo'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
