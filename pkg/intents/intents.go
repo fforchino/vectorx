@@ -104,8 +104,8 @@ type IntentHandlerFunc func(IntentDef, string, IntentParams) string
 type IntentDef struct {
 	IntentName string              `json:"intentName"`
 	Utterances map[string][]string `json:"utterances"`
-	Parameters []string
-	Handler    IntentHandlerFunc
+	Parameters []string            `json:"-"`
+	Handler    IntentHandlerFunc   `json:"-"`
 }
 
 var intents []IntentDef
