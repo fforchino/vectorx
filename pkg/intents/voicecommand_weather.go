@@ -284,6 +284,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		println("Lat: " + Lat + ", Lon: " + Lon)
 		println("Name: " + geoCodingInfoStruct[0].Name)
 		println("Country: " + geoCodingInfoStruct[0].Country)
+		println("TTS Language: " + sdk_wrapper.GetLanguage())
 
 		// Now that we have Lat and Lon, let's query the weather
 		units := "metric"
@@ -398,8 +399,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 				icon = sdk_wrapper.GetDataPath("images/weather/conditions/cloudy_cloudy.gif")
 			}
 		} else {
-			// DEBUG
-			condition = openWeatherMapAPIResponse.Weather[0].Main + string(conditionCode)
+			condition = openWeatherMapAPIResponse.Weather[0].Main
 		}
 
 		temp := int(math.Round(openWeatherMapAPIResponse.Main.Temp))

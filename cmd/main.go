@@ -55,11 +55,6 @@ func main() {
 				println("FATAL: could not load Vector settings from JDOCS")
 				return
 			}
-
-			// Extract params
-			intents.GetWirepodBotInfo(*serial)
-			params := intents.ParseParams(*speechText, xIntent)
-
 			robotLocale := sdk_wrapper.GetLocale()
 			if Debug {
 				println("ROBOT LOCALE: " + robotLocale)
@@ -73,6 +68,11 @@ func main() {
 			if Debug {
 				println("ROBOT LOCALE: " + robotLocale)
 			}
+
+			// Extract params
+			intents.GetWirepodBotInfo(*serial)
+			params := intents.ParseParams(*speechText, xIntent)
+
 			sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
 
 			go func() {
