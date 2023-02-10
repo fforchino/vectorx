@@ -120,6 +120,7 @@ func Weather_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_COLD", []string{"freezing", "freddo", "frío", "froid", "kalt"})
 	addLocalizedString("STR_WEATHER_DEGREES_AND", []string{" degrees and ", " gradi e ", " grados y ", " degrés et ", " Grad und "})
 	addLocalizedString("STR_WEATHER_DEGREE_AND", []string{" degree and ", " grado e ", " grado y ", " degré et ", " Grad und "})
+	addLocalizedString("STR_UNDEFINED", []string{"undefined", "non definito", "indefinido", "indéfini", "unbestimmt"})
 	return nil
 }
 
@@ -269,7 +270,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		}
 		if len(geoCodingInfoStruct) == 0 {
 			println("Geo provided no response.")
-			condition = "undefined"
+			condition = getText("STR_UNDEFINED")
 			is_forecast = "false"
 			local_datetime = "test"              // preferably local time in UTC ISO 8601 format ("2022-06-15 12:21:22.123")
 			speakable_location_string = location // preferably the processed location
@@ -375,7 +376,6 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 		} else if conditionCode == 800 {
 			// Clear
 			if openWeatherMapAPIResponse.DT < openWeatherMapAPIResponse.Sys.Sunset {
-				condition = "Sunny"
 				condition = getText("STR_SUNNY")
 				icon = sdk_wrapper.GetDataPath("images/weather/conditions/sunny1.gif")
 			} else {
@@ -385,7 +385,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 			}
 		} else if conditionCode < 900 {
 			// Cloud
-			condition = "Cloudy"
+			condition = getText("STR_CLOUDY")
 			if conditionCode == 801 || conditionCode == 802 {
 				if openWeatherMapAPIResponse.DT < openWeatherMapAPIResponse.Sys.Sunset {
 					condition = getText("STR_CLOUDY")
@@ -398,7 +398,8 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 				icon = sdk_wrapper.GetDataPath("images/weather/conditions/cloudy_cloudy.gif")
 			}
 		} else {
-			condition = openWeatherMapAPIResponse.Weather[0].Main
+			// DEBUG
+			condition = openWeatherMapAPIResponse.Weather[0].Main + string(conditionCode)
 		}
 
 		temp := int(math.Round(openWeatherMapAPIResponse.Main.Temp))
@@ -422,7 +423,7 @@ func getWeather(location string, botUnits string, hoursFromNow int) (string, str
 			temperature_unit = "F"
 		}
 	} else {
-		condition = "Snow"
+		condition = getText("STR_SNOW")
 		is_forecast = "false"
 		local_datetime = "test"              // preferably local time in UTC ISO 8601 format ("2022-06-15 12:21:22.123")
 		speakable_location_string = location // preferably the processed location
