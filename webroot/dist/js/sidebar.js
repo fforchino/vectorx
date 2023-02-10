@@ -70,6 +70,12 @@ function LoadSidebar(selectedPage) {
     '                  <p>Check for updates</p>\n' +
     '                </a>\n' +
     '              </li>\n' +
+    '              <li class="nav-item">\n' +
+    '                <a id="nav_page_help" href="voicecommands.html" class="nav-link">\n' +
+    '                  <i class="fas fa-life-ring nav-icon"></i>\n' +
+    '                  <p>Voice Command Help</p>\n' +
+    '                </a>\n' +
+    '              </li>\n' +
     '<!--'+
     '              <li class="nav-item">\n' +
     '                <a href="./index.html" class="nav-link">\n' +

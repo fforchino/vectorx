@@ -4,8 +4,9 @@ const QueryParams = new Proxy(new URLSearchParams(window.location.search), {
 });
 
 var Robots = {};
-var Intents = {}
-var Settings = {}
+var Intents = {};
+var Settings = {};
+var VectorxIntents = {};
 
 async function LoadRobots() {
     await fetch("/api/get_robots", {cache: "no-store"})
@@ -37,6 +38,17 @@ async function LoadSettings() {
                 //alert(response);
                 obj = JSON.parse(response);
                 Settings = obj;
+            } catch {}
+        })
+}
+
+async function LoadVectorXCustomIntents() {
+    await fetch("/api/get_vectorx_intents", {cache: "no-store"})
+        .then(response => response.text())
+        .then((response) => {
+            try {
+                obj = JSON.parse(response);
+                VectorxIntents = obj;
             } catch {}
         })
 }

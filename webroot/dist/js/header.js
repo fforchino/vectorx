@@ -16,7 +16,12 @@ function LoadSite(selectedPage) {
         LoadHomePageBots();
         checkSetupMissing();
       }
-      if (selectedPage.startsWith("nav_page_botcontrol")) {
+      else if (selectedPage == "nav_page_help") {
+        LoadVectorXCustomIntents().then( () => {
+          LoadHelpPage();
+        })
+      }
+      else if (selectedPage.startsWith("nav_page_botcontrol")) {
         LoadBotControlPage();
       } else {
         // Handle selection for normal pages

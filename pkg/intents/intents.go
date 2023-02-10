@@ -102,8 +102,8 @@ type IntentParams struct {
 type IntentHandlerFunc func(IntentDef, string, IntentParams) string
 
 type IntentDef struct {
-	IntentName string
-	Utterances map[string][]string
+	IntentName string              `json:"intentName"`
+	Utterances map[string][]string `json:"utterances"`
 	Parameters []string
 	Handler    IntentHandlerFunc
 }
@@ -175,6 +175,10 @@ func GetWirepodBotInfo(serialNo string) {
 	BotLocation = sdk_wrapper.GetVectorSettings()["default_location"].(string)
 	BotUnits = os.Getenv("WEATHERAPI_UNIT")
 	log.Println("Bot location read from robot: " + BotLocation)
+}
+
+func GetIntents() *[]IntentDef {
+	return &intents
 }
 
 /**********************************************************************************************************************/

@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"vectorx/pkg/intents"
 	"vectorx/pkg/stats"
 )
 
@@ -176,6 +177,15 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			"\"commands\": \"" + commands + "\"" +
 			" }"
 		fmt.Fprintf(w, data)
+		break
+	case r.URL.Path == "/api/get_vectorx_intents":
+		var intents *[]intents.IntentDef = intents.GetIntents()
+		jsonStr, err2 := json.Marshal(*intents)
+		if err2 != nil {
+			fmt.Fprintf(w, string(jsonStr))
+		} else {
+			fmt.Fprintf(w, "{}")
+		}
 		break
 	case r.URL.Path == "/api/update":
 		result, commandOutput := runUpdateScript()
