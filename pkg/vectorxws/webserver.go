@@ -231,6 +231,7 @@ func StartWebServer() {
 	if err := http.ListenAndServe(":"+webPort, nil); err != nil {
 		log.Fatal(err)
 	}
+	intents.RegisterIntents()
 }
 
 func WirepodConfigToJSON() (map[string]string, error) {
