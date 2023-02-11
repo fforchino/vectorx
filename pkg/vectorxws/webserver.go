@@ -181,7 +181,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	case r.URL.Path == "/api/get_vectorx_intents":
 		var intents *[]intents.IntentDef = intents.GetIntents()
 		jsonStr, err2 := json.Marshal(*intents)
-		if err2 != nil {
+		if err2 == nil {
 			fmt.Fprintf(w, string(jsonStr))
 		} else {
 			fmt.Fprintf(w, "{}")
@@ -214,6 +214,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 
 func StartWebServer() {
 	var webPort string
+	intents.RegisterIntents()
 	http.HandleFunc("/api/", apiHandler)
 	fileServer := http.FileServer(http.Dir("./webroot"))
 	http.Handle("/", fileServer)
@@ -231,7 +232,6 @@ func StartWebServer() {
 	if err := http.ListenAndServe(":"+webPort, nil); err != nil {
 		log.Fatal(err)
 	}
-	intents.RegisterIntents()
 }
 
 func WirepodConfigToJSON() (map[string]string, error) {
