@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="dist/css/vectorx.css">
   <script src="https://kit.fontawesome.com/8cdc8cbed9.js" crossorigin="anonymous"></script>
 </head>
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -87,7 +88,16 @@
               <!-- /.card-header -->
               <!-- /.card-body -->
               <div class="card-body">
-                These are the release notes for RELEASE_11
+                VectorX RELEASE_11</br></br>
+                <ul>
+                  <li>Standard/Extended voice command speed improvement. Now VectorX code is compiled into binary code so it runs much faster. Also, the SDK is initialized only in case of a VectorX command, so standard wirepod voice commands are not delayed.</li>
+                  <li>Brand new UI for the VectorX control panel, with all VectorX features to try</li>
+                  <li>Fix OpenCV service not starting correctly</li>
+                  <li>Help on VectorX voice commands</li>
+                  <li>RPi4 Image is now updatable. "Check for updates" checks if updates are available and downloads them</li>
+                  <li>Bug fixes in Go SDK (for example, custom eye colors were not correctly handled when drawing monochrome graphics)</li>
+                </ul>
+
               </div>
               <div class="card-footer" style="text-align: right">
                 VectorX RELEASE_10

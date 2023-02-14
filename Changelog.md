@@ -1,6 +1,10 @@
 RELEASE_11
-- Adding a whole new GUI for the VectorX control panel
+- Standard/Extended voice command speed improvement. Now VectorX code is compiled into binary code so it runs much faster. Also, the SDK is initialized only in case of a VectorX command, so standard wirepod voice commands are not delayed.
+- Brand new UI for the VectorX control panel, with all VectorX features to try
 - Fix OpenCV service not starting correctly
+- Help on VectorX voice commands
+- RPi4 Image is now updatable. "Check for updates" checks if updates are available and downloads them
+- Bug fixes in Go SDK (for example, custom eye colors were not correctly handled when drawing monochrome graphics)
 
 RELEASE_10
 - Increase VectorX performance by building the go code to binary. Also initialize go SDK only if there is

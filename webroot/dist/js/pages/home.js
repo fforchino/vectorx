@@ -35,7 +35,7 @@ function doConsistencyCheck() {
             document.getElementById("span_cc5").classList.add("text-danger");
             document.getElementById("i_cc5").classList.add("fa-xmark");
         }
-        document.getElementById("home_locale").innerHTML = obj.STT_LANGUAGE;
+        document.getElementById("home_locale").innerHTML = Settings.STT_LANGUAGE;
     } catch {}
     fetch("/api/get_stats")
         .then(response => response.text())
@@ -72,14 +72,29 @@ function LoadHomePageBots() {
     var data = "";
     for (var i = 0; i < Robots.length; i++) {
         var bot = Robots[i];
+        var ip = "OFFLINE";
+        var botCtrlLink = "#"
+        if (bot.vector_settings==null) {
+            // Bot offline
+            eyeColor = "#aaaaaa";
+        }
+        else {
+            eyeColor = GetRobotEyeColorRGB(bot);
+            ip = bot.ip_address;
+            botCtrlLink = "botcontrol.html?esn="+bot.esn;
+        }
         data += '<div class="col-12 col-sm-6 col-md-3">\n' +
             '            <div class="info-box">\n' +
-            '                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-robot" aria-hidden="true"></i></span>\n' +
+            '                <span class="info-box-icon elevation-1" style="background-color: '+eyeColor+'">\n'+
+            '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="'+botCtrlLink+'" class="bot-link">\n ' +
+            '                        <i class="fas fa-robot" aria-hidden="true"></i>' +
+            '                    </a>\n'+
+            '                </span>\n' +
             '\n' +
             '                <div class="info-box-content">\n' +
             '                    <span class="info-box-text">'+bot.custom_settings.RobotName.toUpperCase()+'</span>\n' +
             '                    <span class="info-box-number">\n' +
-            '                  '+bot.esn.toUpperCase()+' | '+bot.ip_address+'\n' +
+            '                  '+bot.esn.toUpperCase()+' | '+ip+'\n' +
             '                </span>\n' +
             '                </div>\n' +
             '                <!-- /.info-box-content -->\n' +

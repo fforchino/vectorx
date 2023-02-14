@@ -96,13 +96,15 @@ function SidebarGetRobotList() {
   var data = "";
   for (var i = 0; i < Robots.length; i++) {
     var bot = Robots[i];
-    data +=
-        '                  <li class="nav-item">\n' +
-        '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
-        '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +
-        '                      <p>'+bot.custom_settings.RobotName.toUpperCase()+'</p>\n' +
-        '                    </a>\n' +
-        '                  </li>\n';
+    if (bot.vector_settings!=null) {
+      data +=
+          '                  <li class="nav-item">\n' +
+          '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
+          '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +
+          '                      <p>'+bot.custom_settings.RobotName.toUpperCase()+'</p>\n' +
+          '                    </a>\n' +
+          '                  </li>\n';
+    }
   }
   document.getElementById("sidebar_robot_list").innerHTML = data;
 }
