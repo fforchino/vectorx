@@ -85,7 +85,7 @@ function LoadHomePageBots() {
         }
         var botName = bot.custom_settings.RobotName.toUpperCase();
         if (botName.length==0) {
-            botName = bot.esn.toUppercase();
+            botName = bot.esn.toUpperCase();
         }
         data += '<div class="col-12 col-sm-6 col-md-3">\n' +
             '            <div class="info-box">\n' +
