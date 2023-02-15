@@ -83,6 +83,10 @@ function LoadHomePageBots() {
             ip = bot.ip_address;
             botCtrlLink = "botcontrol.html?esn="+bot.esn;
         }
+        var botName = bot.custom_settings.RobotName.toUpperCase();
+        if (botName.length==0) {
+            botName = bot.esn.toUppercase();
+        }
         data += '<div class="col-12 col-sm-6 col-md-3">\n' +
             '            <div class="info-box">\n' +
             '                <span class="info-box-icon elevation-1" style="background-color: '+eyeColor+'">\n'+
@@ -92,7 +96,7 @@ function LoadHomePageBots() {
             '                </span>\n' +
             '\n' +
             '                <div class="info-box-content">\n' +
-            '                    <span class="info-box-text">'+bot.custom_settings.RobotName.toUpperCase()+'</span>\n' +
+            '                    <span class="info-box-text">'+botName+'</span>\n' +
             '                    <span class="info-box-number">\n' +
             '                  '+bot.esn.toUpperCase()+' | '+ip+'\n' +
             '                </span>\n' +
