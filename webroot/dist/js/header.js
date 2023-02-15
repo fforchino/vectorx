@@ -6,45 +6,46 @@ function ReloadSite() {
 
 function LoadSite(selectedPage) {
   CurrentPage = selectedPage;
-  LoadNavBar();
-  LoadBrandLogo();
-  LoadSidebar(selectedPage);
-  LoadSettings().then(() => {
-    LoadRobots().then(() => {
-      SidebarGetRobotList();
-      if (selectedPage == "nav_page_home") {
-        LoadHomePageBots();
-        checkSetupMissing();
-      }
-      else if (selectedPage == "nav_page_help") {
-        LoadVectorXCustomIntents().then( () => {
-          LoadHelpPage();
-        })
-      }
-      else if (selectedPage.startsWith("nav_page_botcontrol")) {
-        LoadBotControlPage();
-      } else {
-        // Handle selection for normal pages
-        document.getElementById(selectedPage).classList.add("active");
-      }
-      LoadFooter();
-      /*
-      LoadIntents().then(() => {
+  checkSetupMissing().then(() => {
+    LoadNavBar();
+    LoadBrandLogo();
+    LoadSidebar(selectedPage);
+    LoadSettings().then(() => {
+      LoadRobots().then(() => {
         SidebarGetRobotList();
         if (selectedPage == "nav_page_home") {
           LoadHomePageBots();
         }
-        SidebarGetIntentList();
-        if (selectedPage.startsWith("nav_page_intent_edit")) {
-          LoadEditIntentPage();
+        else if (selectedPage == "nav_page_help") {
+          LoadVectorXCustomIntents().then( () => {
+            LoadHelpPage();
+          })
         }
-        // Handle selection
-        document.getElementById(selectedPage).classList.add("active");
-        if (selectedPage=="nav_page_intent_add" || selectedPage.startsWith("nav_page_intent_edit")) {
-          document.getElementById("nav_group_custom_intents").classList.add("active");
+        else if (selectedPage.startsWith("nav_page_botcontrol")) {
+          LoadBotControlPage();
+        } else {
+          // Handle selection for normal pages
+          document.getElementById(selectedPage).classList.add("active");
         }
+        LoadFooter();
+        /*
+        LoadIntents().then(() => {
+          SidebarGetRobotList();
+          if (selectedPage == "nav_page_home") {
+            LoadHomePageBots();
+          }
+          SidebarGetIntentList();
+          if (selectedPage.startsWith("nav_page_intent_edit")) {
+            LoadEditIntentPage();
+          }
+          // Handle selection
+          document.getElementById(selectedPage).classList.add("active");
+          if (selectedPage=="nav_page_intent_add" || selectedPage.startsWith("nav_page_intent_edit")) {
+            document.getElementById("nav_group_custom_intents").classList.add("active");
+          }
+        });
+         */
       });
-       */
     });
   });
 }
