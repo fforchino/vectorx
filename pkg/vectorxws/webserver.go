@@ -339,9 +339,11 @@ func configToJson(fileName string) (map[string]string, error) {
 	// optionally, resize scanner's capacity for lines over 64K, see next example
 	for scanner.Scan() {
 		line := scanner.Text()
-		line = strings.Split(line, "export ")[1]
-		data := strings.Split(line, "=")
-		mapConfig[data[0]] = data[1]
+		if strings.Contains(line, "export ") {
+			line = strings.Split(line, "export ")[1]
+			data := strings.Split(line, "=")
+			mapConfig[data[0]] = data[1]
+		}
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
