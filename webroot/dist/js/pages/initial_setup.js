@@ -6,7 +6,7 @@ function goToTutorial(n) {
     if (checkTutorial(n)) {
         for (i=0;i<10;i++) {
             var el = document.getElementById("tut0"+i);
-            if (i!=null) {
+            if (el!=null) {
                 el.style.display = i==n ? "block" : "none";
             }
         }
