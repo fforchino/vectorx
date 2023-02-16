@@ -97,9 +97,9 @@ function SidebarGetRobotList() {
   for (var i = 0; i < Robots.length; i++) {
     var bot = Robots[i];
     if (bot.vector_settings!=null) {
-      var botName = bot.custom_settings.RobotName.toUpperCase();
-      if (botName.length==0) botName = bot.esn.toUpperCase();
-      data +=
+    var botName = bot.custom_settings.RobotName.toUpperCase();
+    if (botName.length==0) botName = bot.esn.toUpperCase();
+    data +=
           '                  <li class="nav-item">\n' +
           '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
           '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +

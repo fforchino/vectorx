@@ -48,26 +48,6 @@ function doConsistencyCheck() {
         })
 }
 
-function goInitialSetup() {
-   document.location.replace("initial_setup.html")
-}
-
-function checkSetupMissing() {
-        fetch("/api/is_setup_done")
-            .then(response => response.text())
-            .then((response) => {
-                    try {
-                            obj = JSON.parse(response);
-                            if (obj.result=="OK") {
-                                    doConsistencyCheck()
-                            }
-                            else {
-                                    goInitialSetup();
-                            }
-                    } catch { goInitialSetup(); }
-            })
-}
-
 function LoadHomePageBots() {
     var data = "";
     for (var i = 0; i < Robots.length; i++) {

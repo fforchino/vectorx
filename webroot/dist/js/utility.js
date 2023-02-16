@@ -64,6 +64,10 @@ function goHome() {
     document.location.replace("index.html")
 }
 
+function goInitialSetup() {
+    document.location.replace("initial_setup.html")
+}
+
 function GetRobotInfo(esn) {
     var theBot = null;
     for (var i = 0; i < Robots.length; i++) {
