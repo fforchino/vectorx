@@ -1,3 +1,6 @@
+RELEASE_12
+- Add an uninstall script (uninstall.sh)
+
 RELEASE_11
 - Standard/Extended voice command speed improvement. Now VectorX code is compiled into binary code so it runs much faster. Also, the SDK is initialized only in case of a VectorX command, so standard wirepod voice commands are not delayed.
 - Brand new UI for the VectorX control panel, with all VectorX features to try

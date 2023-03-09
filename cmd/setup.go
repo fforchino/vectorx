@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,9 +31,21 @@ func contains(iss intentsStruct, i string) bool {
 	return false
 }
 
+func remove(slice intentsStruct, s int) intentsStruct {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+var op *string
+
+func init() {
+	op = flag.String("op", "install", "install/uninstall")
+}
+
 func main() {
 	var customIntentJSON intentsStruct = nil
 	var vectorxIntentJSON intentsStruct = nil
+
+	flag.Parse()
 
 	wirepodPath := os.Getenv("WIREPOD_HOME")
 
@@ -45,6 +58,7 @@ func main() {
 			json.Unmarshal(customIntentJSONFile, &customIntentJSON)
 		}
 	}
+
 	// Load VECTORX custom intents
 	vectorxIntentsFile := "./vectorxSetup.json"
 	if _, err := os.Stat(vectorxIntentsFile); err == nil {
@@ -54,17 +68,39 @@ func main() {
 		}
 	}
 
-	// Overwrite vectorx intents in wirepod custom intents
-	if nil != vectorxIntentJSON {
-		for i, v := range vectorxIntentJSON {
-			cwd, _ := os.Getwd()
-			v.Exec = strings.Replace(v.Exec, "__REPLACEME__", cwd, -1)
-			if !contains(customIntentJSON, v.Name) {
-				println("Appending intent " + v.Name)
-				customIntentJSON = append(customIntentJSON, v)
-			} else {
-				println("Overwriting intent " + v.Name)
-				customIntentJSON[i] = v
+	if *op == "install" {
+		// Overwrite vectorx intents in wirepod custom intents
+		if nil != vectorxIntentJSON {
+			for i, v := range vectorxIntentJSON {
+				cwd, _ := os.Getwd()
+				v.Exec = strings.Replace(v.Exec, "__REPLACEME__", cwd, -1)
+				if !contains(customIntentJSON, v.Name) {
+					println("Appending intent " + v.Name)
+					customIntentJSON = append(customIntentJSON, v)
+				} else {
+					println("Overwriting intent " + v.Name)
+					customIntentJSON[i] = v
+				}
+			}
+		}
+	} else if *op == "uninstall" {
+		println("Uninstall VectorX custom intents")
+		if nil != vectorxIntentJSON {
+			for _, v := range vectorxIntentJSON {
+				nameToRemove := v.Name
+				println("Should remove intent " + nameToRemove)
+				var itemsToRemove []int
+				if contains(customIntentJSON, nameToRemove) {
+					println("Removing intent " + v.Name)
+					for j, w := range customIntentJSON {
+						if w.Name == nameToRemove {
+							itemsToRemove = append(itemsToRemove, j)
+						}
+					}
+					for _, w := range itemsToRemove {
+						customIntentJSON = remove(customIntentJSON, w)
+					}
+				}
 			}
 		}
 	}

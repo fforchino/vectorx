@@ -165,3 +165,11 @@ Data files are stored in the **vectorfs** directory. There are three different d
 one for each robot serial number
 3) **data** holds (read-only) data files. For an example of how to use data files, look at the "roll a die"
 example. The resource files for the roll-a-die voice commands are located under vectorfs/data/images/dice.
+
+## Uninstalling
+If you want to uninstall the hooks VectorX provides and remove all services, run as root the uninstall.sh 
+script:
+```
+sudo ./uninstall.sh 
+```   
+You can always re-setup everything by launching setup.sh and starting over.
