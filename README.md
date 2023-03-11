@@ -166,6 +166,25 @@ one for each robot serial number
 3) **data** holds (read-only) data files. For an example of how to use data files, look at the "roll a die"
 example. The resource files for the roll-a-die voice commands are located under vectorfs/data/images/dice.
 
+## Upgrading
+You can update VectorX as you would with any other git repository: "git pull". However, if you are not a developer
+and thus you are not making changes to the source code, you can use the same update script that the web server does,
+it will do everything for you in one shot:
+```
+./update.sh 
+```   
+The assumptions to run the script are:
+1) You haven't done changes to the source code files. Else the script will fail to update VectorX git repository
+2) You have run setup.sh at least once, and thus you have a valid source.sh file
+3) You are connected to the Internet
+ 
+The update script will do the following things:
+1) Stop all services
+2) Update VectorX and Wire-Pod (my own fork of it) repositories
+3) Rebuild chipper, VectorX and its web server
+4) Run again the VectorX setup in slient mode (no user input is required)
+5) Start again all services
+
 ## Uninstalling
 If you want to uninstall the hooks VectorX provides and remove all services, run as root the uninstall.sh 
 script:

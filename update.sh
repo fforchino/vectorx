@@ -15,7 +15,7 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Updating Wire-Pod..."
   #git reset --hard main
   #git checkout main
-  sudo runuser -l pi -c "cd $WIREPOD_HOME && git pull"
+  sudo runuser -l $(logname) -c "cd $WIREPOD_HOME && git pull"
   echo "Building chipper just in case..."
   cd $VECTORX_HOME
   sudo ./buildChipper.sh
@@ -23,7 +23,7 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   echo "Updating VectorX..."
   #git reset --hard main
   #git checkout main
-  sudo runuser -l pi -c "cd $VECTORX_HOME && git pull"
+  sudo runuser -l $(logname) -c "cd $VECTORX_HOME && git pull"
   echo "Setupping VectorX..."
   sudo ./setup.sh -h
   echo "Starting Wire-Pod"
