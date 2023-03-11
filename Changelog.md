@@ -1,3 +1,9 @@
+RELEASE_13
+- Bugfix: if you just press "ENTER" to wirepod install directory in setup.sh, the proposed path is not saved
+- Bugfix: the update.sh supposes the login user is "pi". This is because this script was supposed to be run 
+  as a service by the update procedure in the RPi4 image (that has a single user, "pi") only. 
+  Now this will work even vectorx is installed stand-alone under another, arbitrary, user. 
+
 RELEASE_12
 - Add an uninstall script (uninstall.sh)
 

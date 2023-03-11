@@ -43,7 +43,7 @@ if [[ ${silentMode} == "false" ]]; then
   function wirepodPrompt() {
     WIREPOD_HOME="/home/pi/wire-pod"
     read -p "Please enter the path to wirepod installation directory (${WIREPOD_HOME}): " wirepodhome
-    if [[ ! -n ${wirepodHome} ]]; then
+    if [[ ! -n ${wirepodhome} ]]; then
       wirepodHome=${WIREPOD_HOME}
     else
       wirepodHome=${wirepodhome}
