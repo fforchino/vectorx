@@ -1,3 +1,7 @@
+RELEASE_14
+- Fix issue #11: Update must also run wirepod setup in silent mode or upgrading to newer versions of 
+  wire-pod won't work
+
 RELEASE_13
 - Bugfix: if you just press "ENTER" to wirepod install directory in setup.sh, the proposed path is not saved
 - Bugfix: the update.sh supposes the login user is "pi". This is because this script was supposed to be run 

@@ -16,6 +16,11 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
   #git reset --hard main
   #git checkout main
   sudo runuser -l $(logname) -c "cd $WIREPOD_HOME && git pull"
+  cd $WIREPOD_HOME
+  echo "Running Wire-Pod setup"
+sudo ./setup.sh << DONE
+3
+DONE
   echo "Building chipper just in case..."
   cd $VECTORX_HOME
   sudo ./buildChipper.sh

@@ -18,7 +18,7 @@ import (
 	"vectorx/pkg/stats"
 )
 
-const VECTORX_VERSION = "RELEASE_13"
+const VECTORX_VERSION = "RELEASE_14"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
@@ -234,16 +234,121 @@ func StartWebServer() {
 	}
 }
 
+type apiConfig struct {
+	Weather struct {
+		Enable   bool   `json:"enable"`
+		Provider string `json:"provider"`
+		Key      string `json:"key"`
+		Unit     string `json:"unit"`
+	} `json:"weather"`
+	Knowledge struct {
+		Enable      bool   `json:"enable"`
+		Provider    string `json:"provider"`
+		Key         string `json:"key"`
+		ID          string `json:"id"`
+		IntentGraph bool   `json:"intentgraph"`
+		RobotName   string `json:"robotName"`
+	} `json:"knowledge"`
+	STT struct {
+		Service  string `json:"provider"`
+		Language string `json:"language"`
+	} `json:"STT"`
+	Server struct {
+		// false for ip, true for escape pod
+		EPConfig bool   `json:"epconfig"`
+		Port     string `json:"port"`
+	} `json:"server"`
+	HasReadFromEnv   bool `json:"hasreadfromenv"`
+	PastInitialSetup bool `json:"pastinitialsetup"`
+}
+
 func WirepodConfigToJSON() (map[string]string, error) {
 	wirepodPath := os.Getenv("WIREPOD_HOME")
 	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
-	return configToJson(wirepodCFG)
+	// Read source.sh
+	wirepodCFGMyJson, err := configToJson(wirepodCFG)
+	if err != nil {
+		return nil, err
+	}
+	// Integrate with the info now in apiConfig.json
+	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
+
+	b, err := os.ReadFile(wirepodJSONCFG)
+	if err != nil {
+		fmt.Print(err)
+	} else {
+		fmt.Println(b)
+		var APIConfig apiConfig
+		json.Unmarshal(b, &APIConfig)
+
+		if APIConfig.Weather.Enable {
+			wirepodCFGMyJson["WEATHERAPI_ENABLED"] = "true"
+			wirepodCFGMyJson["WEATHERAPI_KEY"] = APIConfig.Weather.Key
+			wirepodCFGMyJson["WEATHERAPI_UNIT"] = APIConfig.Weather.Unit
+		} else {
+			wirepodCFGMyJson["WEATHERAPI_ENABLED"] = "false"
+			wirepodCFGMyJson["WEATHERAPI_KEY"] = ""
+			wirepodCFGMyJson["WEATHERAPI_UNIT"] = ""
+		}
+		if APIConfig.Knowledge.Enable {
+			wirepodCFGMyJson["KNOWLEDGE_ENABLED"] = "true"
+			wirepodCFGMyJson["KNOWLEDGE_KEY"] = APIConfig.Knowledge.Key
+			wirepodCFGMyJson["KNOWLEDGE_PROVIDER"] = APIConfig.Knowledge.Provider
+		} else {
+			wirepodCFGMyJson["KNOWLEDGE_ENABLED"] = "false"
+			wirepodCFGMyJson["KNOWLEDGE_KEY"] = ""
+			wirepodCFGMyJson["KNOWLEDGE_PROVIDER"] = ""
+		}
+		wirepodCFGMyJson["STT_LANGUAGE"] = APIConfig.STT.Language
+	}
+
+	return wirepodCFGMyJson, nil
 }
 
 func JSONToWirepodConfig(cfg map[string]string) error {
 	wirepodPath := os.Getenv("WIREPOD_HOME")
 	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
-	return jsonToConfig(wirepodCFG, cfg)
+	// Writes to source.sh
+	jsonToConfig(wirepodCFG, cfg)
+
+	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
+	jSonData := "{\"weather\":{\"enable\":%%WEATHER_API_ENABLED%%,\"provider\":\"openweathermap.org\",\"key\":\"%%WEATHER_API_KEY%%\",\"unit\":\"%%WEATHER_API_UNIT%%\"},\"knowledge\":{\"enable\":%%KG_API_ENABLED%%,\"provider\":\"%%KG_PROVIDER%%\",\"key\":\"sk-KG_API_KEY\",\"id\":\"\",\"intentgraph\":%%KG_GRAPH_ENABLED%%,\"robotName\":\"\"},\"STT\":{\"provider\":\"vosk\",\"language\":\"%%LANGUAGE%%\"},\"server\":{\"epconfig\":true,\"port\":\"\"},\"hasreadfromenv\":true,\"pastinitialsetup\":true}"
+	if cfg["WEATHERAPI_ENABLED"] == "true" {
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_ENABLED%%", "true")
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_KEY%%", cfg["WEATHERAPI_KEY"])
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_UNIT%%", cfg["WEATHERAPI_UNIT"])
+	} else {
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_ENABLED%%", "false")
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_KEY%%", "")
+		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_UNIT%%", "")
+	}
+	if cfg["KNOWLEDGE_ENABLED"] == "true" {
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_ENABLED%%", "true")
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_KEY%%", cfg["KNOWLEDGE_KEY"])
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_PROVIDER%%", cfg["KNOWLEDGE_PROVIDER"])
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_GRAPH_ENABLED%%", "true")
+	} else {
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_ENABLED%%", "false")
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_KEY%%", "")
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_PROVIDER%%", "")
+		jSonData = strings.ReplaceAll(jSonData, "%%KG_GRAPH_ENABLED%%", "false")
+	}
+	jSonData = strings.ReplaceAll(jSonData, "%%LANGUAGE%%", cfg["STT_LANGUAGE"])
+
+	file, err := os.OpenFile(wirepodJSONCFG, os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		print("failed opening file")
+		return err
+	}
+	datawriter := bufio.NewWriter(file)
+	print(jSonData)
+	_, err = datawriter.WriteString(jSonData)
+	if err != nil {
+		println(err.Error())
+	}
+	datawriter.Flush()
+	file.Close()
+	return err
 }
 
 func VectorxConfigToJSON() (map[string]string, error) {
