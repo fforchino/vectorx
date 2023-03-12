@@ -312,7 +312,7 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 	jsonToConfig(wirepodCFG, cfg)
 
 	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
-	jSonData := "{\"weather\":{\"enable\":%%WEATHER_API_ENABLED%%,\"provider\":\"openweathermap.org\",\"key\":\"%%WEATHER_API_KEY%%\",\"unit\":\"%%WEATHER_API_UNIT%%\"},\"knowledge\":{\"enable\":%%KG_API_ENABLED%%,\"provider\":\"%%KG_PROVIDER%%\",\"key\":\"sk-KG_API_KEY\",\"id\":\"\",\"intentgraph\":%%KG_GRAPH_ENABLED%%,\"robotName\":\"\"},\"STT\":{\"provider\":\"vosk\",\"language\":\"%%LANGUAGE%%\"},\"server\":{\"epconfig\":true,\"port\":\"\"},\"hasreadfromenv\":true,\"pastinitialsetup\":true}"
+	jSonData := "{\"weather\":{\"enable\":%%WEATHER_API_ENABLED%%,\"provider\":\"openweathermap.org\",\"key\":\"%%WEATHER_API_KEY%%\",\"unit\":\"%%WEATHER_API_UNIT%%\"},\"knowledge\":{\"enable\":%%KG_API_ENABLED%%,\"provider\":\"%%KG_PROVIDER%%\",\"key\":\"%%KG_API_KEY%%\",\"id\":\"\",\"intentgraph\":%%KG_GRAPH_ENABLED%%,\"robotName\":\"\"},\"STT\":{\"provider\":\"vosk\",\"language\":\"%%LANGUAGE%%\"},\"server\":{\"epconfig\":true,\"port\":\"\"},\"hasreadfromenv\":true,\"pastinitialsetup\":true}"
 	if cfg["WEATHERAPI_ENABLED"] == "true" {
 		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_ENABLED%%", "true")
 		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_KEY%%", cfg["WEATHERAPI_KEY"])
