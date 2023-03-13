@@ -103,16 +103,13 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			if !checkAndFixVosk() {
 				fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 			} else {
-				/*
-					if enableDaemons() {
-						fmt.Fprintf(w, "{ \"result\": \"OK\"}")
-						_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
-					} else {
-						fmt.Fprintf(w, "{ \"result\": \"KO\"}")
-					}
-				*/
-				_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
-				fmt.Fprintf(w, "{ \"result\": \"OK\"}")
+				err = resetWirepod()
+				if err != nil {
+					fmt.Fprintf(w, "{ \"result\": \"KO\"}")
+				} else {
+					_, _ = os.Create(filepath.Join(os.Getenv("VECTORX_HOME"), ".setup"))
+					fmt.Fprintf(w, "{ \"result\": \"OK\"}")
+				}
 			}
 		}
 		break
