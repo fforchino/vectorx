@@ -1,6 +1,7 @@
 RELEASE_14
 - Fix issue #11: Update must also run wirepod setup in silent mode or upgrading to newer versions of 
-  wire-pod won't work
+  wire-pod won't work. Also, the initial setup part needs changes since Wire-Pod has changed its configuration
+  files.
 
 RELEASE_13
 - Bugfix: if you just press "ENTER" to wirepod install directory in setup.sh, the proposed path is not saved
