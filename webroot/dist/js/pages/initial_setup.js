@@ -74,7 +74,7 @@ function saveData() {
                 alert("There was a problem saving data!");
             } else {
                 alert("Data saved successfully");
-                goToTutorial(5);
+                goToTutorial(6);
             }
         })
 }
