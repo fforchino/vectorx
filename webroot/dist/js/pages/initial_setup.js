@@ -40,6 +40,7 @@ function loadData() {
                 document.getElementById("kgprovider").value = obj.KNOWLEDGE_PROVIDER;
                 document.getElementById("language").value = obj.STT_LANGUAGE;
                 document.getElementById("weatherunits").value = obj.WEATHERAPI_UNIT;
+                document.getElementById("connSelection").value = obj.CONN_SELECTION;
             } catch {}
         })
 }

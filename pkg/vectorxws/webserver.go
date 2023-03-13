@@ -310,6 +310,11 @@ func WirepodConfigToJSON() (map[string]string, error) {
 		if wirepodCFGMyJson["WEBSERVER_PORT"] == "" {
 			wirepodCFGMyJson["WEBSERVER_PORT"] = "8080"
 		}
+		if APIConfig.Server.EPConfig == true {
+			wirepodCFGMyJson["CONN_SELECTION"] = "ep"
+		} else {
+			wirepodCFGMyJson["CONN_SELECTION"] = "ip"
+		}
 	}
 
 	return wirepodCFGMyJson, nil
