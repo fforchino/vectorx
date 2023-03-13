@@ -51,11 +51,13 @@ function saveData() {
     var kgprovider = document.getElementById("kgprovider").value;
     var language = document.getElementById("language").value;
     var weatherunits = document.getElementById("weatherunits").value;
+    var connSelection = document.getElementById("connSelection").value;
     var data = "language=" + language +
                "&weatherapi="+weatherapi +
                "&kgapi="+kgapi +
                "&weatherunits="+weatherunits +
-               "&kgprovider="+kgprovider;
+               "&kgprovider="+kgprovider +
+               "&connSelection="+connSelection;
     theUrl = "/api/initial_setup?" + data;
     //alert(theUrl);
     fetch(theUrl)

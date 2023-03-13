@@ -30,7 +30,7 @@
           There are just a few things to set.
         </p>
         <div style="height:200px"></div>
-        <p align="right">(1/5)</p>
+        <p align="right">(1/6)</p>
         <button id="btut00" onclick="goToTutorial(1);" type="submit" class="btn btn-primary btn-block">Let's go!</button>
       </div>
       <div class="tutorial" id="tut01">
@@ -52,7 +52,7 @@
           <label for="weatherapi">OPENWEATHERMAP.ORG API KEY</label>
           <input name="weatherapi" id="weatherapi" type="password" class="form-control" placeholder="OPENWEATHERMAP.ORG API KEY">
         </div>
-        <p align="right">(2/5)</p>
+        <p align="right">(2/6)</p>
         <button id="btut01" onclick="goToTutorial(2);" type="submit" class="btn btn-primary btn-block">Next</button>
       </div>
       <div class="tutorial" id="tut02">
@@ -76,7 +76,7 @@
           <label for="kgapi">KG API KEY</label>
           <input name="kgapi" id="kgapi" type="password" class="form-control" placeholder="KG API KEY">
         </div>
-        <p align="right">(3/5)</p>
+        <p align="right">(3/6)</p>
         <button id="btut02" onclick="goToTutorial(3);" type="submit" class="btn btn-primary btn-block">Next</button>
       </div>
       <div class="tutorial" id="tut03">
@@ -93,25 +93,41 @@
           </select>
         </div>
         <div style="height:200px"></div>
-        <p align="right">(4/5)</p>
+        <p align="right">(4/6)</p>
         <button id="btut03" onclick="goToTutorial(4);" type="submit" class="btn btn-primary btn-block">Next</button>
       </div>
+
+
       <div class="tutorial" id="tut04">
+        <h3><center>Localization</center></h3>
+        <p>Wire-Pod Connection Option</p>
+        <div class="form-group">
+          <label>CONNECTION TYPE</label>
+          <select name="connSelection" id="connSelection" class="form-control">
+            <option value="ep">Escape Pod (recommended for regular, production robots)</option>
+            <option value="ip">IP address (recommended for OSKR/dev-unlocked robots)</option>
+          </select>
+        </div>
+        <div style="height:200px"></div>
+        <p align="right">(5/6)</p>
+        <button id="btut04" onclick="goToTutorial(5);" type="submit" class="btn btn-primary btn-block">Next</button>
+      </div>
+      <div class="tutorial" id="tut05">
         <h3><center>Saving data</center></h3>
         <p>Alright! To complete setup click the button below.</p>
         <div style="height:200px"></div>
-        <p align="right">(5/5)</p>
-        <button id="btut04" onclick="saveData();" type="submit" class="btn btn-primary btn-block">Save and complete setup</button>
+        <p align="right">(6/6)</p>
+        <button id="btut05" onclick="saveData();" type="submit" class="btn btn-primary btn-block">Save and complete setup</button>
       </div>
-      <div class="tutorial" id="tut05">
+      <div class="tutorial" id="tut06">
         <h3><center>Setup Completed</center></h3>
         <p>Setup completed. Now you should onboard your Vectors to Wirepod.<br>
           If you have done that already, click "Finish" to quit setup, you're done.
         </p>
         <p align="right">(Setup Completed)</p>
         <center>
-          <button id="btut05a" onclick="goOnboarding();" type="submit" class="btn btn-primary btn-block">Onboarding</button>
-          <button id="btut05b" onclick="goHome();" type="submit" class="btn btn-primary btn-block">Finish</button>
+          <button id="btut06a" onclick="goOnboarding();" type="submit" class="btn btn-primary btn-block">Onboarding</button>
+          <button id="btut06b" onclick="goHome();" type="submit" class="btn btn-primary btn-block">Finish</button>
         </center>
       </div>
     </div>

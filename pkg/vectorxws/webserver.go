@@ -91,6 +91,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			mapConfig["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfigVectorX["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfig["STT_SERVICE"] = "vosk"
+			mapConfig["CONN_SELECTION"] = r.FormValue("connSelection")
 
 			err = JSONToVectorxConfig(mapConfigVectorX)
 			err = JSONToWirepodConfig(mapConfig)
@@ -270,6 +271,7 @@ func WirepodConfigToJSON() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Source.sh read")
 	// Integrate with the info now in apiConfig.json
 	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
 
@@ -277,9 +279,13 @@ func WirepodConfigToJSON() (map[string]string, error) {
 	if err != nil {
 		fmt.Print(err)
 	} else {
-		fmt.Println(b)
+		fmt.Println("apiConfig.json read")
 		var APIConfig apiConfig
-		json.Unmarshal(b, &APIConfig)
+		err = json.Unmarshal(b, &APIConfig)
+		if err != nil {
+			fmt.Print(err)
+			return wirepodCFGMyJson, err
+		}
 
 		if APIConfig.Weather.Enable {
 			wirepodCFGMyJson["WEATHERAPI_ENABLED"] = "true"
@@ -300,6 +306,10 @@ func WirepodConfigToJSON() (map[string]string, error) {
 			wirepodCFGMyJson["KNOWLEDGE_PROVIDER"] = ""
 		}
 		wirepodCFGMyJson["STT_LANGUAGE"] = APIConfig.STT.Language
+		wirepodCFGMyJson["WEBSERVER_PORT"] = APIConfig.Server.Port
+		if wirepodCFGMyJson["WEBSERVER_PORT"] == "" {
+			wirepodCFGMyJson["WEBSERVER_PORT"] = "8080"
+		}
 	}
 
 	return wirepodCFGMyJson, nil
@@ -312,42 +322,43 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 	jsonToConfig(wirepodCFG, cfg)
 
 	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
-	jSonData := "{\"weather\":{\"enable\":%%WEATHER_API_ENABLED%%,\"provider\":\"openweathermap.org\",\"key\":\"%%WEATHER_API_KEY%%\",\"unit\":\"%%WEATHER_API_UNIT%%\"},\"knowledge\":{\"enable\":%%KG_API_ENABLED%%,\"provider\":\"%%KG_PROVIDER%%\",\"key\":\"%%KG_API_KEY%%\",\"id\":\"\",\"intentgraph\":%%KG_GRAPH_ENABLED%%,\"robotName\":\"\"},\"STT\":{\"provider\":\"vosk\",\"language\":\"%%LANGUAGE%%\"},\"server\":{\"epconfig\":true,\"port\":\"\"},\"hasreadfromenv\":true,\"pastinitialsetup\":true}"
+	var APIConfig apiConfig = apiConfig{}
+
 	if cfg["WEATHERAPI_ENABLED"] == "true" {
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_ENABLED%%", "true")
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_KEY%%", cfg["WEATHERAPI_KEY"])
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_UNIT%%", cfg["WEATHERAPI_UNIT"])
+		APIConfig.Weather.Enable = true
+		APIConfig.Weather.Key = cfg["WEATHERAPI_KEY"]
+		APIConfig.Weather.Unit = cfg["WEATHERAPI_UNIT"]
 	} else {
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_ENABLED%%", "false")
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_KEY%%", "")
-		jSonData = strings.ReplaceAll(jSonData, "%%WEATHER_API_UNIT%%", "")
+		APIConfig.Weather.Enable = false
+		APIConfig.Weather.Key = ""
+		APIConfig.Weather.Unit = "C"
 	}
 	if cfg["KNOWLEDGE_ENABLED"] == "true" {
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_ENABLED%%", "true")
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_KEY%%", cfg["KNOWLEDGE_KEY"])
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_PROVIDER%%", cfg["KNOWLEDGE_PROVIDER"])
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_GRAPH_ENABLED%%", "true")
+		APIConfig.Knowledge.Enable = true
+		APIConfig.Knowledge.Key = cfg["KNOWLEDGE_KEY"]
+		APIConfig.Knowledge.Provider = cfg["KNOWLEDGE_PROVIDER"]
+		APIConfig.Knowledge.IntentGraph = true
 	} else {
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_ENABLED%%", "false")
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_API_KEY%%", "")
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_PROVIDER%%", "")
-		jSonData = strings.ReplaceAll(jSonData, "%%KG_GRAPH_ENABLED%%", "false")
+		APIConfig.Knowledge.Enable = false
+		APIConfig.Knowledge.Key = ""
+		APIConfig.Knowledge.Provider = ""
+		APIConfig.Knowledge.IntentGraph = false
 	}
-	jSonData = strings.ReplaceAll(jSonData, "%%LANGUAGE%%", cfg["STT_LANGUAGE"])
+	APIConfig.STT.Language = cfg["STT_LANGUAGE"]
+	if cfg["CONN_SELECTION"] == "ep" {
+		APIConfig.Server.EPConfig = true
+	} else {
+		APIConfig.Server.EPConfig = false
+	}
+	APIConfig.HasReadFromEnv = true
+	APIConfig.PastInitialSetup = true
+	jSonData, err := json.Marshal(APIConfig)
+	print(string(jSonData))
 
-	file, err := os.OpenFile(wirepodJSONCFG, os.O_CREATE|os.O_WRONLY, 0644)
+	err = os.WriteFile(wirepodJSONCFG, jSonData, 0644)
 	if err != nil {
-		print("failed opening file")
-		return err
+		print("failed opening file " + wirepodJSONCFG)
 	}
-	datawriter := bufio.NewWriter(file)
-	print(jSonData)
-	_, err = datawriter.WriteString(jSonData)
-	if err != nil {
-		println(err.Error())
-	}
-	datawriter.Flush()
-	file.Close()
 	return err
 }
 
