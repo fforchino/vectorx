@@ -127,7 +127,3 @@ function hslToHex(h, s, l) {
     };
     return `#${f(0)}${f(8)}${f(4)}`;
 }
-
-function getWirePodConsoleUrl() {
-    return Settings["WIREPOD_CONSOLE"];
-}
