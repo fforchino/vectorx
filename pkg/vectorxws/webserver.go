@@ -19,7 +19,7 @@ import (
 	"vectorx/pkg/stats"
 )
 
-const VECTORX_VERSION = "RELEASE_14"
+const VECTORX_VERSION = "RELEASE_15"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`

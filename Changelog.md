@@ -1,3 +1,8 @@
+RELEASE_15
+- Fix issue #12: Fix VectorX onboarding setup for OSKR bots
+  Now initial setup considers also OSKR bots and allows configuring Wire-Pod to IP-mode or EP mode. Also, the
+  on-boarding procedure differs for a production and a development (OSKR) robot.
+
 RELEASE_14
 - Fix issue #11: Update must also run wirepod setup in silent mode or upgrading to newer versions of 
   wire-pod won't work. Also, the initial setup part needs changes since Wire-Pod has changed its configuration
