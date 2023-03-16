@@ -48,7 +48,7 @@ function LoadSidebar(selectedPage) {
     '                </ul>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
-    '                <a href="http://escapepod.local:8080" class="nav-link">\n' +
+    '                <a href="'+getWirePodConsoleUrl()+'" class="nav-link" >\n' +
     '                  <i class="fas fa-rocket nav-icon"></i>\n' +
     '                  <p>Wire-Pod Console</p>\n' +
     '                </a>\n' +

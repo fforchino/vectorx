@@ -8,6 +8,7 @@ import (
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -310,8 +311,10 @@ func WirepodConfigToJSON() (map[string]string, error) {
 		//wirepodCFGMyJson["WEBSERVER_PORT"] = "8080"
 		if APIConfig.Server.EPConfig == true {
 			wirepodCFGMyJson["CONN_SELECTION"] = "ep"
+			wirepodCFGMyJson["WIREPOD_CONSOLE"] = "http://escapepod.local:" + wirepodCFGMyJson["WEBSERVER_PORT"]
 		} else {
 			wirepodCFGMyJson["CONN_SELECTION"] = "ip"
+			wirepodCFGMyJson["WIREPOD_CONSOLE"] = "http://" + string(GetOutboundIP()) + ":" + wirepodCFGMyJson["WEBSERVER_PORT"]
 		}
 	}
 
@@ -382,6 +385,18 @@ func JSONToVectorxConfig(cfg map[string]string) error {
 /********************************************************************************/
 /*                            PRIVATE FUNCTIONS                                 */
 /********************************************************************************/
+
+func GetOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
+}
 
 func enableDaemons() bool {
 	// Enable Wirepod as a daemon
