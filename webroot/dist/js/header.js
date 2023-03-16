@@ -8,8 +8,8 @@ async function LoadSite(selectedPage) {
   CurrentPage = selectedPage;
     LoadNavBar();
     LoadBrandLogo();
-    LoadSidebar(selectedPage);
     LoadSettings().then(() => {
+      LoadSidebar(selectedPage);
       checkSetupMissing().then(() => {
         LoadRobots().then(() => {
           SidebarGetRobotList();
