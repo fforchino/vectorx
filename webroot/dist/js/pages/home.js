@@ -28,12 +28,19 @@ function doConsistencyCheck() {
             document.getElementById("span_cc4").classList.add("text-danger");
             document.getElementById("i_cc4").classList.add("fa-xmark");
         }
-        if (Settings.WEBSERVER_PORT == "443") {
+        if (Settings.CHIPPER_PORT == "443") {
             document.getElementById("span_cc5").classList.add("text-success");
             document.getElementById("i_cc5").classList.add("fa-check");
         } else {
             document.getElementById("span_cc5").classList.add("text-danger");
             document.getElementById("i_cc5").classList.add("fa-xmark");
+        }
+        if (Settings.WEBSERVER_PORT == "8080") {
+            document.getElementById("span_cc6").classList.add("text-success");
+            document.getElementById("i_cc6").classList.add("fa-check");
+        } else {
+            document.getElementById("span_cc6").classList.add("text-danger");
+            document.getElementById("i_cc6").classList.add("fa-xmark");
         }
         document.getElementById("home_locale").innerHTML = Settings.STT_LANGUAGE;
     } catch {}

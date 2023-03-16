@@ -92,6 +92,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			mapConfigVectorX["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfig["STT_SERVICE"] = "vosk"
 			mapConfig["CONN_SELECTION"] = r.FormValue("connSelection")
+			mapConfig["WEBSERVER_PORT"] = "8080"
 
 			err = JSONToVectorxConfig(mapConfigVectorX)
 			err = JSONToWirepodConfig(mapConfig)
@@ -305,10 +306,8 @@ func WirepodConfigToJSON() (map[string]string, error) {
 			wirepodCFGMyJson["KNOWLEDGE_PROVIDER"] = ""
 		}
 		wirepodCFGMyJson["STT_LANGUAGE"] = APIConfig.STT.Language
-		wirepodCFGMyJson["WEBSERVER_PORT"] = APIConfig.Server.Port
-		if wirepodCFGMyJson["WEBSERVER_PORT"] == "" {
-			wirepodCFGMyJson["WEBSERVER_PORT"] = "8080"
-		}
+		wirepodCFGMyJson["CHIPPER_PORT"] = APIConfig.Server.Port
+		//wirepodCFGMyJson["WEBSERVER_PORT"] = "8080"
 		if APIConfig.Server.EPConfig == true {
 			wirepodCFGMyJson["CONN_SELECTION"] = "ep"
 		} else {
