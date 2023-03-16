@@ -314,7 +314,7 @@ func WirepodConfigToJSON() (map[string]string, error) {
 			wirepodCFGMyJson["WIREPOD_CONSOLE"] = "http://escapepod.local:" + wirepodCFGMyJson["WEBSERVER_PORT"]
 		} else {
 			wirepodCFGMyJson["CONN_SELECTION"] = "ip"
-			wirepodCFGMyJson["WIREPOD_CONSOLE"] = "http://" + string(GetOutboundIP()) + ":" + wirepodCFGMyJson["WEBSERVER_PORT"]
+			wirepodCFGMyJson["WIREPOD_CONSOLE"] = "http://" + GetOutboundIP().String() + ":" + wirepodCFGMyJson["WEBSERVER_PORT"]
 		}
 	}
 
