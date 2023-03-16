@@ -7,28 +7,28 @@ function doConsistencyCheck() {
             document.getElementById("span_cc1").classList.add("text-danger");
             document.getElementById("i_cc1").classList.add("fa-xmark");
         }
-        if (Settings.VOSK_OK == "true") {
+        if (Settings.WEATHERAPI_PROVIDER == "openweathermap.org") {
             document.getElementById("span_cc2").classList.add("text-success");
             document.getElementById("i_cc2").classList.add("fa-check");
         } else {
             document.getElementById("span_cc2").classList.add("text-danger");
             document.getElementById("i_cc2").classList.add("fa-xmark");
         }
-        if (Settings.WEATHERAPI_PROVIDER == "openweathermap.org") {
+        if ((Settings.KNOWLEDGE_PROVIDER != "") && (Settings.KNOWLEDGE_KEY!="")) {
             document.getElementById("span_cc3").classList.add("text-success");
             document.getElementById("i_cc3").classList.add("fa-check");
         } else {
             document.getElementById("span_cc3").classList.add("text-danger");
             document.getElementById("i_cc3").classList.add("fa-xmark");
         }
-        if ((Settings.KNOWLEDGE_PROVIDER != "") && (obj.KNOWLEDGE_KEY!="")) {
+        if (Settings.VOSK_OK == "true") {
             document.getElementById("span_cc4").classList.add("text-success");
             document.getElementById("i_cc4").classList.add("fa-check");
         } else {
             document.getElementById("span_cc4").classList.add("text-danger");
             document.getElementById("i_cc4").classList.add("fa-xmark");
         }
-        if (Settings.WEBSERVER_PORT == "8080") {
+        if (Settings.WEBSERVER_PORT == "443") {
             document.getElementById("span_cc5").classList.add("text-success");
             document.getElementById("i_cc5").classList.add("fa-check");
         } else {

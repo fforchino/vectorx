@@ -288,10 +288,12 @@ func WirepodConfigToJSON() (map[string]string, error) {
 			wirepodCFGMyJson["WEATHERAPI_ENABLED"] = "true"
 			wirepodCFGMyJson["WEATHERAPI_KEY"] = APIConfig.Weather.Key
 			wirepodCFGMyJson["WEATHERAPI_UNIT"] = APIConfig.Weather.Unit
+			wirepodCFGMyJson["WEATHERAPI_PROVIDER"] = APIConfig.Weather.Provider
 		} else {
 			wirepodCFGMyJson["WEATHERAPI_ENABLED"] = "false"
 			wirepodCFGMyJson["WEATHERAPI_KEY"] = ""
 			wirepodCFGMyJson["WEATHERAPI_UNIT"] = ""
+			wirepodCFGMyJson["WEATHERAPI_PROVIDER"] = ""
 		}
 		if APIConfig.Knowledge.Enable {
 			wirepodCFGMyJson["KNOWLEDGE_ENABLED"] = "true"
@@ -322,7 +324,6 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 	wirepodCFG := filepath.Join(wirepodPath, "chipper/source.sh")
 	// Writes to source.sh
 	jsonToConfig(wirepodCFG, cfg)
-
 	wirepodJSONCFG := filepath.Join(wirepodPath, "chipper/apiConfig.json")
 	var APIConfig apiConfig = apiConfig{}
 
@@ -330,10 +331,12 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 		APIConfig.Weather.Enable = true
 		APIConfig.Weather.Key = cfg["WEATHERAPI_KEY"]
 		APIConfig.Weather.Unit = cfg["WEATHERAPI_UNIT"]
+		APIConfig.Weather.Provider = cfg["WEATHERAPI_PROVIDER"]
 	} else {
 		APIConfig.Weather.Enable = false
 		APIConfig.Weather.Key = ""
 		APIConfig.Weather.Unit = "C"
+		APIConfig.Weather.Provider = ""
 	}
 	if cfg["KNOWLEDGE_ENABLED"] == "true" {
 		APIConfig.Knowledge.Enable = true
@@ -352,6 +355,7 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 	} else {
 		APIConfig.Server.EPConfig = false
 	}
+	APIConfig.Server.Port = "443"
 	APIConfig.HasReadFromEnv = true
 	APIConfig.PastInitialSetup = true
 	jSonData, err := json.Marshal(APIConfig)
