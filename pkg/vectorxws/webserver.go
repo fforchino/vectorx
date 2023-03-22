@@ -581,7 +581,7 @@ func runPseudoIntentCommand(intentName string, serialNo string, params []string)
 			} else {
 				return err2
 			}
-		} else if intentName == "tts-configure" {
+		} else if intentName == "tts-test" {
 			sentence := params[0]
 			go func() {
 				_ = sdk_wrapper.Robot.BehaviorControl(Ctx, Start, Stop)
