@@ -1,5 +1,20 @@
 var CurrentRobot = null;
 
+async function LoadVoices(lang) {
+    let dropdown = $('#language-ls-voice');
+    dropdown.empty();
+    dropdown.append('<option selected="true" disabled>Choose Voice</option>');
+    dropdown.prop('selectedIndex', 0);
+    const url = 'https://www.wondergarden.app/voiceserver/index.php/getVoices?lang='+lang;
+
+    // Populate dropdown
+    $.getJSON(url, function (data) {
+        $.each(data, function (key, entry) {
+            dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
+        })
+    });
+}
+
 function LoadBotControlPage() {
     CurrentRobot = GetRobotInfo(QueryParams.esn)
     if (CurrentRobot!=null) {
@@ -8,6 +23,10 @@ function LoadBotControlPage() {
         document.getElementById("nav_page_botcontrol_"+CurrentRobot.esn).classList.add("active");
         document.getElementById("bc_serial_no").innerHTML = botName
         document.getElementById("bc_title").innerHTML = "Play with "+botName;
+        document.getElementById("language-ls-engine").value = ""+CurrentRobot.custom_settings.TTSEngine;
+        document.getElementById("language-ls-ttslanguage").value = Settings.STT_LANGUAGE;
+        document.getElementById("language-ls-voice").value = CurrentRobot.custom_settings.TTSVoice;
+        BotControlHandleTTSEngineChange();
     }
 }
 
@@ -119,7 +138,9 @@ async function BotControlSendIntent(intentName, resultElement) {
         intentName=="weather" ||
         intentName=="weather-forecast" ||
         intentName=="set-name" ||
-        intentName=="pills-of-wisdom") {
+        intentName=="pills-of-wisdom" ||
+        intentName=="tts-configure" ||
+        intentName=="tts-test") {
         var data = "name=" + intentName+"&esn="+CurrentRobot.esn+extraData;
         await fetch("/api/send_intent?" + data)
             .then(response => response.text())
@@ -138,5 +159,17 @@ async function BotControlSendIntent(intentName, resultElement) {
             await new Promise(r => setTimeout(r, 5000));
             ReloadSite();
         }
+    }
+}
+
+function BotControlHandleTTSEngineChange() {
+    var engine = document.getElementById("language-ls-engine").value;
+    if (engine!="2") {
+        document.getElementById("language-ls-voice").style.display = "none"
+        document.getElementById("language-ls-voice-label").style.display = "none"
+    }
+    else {
+        document.getElementById("language-ls-voice").style.display = "block"
+        document.getElementById("language-ls-voice-label").style.display = "block"
     }
 }

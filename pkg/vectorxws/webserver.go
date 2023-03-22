@@ -572,13 +572,14 @@ func runPseudoIntentCommand(intentName string, serialNo string, params []string)
 			return err
 		}
 		if intentName == "tts-configure" {
-			language := params[0]
-			engine, err2 := strconv.Atoi(params[1])
+			engine, err2 := strconv.Atoi(params[0])
+			language := params[1]
 			voice := params[2]
 			if err2 == nil {
 				sdk_wrapper.SetLocale(language)
 				sdk_wrapper.SetTTSConfiguration(engine, voice)
 			} else {
+				fmt.Println(err2.Error())
 				return err2
 			}
 		} else if intentName == "tts-test" {
