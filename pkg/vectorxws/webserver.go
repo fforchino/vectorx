@@ -2,6 +2,7 @@ package vectorxws
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -194,12 +195,17 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	case r.URL.Path == "/api/send_intent":
 		name := r.FormValue("name")
 		serialNo := r.FormValue("esn")
-		params := []string{r.FormValue("p1"), r.FormValue("p2")}
+		params := []string{r.FormValue("p1"), r.FormValue("p2"), r.FormValue("p3")}
 		if name == "" || serialNo == "" {
 			fmt.Fprintf(w, "{ \"result\": \"KO\"}")
 			return
 		}
-		e := runIntentCommand(name, serialNo, params)
+		var e error
+		if name == "tts-test" || name == "tts-configure" {
+			e = runPseudoIntentCommand(name, serialNo, params)
+		} else {
+			e = runIntentCommand(name, serialNo, params)
+		}
 		if e == nil {
 			fmt.Fprintf(w, "{ \"result\": \"OK\"}")
 		} else {
@@ -551,6 +557,48 @@ func getVoskLanguage(lang string, fileUrl string, fileName string) bool {
 		}
 	}
 	return isOk
+}
+
+func runPseudoIntentCommand(intentName string, serialNo string, params []string) error {
+	var err error = nil
+	var Ctx = context.Background()
+	var Start = make(chan bool)
+	var Stop = make(chan bool)
+
+	if intentName == "tts-test" || intentName == "tts-configure" {
+		err = sdk_wrapper.InitSDKForWirepod(serialNo)
+		if err != nil {
+			println("FATAL: could not load Vector settings from JDOCS")
+			return err
+		}
+		if intentName == "tts-configure" {
+			language := params[0]
+			engine, err2 := strconv.Atoi(params[1])
+			voice := params[2]
+			if err2 == nil {
+				sdk_wrapper.SetLocale(language)
+				sdk_wrapper.SetTTSConfiguration(engine, voice)
+			} else {
+				return err2
+			}
+		} else if intentName == "tts-configure" {
+			sentence := params[0]
+			go func() {
+				_ = sdk_wrapper.Robot.BehaviorControl(Ctx, Start, Stop)
+			}()
+
+			for {
+				select {
+				case <-Start:
+					sdk_wrapper.SayText(sentence)
+					Stop <- true
+				}
+				return nil
+			}
+		}
+		return nil
+	}
+	return errors.New("Unsupported command")
 }
 
 func runIntentCommand(intentName string, serialNo string, params []string) error {

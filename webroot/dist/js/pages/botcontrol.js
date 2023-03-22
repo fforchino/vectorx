@@ -85,6 +85,31 @@ async function BotControlSendIntent(intentName, resultElement) {
             return
         }
     }
+    else if (intentName=="tts-test") {
+        var sentence = document.getElementById("language-ttslanguage-word").value;
+        sentence = encodeURIComponent(sentence);
+        if (sentence!="") {
+            extraData += "&p1="+sentence;
+        } else {
+            document.getElementById(resultElement).innerHTML="Input error. Check parameters.";
+            return
+        }
+    }
+    else if (intentName=="tts-configure") {
+        var engine = document.getElementById("language-ls-engine").value;
+        var language = document.getElementById("language-ls-ttslanguage").value;
+        var voice = document.getElementById("language-ls-voice").value;
+
+        if (engine != "" && language != "") {
+            extraData += "&p1=" + engine + "&p2=" + language;
+            if (voice !="") {
+                extraData += "&p3=" + voice;
+            }
+        } else {
+            document.getElementById(resultElement).innerHTML = "Input error. Check parameters.";
+            return
+        }
+    }
     if (intentName=="roll-a-die" ||
         intentName=="bingo" ||
         intentName=="pong" ||

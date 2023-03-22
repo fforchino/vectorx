@@ -1,14 +1,10 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"os"
 	"path/filepath"
-	"time"
-	"vectorx/pkg/intents"
 )
 
 type botConfigStruct []struct {
@@ -19,6 +15,11 @@ type botConfigStruct []struct {
 	IsEarlyOpus     bool   `json:"is_early_opus"`
 }
 
+func main() {
+
+}
+
+/*
 func main() {
 	// Just called to add VIM localized strings to the engine
 	intents.RegisterIntents()
@@ -62,6 +63,7 @@ func main() {
 		time.Sleep(time.Duration(1000) * time.Millisecond)
 	}
 }
+*/
 
 // Gets a list of serials managed by this instance of wirepod
 

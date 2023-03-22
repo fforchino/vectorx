@@ -218,6 +218,7 @@
             </div>
           </div>
           <!-- ./col -->
+
           <div class="col-lg-6 col-12">
             <!-- small box -->
             <div class="small-box bg-info">
@@ -254,6 +255,67 @@
             </div>
           </div>
         </div>
+
+        <div class="col-lg-12 col-12">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>Vector's Voice</h3>
+
+              <p>Choose the Text-To-Speech engine for this bot and a custom voice, if applicable</p>
+              <div class="bot-control-reveal" id="bot-control-ttslanguage-ls">
+                <div class="form-group row">
+                  <label for="language-ls-ttslanguage" class="col-sm-2 col-form-label">language</label>
+                  <div class="col-sm-10">
+                    <select class="custom-select rounded-0" id="language-ls-ttslanguage">
+                      <option value="english">English (US)</option>
+                      <option value="italian">Italian</option>
+                      <option value="spanish">Spanish</option>
+                      <option value="french">French</option>
+                      <option value="german">German</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="language-ls-engine" class="col-sm-2 col-form-label">TTS Engine</label>
+                  <div class="col-sm-10">
+                    <select class="custom-select rounded-0" id="language-ls-engine">
+                      <option value="3">Native TTS</option>
+                      <option value="1">Espeak</option>
+                      <option value="0">Google TTS</option>
+                      <option value="2">VectorX VoiceServer</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="language-ls-voice" class="col-sm-2 col-form-label">TTS Voice</label>
+                  <div class="col-sm-10">
+                    <select class="custom-select rounded-0" id="language-ls-voice">
+                      <option value="english">TEST</option>
+                    </select>
+                  </div>
+                </div>
+                <span id="bot-control-ttslanguage-ls-result"></span>
+                <button onclick="BotControlSendIntent('tts-configure', 'bot-control-ttslanguage-ls-result');" type="button" class="btn btn-block btn-primary">Set</button>
+                <br/><br/>
+                <div class="form-group row">
+                  <label for="language-ttslanguage-word" class="col-sm-2 col-form-label">Test a sentence</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="language-ttslanguage-word" placeholder="Say something...">
+                  </div>
+                </div>
+                <span id="bot-control-ttslanguage-test-ls-result"></span>
+                <button onclick="BotControlSendIntent('tts-test', 'bot-control-ttslanguage-test-ls-result');" type="button" class="btn btn-block btn-primary">Test</button>
+              </div>
+            </div>
+            <div class="icon">
+              <i class="fa-solid fa-earth-europe"></i>
+            </div>
+            <a href="#" onclick="BotControlReveal(this, 'bot-control-ttslanguage-ls'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+      </div>
+
         <!-- /.row -->
         <div class="col-sm-6">
           <h1 class="m-0">Weather</h1>

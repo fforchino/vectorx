@@ -73,7 +73,9 @@ func main() {
 			intents.GetWirepodBotInfo(*serial)
 			params := intents.ParseParams(*speechText, xIntent)
 
-			sdk_wrapper.SetTTSEngine(sdk_wrapper.TTS_ENGINE_HTGO)
+			engine, voice := sdk_wrapper.GetTTSConfiguration()
+			sdk_wrapper.SetTTSEngine(engine)
+			sdk_wrapper.SetTTSVoice(voice)
 
 			go func() {
 				_ = sdk_wrapper.Robot.BehaviorControl(Ctx, Start, Stop)
