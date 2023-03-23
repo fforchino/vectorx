@@ -20,9 +20,8 @@ async function LoadSite(selectedPage) {
               LoadHelpPage();
             })
           } else if (selectedPage.startsWith("nav_page_botcontrol")) {
-            LoadVoices(Settings.STT_LANGUAGE).then(() => {
+              LoadVoices(Settings.STT_LANGUAGE);
               LoadBotControlPage();
-            });
           } else {
             // Handle selection for normal pages
             document.getElementById(selectedPage).classList.add("active");

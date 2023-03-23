@@ -1,3 +1,7 @@
+RELEASE_16
+- Add Fakeyou.com custom voices to Vector
+- Added playground in bot control page to set TTS engine and test sentences
+
 RELEASE_15
 - Fix issue #12: Fix VectorX onboarding setup for OSKR bots
   Now initial setup considers also OSKR bots and allows configuring Wire-Pod to IP-mode or EP mode. Also, the

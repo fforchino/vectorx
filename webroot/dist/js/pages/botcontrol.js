@@ -12,6 +12,8 @@ async function LoadVoices(lang) {
         $.each(data, function (key, entry) {
             dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
         })
+        document.getElementById("language-ls-ttslanguage").value = lang;
+        LoadTTSSettings();
     });
 }
 
@@ -23,11 +25,16 @@ function LoadBotControlPage() {
         document.getElementById("nav_page_botcontrol_"+CurrentRobot.esn).classList.add("active");
         document.getElementById("bc_serial_no").innerHTML = botName
         document.getElementById("bc_title").innerHTML = "Play with "+botName;
-        document.getElementById("language-ls-engine").value = ""+CurrentRobot.custom_settings.TTSEngine;
-        document.getElementById("language-ls-ttslanguage").value = Settings.STT_LANGUAGE;
-        document.getElementById("language-ls-voice").value = CurrentRobot.custom_settings.TTSVoice;
-        BotControlHandleTTSEngineChange();
     }
+}
+
+function LoadTTSSettings() {
+    document.getElementById("language-ls-engine").value = ""+CurrentRobot.custom_settings.TTSEngine;
+    var hasVoice = !! $('#language-ls-voice > option[value="'+CurrentRobot.custom_settings.TTSVoice+'"]').length;
+    if (hasVoice) {
+        document.getElementById("language-ls-voice").value = CurrentRobot.custom_settings.TTSVoice;
+    }
+    BotControlHandleTTSEngineChange();
 }
 
 function BotControlReveal(element, elementIdToShow) {
