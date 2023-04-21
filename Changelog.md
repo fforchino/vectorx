@@ -1,3 +1,6 @@
+RELEASE_17
+- Bugfix: unknown locale "en_US" (it should be "en-US") 
+
 RELEASE_16
 - Add Fakeyou.com custom voices to Vector
 - Added playground in bot control page to set TTS engine and test sentences

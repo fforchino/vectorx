@@ -86,7 +86,7 @@ func main() {
 				case <-Start:
 					returnIntent := xIntent.Handler(xIntent, *speechText, params)
 					// Seems that we have to force back en_US locale or "Hey Vector" won't work anymore
-					sdk_wrapper.SetLocale("en_US")
+					sdk_wrapper.SetLocale("en-US")
 					// Ok, intent handled. Return the intent that Wirepod has to send to the robot
 					fmt.Println("{\"status\": \"ok\", \"returnIntent\": \"" + returnIntent + "\"}")
 					Stop <- true
@@ -97,14 +97,14 @@ func main() {
 			stats.StatsIntentHandled(false)
 			// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
 			if sdkInit {
-				sdk_wrapper.SetLocale("en_US")
+				sdk_wrapper.SetLocale("en-US")
 			}
 			fmt.Println("{\"status\": \"ko\", \"returnIntent\": \"\"}")
 		}
 	} else {
 		// Intent cannot be handled by VectorX. Wirepod may continue its intent parsing chain
-		sdk_wrapper.SetLocale("en_US")
+		sdk_wrapper.SetLocale("en-US")
 		fmt.Println("{\"status\": \"ko\", \"returnIntent\": \"\"}")
-		sdk_wrapper.SetLocale("en_US")
+		sdk_wrapper.SetLocale("en-US")
 	}
 }
