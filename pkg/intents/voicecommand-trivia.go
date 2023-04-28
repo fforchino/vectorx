@@ -48,10 +48,10 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_GAME_OVER", []string{"Game over", "Fine partita", "", "", ""})
 	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s1", "Domanda numero %s1", "", "", ""})
 
-	addLocalizedString("STR_FIRST", []string{"first", "prima", "", "", ""})
-	addLocalizedString("STR_SECOND", []string{"second", "seconda", "", "", ""})
-	addLocalizedString("STR_THIRD", []string{"third", "terza", "", "", ""})
-	addLocalizedString("STR_FOURTH", []string{"fourth", "quarta", "", "", ""})
+	addLocalizedString("STR_FIRST", []string{"one", "uno", "", "", ""})
+	addLocalizedString("STR_SECOND", []string{"two", "due", "", "", ""})
+	addLocalizedString("STR_THIRD", []string{"three", "tre", "", "", ""})
+	addLocalizedString("STR_FOURTH", []string{"four", "quattro", "", "", ""})
 	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
 	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "", "", ""})
 	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "", "", ""})
@@ -219,13 +219,13 @@ func gotoQuestion(questionNum int) {
 		if err == nil {
 			sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
 			sdk_wrapper.SayText(CurrentQuestion.Question)
-			sdk_wrapper.WriteText("1) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.WriteText("1) "+CurrentQuestion.A, 24, false, 5000, false)
 			sdk_wrapper.SayText("1 " + CurrentQuestion.A)
-			sdk_wrapper.WriteText("2) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.WriteText("2) "+CurrentQuestion.B, 24, false, 5000, false)
 			sdk_wrapper.SayText("2 " + CurrentQuestion.B)
-			sdk_wrapper.WriteText("3) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.WriteText("3) "+CurrentQuestion.C, 24, false, 5000, false)
 			sdk_wrapper.SayText("3 " + CurrentQuestion.C)
-			sdk_wrapper.WriteText("4) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.WriteText("4) "+CurrentQuestion.D, 24, false, 5000, false)
 			sdk_wrapper.SayText("4 " + CurrentQuestion.D)
 		} else {
 			// Quit the game
