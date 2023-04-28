@@ -44,6 +44,8 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_THIRD", []string{"third", "terza", "", "", ""})
 	addLocalizedString("STR_FOURTH", []string{"fourth", "quarta", "", "", ""})
 	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
+	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "", "", ""})
+	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "", "", ""})
 
 	registerTriviaIntent(intentList)
 
@@ -55,15 +57,20 @@ func triviaGameStarted() bool {
 	return (err == nil && GameConfig.GameName == TRIVIA_GAME_NAME && GameConfig.State == STATE_TRIVIA_GAME_STARTED)
 }
 
+func saveConfig() bool {
+	retVal := false
+	b, err := json.Marshal(GameConfig)
+	if err == nil {
+		sdk_wrapper.SetCurrentGame(string(b))
+		retVal = true
+	}
+	return retVal
+}
+
 func setTriviaGameStart() bool {
 	retVal := false
 	if !triviaGameStarted() {
-		GameConfig.State = STATE_TRIVIA_GAME_STARTED
-		b, err := json.Marshal(GameConfig)
-		if err == nil {
-			sdk_wrapper.SetCurrentGame(string(b))
-			retVal = true
-		}
+		retVal = saveConfig()
 	}
 	return retVal
 }
@@ -171,9 +178,18 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 		}
 
 		if userAnswer == TRIVIA_ANSWER_1 {
+			sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 			gotoQuestion(GameConfig.CurrentQuestion + 1)
+		} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
+			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
+			gotoQuestion(GameConfig.CurrentQuestion)
+		} else {
+			sdk_wrapper.SayText(getText("STR_WRONG_ANSWER"))
+			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
+			gotoQuestion(GameConfig.CurrentQuestion + 1)
 		}
+
 	}
 
 	return returnIntent
@@ -187,6 +203,7 @@ func gotoQuestion(questionNum int) {
 	if triviaGameStarted() {
 		// Ask question
 		GameConfig.CurrentQuestion = questionNum
+		saveConfig()
 		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
 	}
 }
