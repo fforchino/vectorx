@@ -219,11 +219,14 @@ func gotoQuestion(questionNum int) {
 		if err == nil {
 			sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
 			sdk_wrapper.SayText(CurrentQuestion.Question)
-			textToWrite := "1) " + CurrentQuestion.A + "\n" +
-				"2) " + CurrentQuestion.B + "\n" +
-				"3) " + CurrentQuestion.C + "\n" +
-				"4) " + CurrentQuestion.D + "\n"
-			sdk_wrapper.WriteText(textToWrite, 32, false, 5000, false)
+			sdk_wrapper.WriteText("1) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.SayText("1 " + CurrentQuestion.A)
+			sdk_wrapper.WriteText("2) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.SayText("2 " + CurrentQuestion.B)
+			sdk_wrapper.WriteText("3) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.SayText("3 " + CurrentQuestion.C)
+			sdk_wrapper.WriteText("4) "+CurrentQuestion.A, 16, false, 5000, false)
+			sdk_wrapper.SayText("4 " + CurrentQuestion.D)
 		} else {
 			// Quit the game
 			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
