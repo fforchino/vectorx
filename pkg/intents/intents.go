@@ -127,6 +127,7 @@ func RegisterIntents() {
 	//Balance_Register(&intents)
 	PillsOfWisdom_Register(&intents)
 	VIM_Register(&intents)
+	Trivia_Register(&intents)
 }
 
 func IntentMatch(speechText string, locale string) (IntentDef, error) {

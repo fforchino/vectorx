@@ -65,6 +65,22 @@ func getText(key string) string {
 	return getTextEx(key, []string{})
 }
 
+func getTextIn(key string, params []string, lang int) string {
+	text := key
+	var data = texts[key]
+	if data != nil {
+		if lang == it_IT || lang == en_US || lang == fr_FR || lang == de_DE || lang == es_ES {
+			text = data[lang]
+		} else {
+			text = data[en_US]
+		}
+	}
+	for i, p := range params {
+		text = strings.Replace(text, "%s"+strconv.Itoa(i+1), p, 1)
+	}
+	return text
+}
+
 func getTextEx(key string, params []string) string {
 	text := key
 	var data = texts[key]
