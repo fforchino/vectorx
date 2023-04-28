@@ -15,12 +15,13 @@ type TriviaGameData struct {
 }
 
 type TriviaQuestionData struct {
-	Question string `json:"question"`
-	A        string `json:"a"`
-	B        string `json:"b"`
-	C        string `json:"c"`
-	D        string `json:"d"`
-	Answer   int    `json:"answer"`
+	Question       string `json:"question"`
+	A              string `json:"a"`
+	B              string `json:"b"`
+	C              string `json:"c"`
+	D              string `json:"d"`
+	Answer         int    `json:"answer"`
+	TotalQuestions int    `json:"totalQuestions"`
 }
 
 const STATE_TRIVIA_GAME_STARTED = "started"
@@ -56,6 +57,7 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "", "", ""})
 	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "", "", ""})
 	addLocalizedString("STR_INVALID_ANSWER", []string{"invalid answer", "risposta non valida", "", "", ""})
+	addLocalizedString("STR_TOTAL_SCORE", []string{"Total score: %s1", "Punteggio: %s1", "", "", ""})
 
 	registerTriviaIntent(intentList)
 
@@ -191,6 +193,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 
 			if userAnswer == CurrentQuestion.Answer {
 				sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
+				GameConfig.Score = GameConfig.Score + 1
 				returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 				gotoQuestion(GameConfig.CurrentQuestion + 1)
 			} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
@@ -214,6 +217,11 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 
 func gotoQuestion(questionNum int) {
 	if triviaGameStarted() {
+		if questionNum > CurrentQuestion.TotalQuestions {
+			sdk_wrapper.SayText(getTextEx("STR_TOTAL_SCORE", []string{strconv.Itoa(GameConfig.Score)}))
+			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
+			setTriviaGameEnd()
+		}
 		// Ask question
 		GameConfig.CurrentQuestion = questionNum
 		saveConfig()
@@ -249,6 +257,14 @@ func getQuestionFromWeb(questionNum int) error {
 		}
 		return err
 	*/
-	CurrentQuestion = TriviaQuestionData{Question: "Who is Luke Skywalker's father?", A: "Darth Vader", B: "Yoda", C: "Obi-Wan Kenobi", D: "Emperor Palpatine", Answer: 1}
+	CurrentQuestion = TriviaQuestionData{
+		Question:       "Who is Luke Skywalker's father?",
+		A:              "Darth Vader",
+		B:              "Yoda",
+		C:              "Obi-Wan Kenobi",
+		D:              "Emperor Palpatine",
+		Answer:         1,
+		TotalQuestions: 3,
+	}
 	return nil
 }
