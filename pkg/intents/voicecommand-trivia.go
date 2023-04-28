@@ -25,11 +25,11 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_GAME_OVER", []string{"Game over", "Fine partita", "", "", ""})
 	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s1", "Domanda numero %s1", "", "", ""})
 
-	addLocalizedString("FIRST", []string{"first", "prima", "", "", ""})
-	addLocalizedString("SECOND", []string{"second", "seconda", "", "", ""})
-	addLocalizedString("THIRD", []string{"third", "terza", "", "", ""})
-	addLocalizedString("FOURTH", []string{"fourth", "quarta", "", "", ""})
-	addLocalizedString("QUIT", []string{"quit", "esci", "", "", ""})
+	addLocalizedString("STR_FIRST", []string{"first", "prima", "", "", ""})
+	addLocalizedString("STR_SECOND", []string{"second", "seconda", "", "", ""})
+	addLocalizedString("STR_THIRD", []string{"third", "terza", "", "", ""})
+	addLocalizedString("STR_FOURTH", []string{"fourth", "quarta", "", "", ""})
+	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
 
 	registerTriviaIntent(intentList)
 	registerTriviaAnswers(intentList)
