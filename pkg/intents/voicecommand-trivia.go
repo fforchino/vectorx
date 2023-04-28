@@ -22,7 +22,7 @@ var CurrentQuestion = 0
 func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "", "", ""})
 	addLocalizedString("STR_GAME_OVER", []string{"Game over", "Fine partita", "", "", ""})
-	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s1", "Domanda numero %s1", "", "", ""})
+	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s0", "Domanda numero %s0", "", "", ""})
 
 	addLocalizedString("FIRST", []string{"first", "prima", "", "", ""})
 	addLocalizedString("SECOND", []string{"second", "seconda", "", "", ""})
@@ -169,6 +169,9 @@ func gotoQuestion(questionNum int) {
 		CurrentQuestion = questionNum
 		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{string(questionNum)}))
 		// Prompt user for input
-		sdk_wrapper.TriggerWakeWord()
+		go func() {
+			time.Sleep(3 * time.Second)
+			sdk_wrapper.TriggerWakeWord()
+		}()
 	}
 }
