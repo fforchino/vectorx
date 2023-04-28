@@ -70,6 +70,7 @@ func saveConfig() bool {
 func setTriviaGameStart() bool {
 	retVal := false
 	if !triviaGameStarted() {
+		GameConfig.State = STATE_TRIVIA_GAME_STARTED
 		retVal = saveConfig()
 	}
 	return retVal
@@ -78,14 +79,13 @@ func setTriviaGameStart() bool {
 func setTriviaGameEnd() bool {
 	retVal := false
 	if triviaGameStarted() {
-		GameConfig.State = STATE_TRIVIA_GAME_NOT_STARTED
-		GameConfig.Score = 0
-		GameConfig.CurrentQuestion = 1
-		b, err := json.Marshal(GameConfig)
-		if err == nil {
-			sdk_wrapper.SetCurrentGame(string(b))
-			retVal = true
-		}
+		/*
+			GameConfig.State = STATE_TRIVIA_GAME_NOT_STARTED
+			GameConfig.Score = 0
+			GameConfig.CurrentQuestion = 1
+			retVal = saveConfig()
+		*/
+		sdk_wrapper.SetCurrentGame("")
 	}
 	return retVal
 }
