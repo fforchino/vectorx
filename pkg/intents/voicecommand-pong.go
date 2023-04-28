@@ -32,7 +32,7 @@ func Pong_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               playPong,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_PONG_I_WON", []string{"I won! ", "ho vinto!", "yo gané!", "j'ai gagné!", "ich habe gewonnen!"})

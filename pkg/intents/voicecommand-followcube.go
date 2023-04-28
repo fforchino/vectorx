@@ -27,7 +27,7 @@ func FollowCube_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               followCube,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 

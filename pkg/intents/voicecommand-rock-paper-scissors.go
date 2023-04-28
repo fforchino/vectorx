@@ -29,7 +29,7 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               playRockPaperScissors,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen!"})

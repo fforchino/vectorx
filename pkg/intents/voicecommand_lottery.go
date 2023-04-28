@@ -28,7 +28,7 @@ func Lottery_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               bingo,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_BINGO_BINGO", []string{"bingo time!", "tombola!", "bingo!", "bingo!", "bingo!"})

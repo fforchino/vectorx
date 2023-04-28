@@ -104,7 +104,7 @@ func registerLoginToChat(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               loginToChat,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -145,7 +145,7 @@ func registerLogoutChat(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               logoutChat,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -186,7 +186,7 @@ func registerQueryChatTarget(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               queryChatTarget,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -221,7 +221,7 @@ func registerSetChatTarget(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{PARAMETER_CHAT_TARGET},
 		Handler:               setChatTarget,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -254,7 +254,7 @@ func registerSendMessageToChat(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               sendMessageToChat,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil

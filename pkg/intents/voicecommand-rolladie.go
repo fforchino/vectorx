@@ -25,7 +25,7 @@ func RollaDie_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               rollADie,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("TXT_YOU_ROLLED", []string{"you rolled a %s1", "è uscito un %s1", "ha salido %s1", "ça sort %s1", "%s1 kam heraus"})

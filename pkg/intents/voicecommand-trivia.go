@@ -5,7 +5,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 const TRIVIA_ANSWER_UNKNOWN = -1
@@ -76,7 +75,7 @@ func registerTriviaIntent(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               triggerTriviaGame,
-		OSKRTriggersUserInput: true,
+		OSKRTriggersUserInput: handleTriviaNextInput,
 	}
 	*intentList = append(*intentList, intent)
 
@@ -140,10 +139,14 @@ func registerTriviaAnswers(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{},
 		Handler:               handleTriviaInput,
-		OSKRTriggersUserInput: true,
+		OSKRTriggersUserInput: handleTriviaNextInput,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
+}
+
+func handleTriviaNextInput() bool {
+	return triviaGameStarted()
 }
 
 func handleTriviaInput(intent IntentDef, speechText string, params IntentParams) string {
@@ -167,19 +170,9 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			userAnswer = TRIVIA_ANSWER_4
 		}
 
-		if userAnswer == TRIVIA_ANSWER_UNKNOWN {
-			go func() {
-				time.Sleep(3 * time.Second)
-				sdk_wrapper.TriggerWakeWord()
-			}()
-		}
 		if userAnswer == TRIVIA_ANSWER_1 {
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-			go func() {
-				time.Sleep(3 * time.Second)
-				CurrentQuestion = CurrentQuestion + 1
-				gotoQuestion(CurrentQuestion)
-			}()
+			gotoQuestion(CurrentQuestion)
 		}
 	}
 

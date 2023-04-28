@@ -98,7 +98,7 @@ func Weather_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{PARAMETER_WEATHER},
 		Handler:               doWeatherForecast,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 

@@ -25,7 +25,7 @@ func ChangeLanguage_Register(intentList *[]IntentDef) error {
 		Utterances:            utterances,
 		Parameters:            []string{PARAMETER_LANGUAGE},
 		Handler:               changeLanguage,
-		OSKRTriggersUserInput: false,
+		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
