@@ -100,10 +100,11 @@ func registerLoginToChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Verbindung zum Chat herstellen"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_login",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    loginToChat,
+		IntentName:            "extended_intent_vim_login",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               loginToChat,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -140,10 +141,11 @@ func registerLogoutChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Aus dem Chat rauskommen"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_logout",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    logoutChat,
+		IntentName:            "extended_intent_vim_logout",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               logoutChat,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -180,10 +182,11 @@ func registerQueryChatTarget(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"mit wem sprichst Du"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_set_chat_target",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    queryChatTarget,
+		IntentName:            "extended_intent_vim_set_chat_target",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               queryChatTarget,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -214,10 +217,11 @@ func registerSetChatTarget(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Sprechen Sie mit"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_set_chat_target",
-		Utterances: utterances,
-		Parameters: []string{PARAMETER_CHAT_TARGET},
-		Handler:    setChatTarget,
+		IntentName:            "extended_intent_vim_set_chat_target",
+		Utterances:            utterances,
+		Parameters:            []string{PARAMETER_CHAT_TARGET},
+		Handler:               setChatTarget,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -246,10 +250,11 @@ func registerSendMessageToChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"senden"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_vim_message",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    sendMessageToChat,
+		IntentName:            "extended_intent_vim_message",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               sendMessageToChat,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil

@@ -94,10 +94,11 @@ func Weather_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Was ist vor langer Zeit", "Wie Zeit ist es", "wie draußen", "Wettervorhersage"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_weather",
-		Utterances: utterances,
-		Parameters: []string{PARAMETER_WEATHER},
-		Handler:    doWeatherForecast,
+		IntentName:            "extended_intent_weather",
+		Utterances:            utterances,
+		Parameters:            []string{PARAMETER_WEATHER},
+		Handler:               doWeatherForecast,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 

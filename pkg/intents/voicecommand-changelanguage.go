@@ -21,10 +21,11 @@ func ChangeLanguage_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"sprechen"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_changelanguage",
-		Utterances: utterances,
-		Parameters: []string{PARAMETER_LANGUAGE},
-		Handler:    changeLanguage,
+		IntentName:            "extended_intent_changelanguage",
+		Utterances:            utterances,
+		Parameters:            []string{PARAMETER_LANGUAGE},
+		Handler:               changeLanguage,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	return nil

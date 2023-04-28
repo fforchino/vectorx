@@ -23,10 +23,11 @@ func FollowCube_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Folgen Sie dem Würfel"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_follow_the_cube",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    followCube,
+		IntentName:            "extended_intent_follow_the_cube",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               followCube,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 

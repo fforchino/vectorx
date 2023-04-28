@@ -28,10 +28,11 @@ func Pong_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"lass uns pong spielen"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_play_pong",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    playPong,
+		IntentName:            "extended_intent_play_pong",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               playPong,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_PONG_I_WON", []string{"I won! ", "ho vinto!", "yo gané!", "j'ai gagné!", "ich habe gewonnen!"})

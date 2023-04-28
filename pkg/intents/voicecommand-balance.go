@@ -21,10 +21,11 @@ func Balance_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Gewichtsskala"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_hello_world",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    doBalance,
+		IntentName:            "extended_intent_hello_world",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               doBalance,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_BALANCE_WEIGHT", []string{"%s1 grams", "%s1 grammi", "%s1 gramos", "%s1 grammes", "%s1 Gramm"})

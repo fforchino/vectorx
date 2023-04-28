@@ -3,7 +3,7 @@ module vectorx
 go 1.19
 
 require (
-	github.com/fforchino/vector-go-sdk v0.0.0-20230428061501-691f603f3ce1
+	github.com/fforchino/vector-go-sdk v0.0.0-20230428162644-e2f10e6f8cdb
 	github.com/fogleman/gg v1.3.0
 )
 

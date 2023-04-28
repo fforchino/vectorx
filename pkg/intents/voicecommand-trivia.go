@@ -3,6 +3,7 @@ package intents
 import (
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,10 +14,10 @@ const TRIVIA_ANSWER_2 = 2
 const TRIVIA_ANSWER_3 = 3
 const TRIVIA_ANSWER_4 = 4
 const TRIVIA_ANSWER_QUIT = 5
+const TRIVIA_GAME_NAME = "TRIVIA_GAME"
 
 var TRIVIA_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VECTOR-TRIVIA" //"http://192.168.43.65/VECTOR-TRIVIA"
 var TriviaDebug = true
-var TriviaGameStarted = false
 var CurrentQuestion = 0
 
 func Trivia_Register(intentList *[]IntentDef) error {
@@ -36,6 +37,28 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	return nil
 }
 
+func triviaGameStarted() bool {
+	return sdk_wrapper.GetCurrentGame() == TRIVIA_GAME_NAME
+}
+
+func setTriviaGameStart() bool {
+	retVal := false
+	if !triviaGameStarted() {
+		sdk_wrapper.SetCurrentGame(TRIVIA_GAME_NAME)
+		retVal = true
+	}
+	return retVal
+}
+
+func setTriviaGameEnd() bool {
+	retVal := false
+	if triviaGameStarted() {
+		sdk_wrapper.SetCurrentGame("")
+		retVal = true
+	}
+	return retVal
+}
+
 /**********************************************************************************************************************/
 /*                                            TRIGGER TRIVIA GAME                                                     */
 /**********************************************************************************************************************/
@@ -49,10 +72,11 @@ func registerTriviaIntent(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{""}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_trivia",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    triggerTriviaGame,
+		IntentName:            "extended_intent_trivia",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               triggerTriviaGame,
+		OSKRTriggersUserInput: true,
 	}
 	*intentList = append(*intentList, intent)
 
@@ -60,10 +84,12 @@ func registerTriviaIntent(intentList *[]IntentDef) error {
 }
 
 func triggerTriviaGame(intent IntentDef, speechText string, params IntentParams) string {
-	returnIntent := STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
 	sdk_wrapper.SayText(getText("STR_OK_LETS_GO"))
-	TriviaGameStarted = true
-	gotoQuestion(1)
+	if setTriviaGameStart() {
+		gotoQuestion(1)
+		returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+	}
 	return returnIntent
 }
 
@@ -110,10 +136,11 @@ func registerTriviaAnswers(intentList *[]IntentDef) error {
 	}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_trivia_input",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    handleTriviaInput,
+		IntentName:            "extended_intent_trivia_input",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               handleTriviaInput,
+		OSKRTriggersUserInput: true,
 	}
 	*intentList = append(*intentList, intent)
 	return nil
@@ -122,12 +149,12 @@ func registerTriviaAnswers(intentList *[]IntentDef) error {
 func handleTriviaInput(intent IntentDef, speechText string, params IntentParams) string {
 	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
 
-	if TriviaGameStarted {
+	if triviaGameStarted() {
 		userAnswer := TRIVIA_ANSWER_UNKNOWN
 		if strings.Contains(speechText, getText("STR_QUIT")) {
 			// Quit the game
 			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
-			TriviaGameStarted = false
+			setTriviaGameEnd()
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 			userAnswer = TRIVIA_ANSWER_QUIT
 		} else if strings.Contains(speechText, getText("STR_FIRST")) {
@@ -164,9 +191,9 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 /**********************************************************************************************************************/
 
 func gotoQuestion(questionNum int) {
-	if TriviaGameStarted {
+	if triviaGameStarted() {
 		// Ask question
 		CurrentQuestion = questionNum
-		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{string(questionNum)}))
+		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
 	}
 }

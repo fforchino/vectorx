@@ -23,10 +23,11 @@ func registerSetRobotName(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Du bist", "du nennst dich", "dein Name ist"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_set_robot_name",
-		Utterances: utterances,
-		Parameters: []string{PARAMETER_ROBOTNAME},
-		Handler:    setRobotName,
+		IntentName:            "extended_intent_set_robot_name",
+		Utterances:            utterances,
+		Parameters:            []string{PARAMETER_ROBOTNAME},
+		Handler:               setRobotName,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_ROBOT_GET_NAME", []string{"my name is %s1", "mi chiamo %s1", "mi nombre es %s1", "je m'appelle %s1", "mein name ist %s1"})

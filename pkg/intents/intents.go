@@ -102,10 +102,11 @@ type IntentParams struct {
 type IntentHandlerFunc func(IntentDef, string, IntentParams) string
 
 type IntentDef struct {
-	IntentName string              `json:"intentName"`
-	Utterances map[string][]string `json:"utterances"`
-	Parameters []string            `json:"-"`
-	Handler    IntentHandlerFunc   `json:"-"`
+	IntentName            string              `json:"intentName"`
+	Utterances            map[string][]string `json:"utterances"`
+	Parameters            []string            `json:"-"`
+	Handler               IntentHandlerFunc   `json:"-"`
+	OSKRTriggersUserInput bool                `json:"-"`
 }
 
 var intents []IntentDef

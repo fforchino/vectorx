@@ -23,10 +23,11 @@ func HelloWorld_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Hallo Welt"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_hello_world",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    helloWorld,
+		IntentName:            "extended_intent_hello_world",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               helloWorld,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_HELLO_WORLD", []string{"hello world!", "ciao mondo!", "hola mundo!", "bonjour le monde!", "hallo welt"})

@@ -21,10 +21,11 @@ func RollaDie_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"Zieh eine Nuss", "wirft eine Nuss"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_rolladie",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    rollADie,
+		IntentName:            "extended_intent_rolladie",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               rollADie,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("TXT_YOU_ROLLED", []string{"you rolled a %s1", "è uscito un %s1", "ha salido %s1", "ça sort %s1", "%s1 kam heraus"})

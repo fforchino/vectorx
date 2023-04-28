@@ -25,10 +25,11 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"spielen schere stein papier"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_rock_paper_scissors",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    playRockPaperScissors,
+		IntentName:            "extended_intent_rock_paper_scissors",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               playRockPaperScissors,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen!"})

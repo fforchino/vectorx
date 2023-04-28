@@ -18,10 +18,11 @@ func HowDoYouSay_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"wie sie"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_how_do_you_say",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    HowDoYouSay,
+		IntentName:            "extended_intent_how_do_you_say",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               HowDoYouSay,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 

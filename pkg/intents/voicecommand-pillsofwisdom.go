@@ -19,10 +19,11 @@ func PillsOfWisdom_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_GERMAN] = []string{"erzähle mir etwas"}
 
 	var intent = IntentDef{
-		IntentName: "extended_intent_pills_of_wisdom",
-		Utterances: utterances,
-		Parameters: []string{},
-		Handler:    pillsOfWisdom,
+		IntentName:            "extended_intent_pills_of_wisdom",
+		Utterances:            utterances,
+		Parameters:            []string{},
+		Handler:               pillsOfWisdom,
+		OSKRTriggersUserInput: false,
 	}
 	*intentList = append(*intentList, intent)
 
