@@ -194,6 +194,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			if userAnswer == CurrentQuestion.Answer {
 				sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
 				GameConfig.Score = GameConfig.Score + 1
+				saveConfig()
 				returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 				gotoQuestion(GameConfig.CurrentQuestion + 1)
 			} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
