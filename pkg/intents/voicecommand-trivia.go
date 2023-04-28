@@ -42,7 +42,7 @@ var GameConfig = TriviaGameData{GameName: TRIVIA_GAME_NAME,
 	Score:           0,
 	State:           STATE_TRIVIA_GAME_NOT_STARTED,
 }
-var CurrentQuestion = TriviaQuestionData{}
+var CurrentQuestion = TriviaQuestionData{TotalQuestions: 1}
 
 func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "", "", ""})
