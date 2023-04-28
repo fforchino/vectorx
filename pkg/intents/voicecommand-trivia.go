@@ -187,6 +187,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			userAnswer = TRIVIA_ANSWER_4
 		}
 
+		println("UserAnswer: %d, CurrentQuestion.Answer %d", userAnswer, CurrentQuestion.Answer)
 		if userAnswer == CurrentQuestion.Answer {
 			sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
@@ -195,7 +196,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			sdk_wrapper.SayText(getText("STR_INVALID_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
 			gotoQuestion(GameConfig.CurrentQuestion)
-		} else {
+		} else if userAnswer != TRIVIA_ANSWER_QUIT {
 			sdk_wrapper.SayText(getText("STR_WRONG_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
 			gotoQuestion(GameConfig.CurrentQuestion + 1)
