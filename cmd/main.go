@@ -39,6 +39,13 @@ func main() {
 			*speechText = (*speechText)[1 : len(*speechText)-1]
 		}
 
+		// Init SDK before intent match, so registration can use custom settings if needed
+		err := sdk_wrapper.InitSDKForWirepod(*serial)
+		if err != nil {
+			println("FATAL: could not load Vector settings from JDOCS")
+			return
+		}
+
 		// Register vectorx intents
 		intents.RegisterIntents()
 
@@ -50,12 +57,6 @@ func main() {
 			// SDK because we may need to get Vector's settings (e.g. for weather forecast we need the default location)
 
 			stats.StatsIntentHandled(true)
-			// Init SDK
-			err := sdk_wrapper.InitSDKForWirepod(*serial)
-			if err != nil {
-				println("FATAL: could not load Vector settings from JDOCS")
-				return
-			}
 			robotLocale := sdk_wrapper.GetLocale()
 			if Debug {
 				println("ROBOT LOCALE: " + robotLocale)

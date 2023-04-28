@@ -137,6 +137,15 @@ func IntentMatch(speechText string, locale string) (IntentDef, error) {
 	var candidates2 []IntentDef
 	maxLen := 0
 	cIntent := 0
+
+	// Check for a catchall intent first, this has priority over all.
+	// Note: only a catchall intent should be active at a time!!!
+	for _, intent := range intents {
+		if intent.Utterances[locale][0] == "*" {
+			return intent, nil
+		}
+	}
+	// Else search for a perfect match first
 	for _, intent := range intents {
 		if hasPerfectMatch(intent.Utterances[locale], speechText) {
 			candidates1 = append(candidates1, intent)

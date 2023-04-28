@@ -46,7 +46,6 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
 
 	registerTriviaIntent(intentList)
-	registerTriviaAnswers(intentList)
 
 	return nil
 }
@@ -105,6 +104,12 @@ func registerTriviaIntent(intentList *[]IntentDef) error {
 	}
 	*intentList = append(*intentList, intent)
 
+	// If the game is started, register a catch-all intent that will capture any input
+	// Note: only a catchall intent should be active at a time!!!
+	if triviaGameStarted() {
+		registerCatchallIntent(intentList)
+	}
+
 	return nil
 }
 
@@ -122,43 +127,13 @@ func triggerTriviaGame(intent IntentDef, speechText string, params IntentParams)
 /*                                            HANDLE ANSWERS                                                          */
 /**********************************************************************************************************************/
 
-func registerTriviaAnswers(intentList *[]IntentDef) error {
+func registerCatchallIntent(intentList *[]IntentDef) {
 	utterances := make(map[string][]string)
-	utterances[LOCALE_ENGLISH] = []string{
-		getTextIn("STR_QUIT", []string{}, en_US),
-		getTextIn("STR_FIRST", []string{}, en_US),
-		getTextIn("STR_SECOND", []string{}, en_US),
-		getTextIn("STR_THIRD", []string{}, en_US),
-		getTextIn("STR_FOURTH", []string{}, en_US),
-	}
-	utterances[LOCALE_ITALIAN] = []string{
-		getTextIn("STR_QUIT", []string{}, it_IT),
-		getTextIn("STR_FIRST", []string{}, it_IT),
-		getTextIn("STR_SECOND", []string{}, it_IT),
-		getTextIn("STR_THIRD", []string{}, it_IT),
-		getTextIn("STR_FOURTH", []string{}, it_IT),
-	}
-	utterances[LOCALE_SPANISH] = []string{
-		getTextIn("STR_QUIT", []string{}, es_ES),
-		getTextIn("STR_FIRST", []string{}, es_ES),
-		getTextIn("STR_SECOND", []string{}, es_ES),
-		getTextIn("STR_THIRD", []string{}, es_ES),
-		getTextIn("STR_FOURTH", []string{}, es_ES),
-	}
-	utterances[LOCALE_FRENCH] = []string{
-		getTextIn("STR_QUIT", []string{}, fr_FR),
-		getTextIn("STR_FIRST", []string{}, fr_FR),
-		getTextIn("STR_SECOND", []string{}, fr_FR),
-		getTextIn("STR_THIRD", []string{}, fr_FR),
-		getTextIn("STR_FOURTH", []string{}, fr_FR),
-	}
-	utterances[LOCALE_GERMAN] = []string{
-		getTextIn("STR_QUIT", []string{}, de_DE),
-		getTextIn("STR_FIRST", []string{}, de_DE),
-		getTextIn("STR_SECOND", []string{}, de_DE),
-		getTextIn("STR_THIRD", []string{}, de_DE),
-		getTextIn("STR_FOURTH", []string{}, de_DE),
-	}
+	utterances[LOCALE_ENGLISH] = []string{"*"}
+	utterances[LOCALE_ITALIAN] = []string{"*"}
+	utterances[LOCALE_SPANISH] = []string{"*"}
+	utterances[LOCALE_FRENCH] = []string{"*"}
+	utterances[LOCALE_GERMAN] = []string{"*"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_trivia_input",
@@ -168,7 +143,6 @@ func registerTriviaAnswers(intentList *[]IntentDef) error {
 		OSKRTriggersUserInput: handleTriviaNextInput,
 	}
 	*intentList = append(*intentList, intent)
-	return nil
 }
 
 func handleTriviaNextInput() bool {
