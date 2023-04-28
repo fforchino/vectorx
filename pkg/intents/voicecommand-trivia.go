@@ -187,7 +187,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			userAnswer = TRIVIA_ANSWER_4
 		}
 
-		println("UserAnswer: %d, CurrentQuestion.Answer %d", userAnswer, CurrentQuestion.Answer)
+		sdk_wrapper.SayText(strconv.Itoa(userAnswer) + " " + strconv.Itoa(CurrentQuestion.Answer))
 		if userAnswer == CurrentQuestion.Answer {
 			sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
