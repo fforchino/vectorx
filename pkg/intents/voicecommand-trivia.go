@@ -221,6 +221,7 @@ func gotoQuestion(questionNum int) {
 			sdk_wrapper.SayText(getTextEx("STR_TOTAL_SCORE", []string{strconv.Itoa(GameConfig.Score)}))
 			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
 			setTriviaGameEnd()
+			return
 		}
 		// Ask question
 		GameConfig.CurrentQuestion = questionNum
