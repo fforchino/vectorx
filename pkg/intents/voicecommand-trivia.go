@@ -1,11 +1,22 @@
 package intents
 
 import (
+	"encoding/json"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 	"os"
 	"strconv"
 	"strings"
 )
+
+type TriviaGameData struct {
+	GameName        string `json:"gameName"`
+	CurrentQuestion int    `json:"currentQuestion"`
+	Score           int    `json:"score"`
+	State           string `json:"state"`
+}
+
+const STATE_TRIVIA_GAME_STARTED = "started"
+const STATE_TRIVIA_GAME_NOT_STARTED = "none"
 
 const TRIVIA_ANSWER_UNKNOWN = -1
 const TRIVIA_ANSWER_1 = 1
@@ -17,7 +28,11 @@ const TRIVIA_GAME_NAME = "TRIVIA_GAME"
 
 var TRIVIA_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VECTOR-TRIVIA" //"http://192.168.43.65/VECTOR-TRIVIA"
 var TriviaDebug = true
-var CurrentQuestion = 0
+var GameConfig = TriviaGameData{GameName: TRIVIA_GAME_NAME,
+	CurrentQuestion: 1,
+	Score:           0,
+	State:           STATE_TRIVIA_GAME_NOT_STARTED,
+}
 
 func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "", "", ""})
@@ -37,14 +52,19 @@ func Trivia_Register(intentList *[]IntentDef) error {
 }
 
 func triviaGameStarted() bool {
-	return sdk_wrapper.GetCurrentGame() == TRIVIA_GAME_NAME
+	err := json.Unmarshal([]byte(sdk_wrapper.GetCurrentGame()), &GameConfig)
+	return (err == nil && GameConfig.GameName == TRIVIA_GAME_NAME && GameConfig.State == STATE_TRIVIA_GAME_STARTED)
 }
 
 func setTriviaGameStart() bool {
 	retVal := false
 	if !triviaGameStarted() {
-		sdk_wrapper.SetCurrentGame(TRIVIA_GAME_NAME)
-		retVal = true
+		GameConfig.State = STATE_TRIVIA_GAME_STARTED
+		b, err := json.Marshal(GameConfig)
+		if err == nil {
+			sdk_wrapper.SetCurrentGame(string(b))
+			retVal = true
+		}
 	}
 	return retVal
 }
@@ -52,8 +72,14 @@ func setTriviaGameStart() bool {
 func setTriviaGameEnd() bool {
 	retVal := false
 	if triviaGameStarted() {
-		sdk_wrapper.SetCurrentGame("")
-		retVal = true
+		GameConfig.State = STATE_TRIVIA_GAME_NOT_STARTED
+		GameConfig.Score = 0
+		GameConfig.CurrentQuestion = 1
+		b, err := json.Marshal(GameConfig)
+		if err == nil {
+			sdk_wrapper.SetCurrentGame(string(b))
+			retVal = true
+		}
 	}
 	return retVal
 }
@@ -172,7 +198,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 
 		if userAnswer == TRIVIA_ANSWER_1 {
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-			gotoQuestion(CurrentQuestion)
+			gotoQuestion(GameConfig.CurrentQuestion + 1)
 		}
 	}
 
@@ -186,7 +212,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 func gotoQuestion(questionNum int) {
 	if triviaGameStarted() {
 		// Ask question
-		CurrentQuestion = questionNum
+		GameConfig.CurrentQuestion = questionNum
 		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
 	}
 }
