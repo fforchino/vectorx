@@ -3,7 +3,6 @@ package intents
 import (
 	"encoding/json"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -13,6 +12,15 @@ type TriviaGameData struct {
 	CurrentQuestion int    `json:"currentQuestion"`
 	Score           int    `json:"score"`
 	State           string `json:"state"`
+}
+
+type TriviaQuestionData struct {
+	Question string `json:"question"`
+	A        string `json:"a"`
+	B        string `json:"b"`
+	C        string `json:"c"`
+	D        string `json:"d"`
+	Answer   int    `json:"answer"`
 }
 
 const STATE_TRIVIA_GAME_STARTED = "started"
@@ -26,13 +34,14 @@ const TRIVIA_ANSWER_4 = 4
 const TRIVIA_ANSWER_QUIT = 5
 const TRIVIA_GAME_NAME = "TRIVIA_GAME"
 
-var TRIVIA_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VECTOR-TRIVIA" //"http://192.168.43.65/VECTOR-TRIVIA"
+var TRIVIA_SERVER_URL = "https://www.wondergarden.app/VECTOR-TRIVIA" //"http://192.168.43.65/VECTOR-TRIVIA"
 var TriviaDebug = true
 var GameConfig = TriviaGameData{GameName: TRIVIA_GAME_NAME,
 	CurrentQuestion: 1,
 	Score:           0,
 	State:           STATE_TRIVIA_GAME_NOT_STARTED,
 }
+var CurrentQuestion = TriviaQuestionData{}
 
 func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "", "", ""})
@@ -46,6 +55,7 @@ func Trivia_Register(intentList *[]IntentDef) error {
 	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
 	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "", "", ""})
 	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "", "", ""})
+	addLocalizedString("STR_INVALID_ANSWER", []string{"invalid answer", "risposta non valida", "", "", ""})
 
 	registerTriviaIntent(intentList)
 
@@ -177,11 +187,12 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 			userAnswer = TRIVIA_ANSWER_4
 		}
 
-		if userAnswer == TRIVIA_ANSWER_1 {
+		if userAnswer == CurrentQuestion.Answer {
 			sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
 			gotoQuestion(GameConfig.CurrentQuestion + 1)
 		} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
+			sdk_wrapper.SayText(getText("STR_INVALID_ANSWER"))
 			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
 			gotoQuestion(GameConfig.CurrentQuestion)
 		} else {
@@ -196,7 +207,7 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 }
 
 /**********************************************************************************************************************/
-/*                                            HANDLE ANSWERS                                                          */
+/*                                            WEBSERVER INTERACTION                                                   */
 /**********************************************************************************************************************/
 
 func gotoQuestion(questionNum int) {
@@ -204,6 +215,35 @@ func gotoQuestion(questionNum int) {
 		// Ask question
 		GameConfig.CurrentQuestion = questionNum
 		saveConfig()
-		sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
+		err := getQuestionFromWeb(questionNum)
+		if err == nil {
+			sdk_wrapper.SayText(getTextEx("STR_QUESTION_NUM", []string{strconv.Itoa(questionNum)}))
+			sdk_wrapper.SayText(CurrentQuestion.Question)
+			textToWrite := "1) " + CurrentQuestion.A + "\n" +
+				"2) " + CurrentQuestion.B + "\n" +
+				"3) " + CurrentQuestion.C + "\n" +
+				"4) " + CurrentQuestion.D + "\n"
+			sdk_wrapper.WriteText(textToWrite, 32, false, 5000, false)
+		} else {
+			// Quit the game
+			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
+			setTriviaGameEnd()
+		}
 	}
+}
+
+func getQuestionFromWeb(questionNum int) error {
+	/*
+		theUrl := TRIVIA_SERVER_URL + "/php/getQuestion.php?q=" + strconv.Itoa(questionNum) + "&lang=" + sdk_wrapper.GetLanguage()
+		resp, err := http.Get(theUrl)
+		if err == nil {
+			var responseText []byte
+			responseText, err = ioutil.ReadAll(resp.Body)
+			println("RESPONSE: " + string(responseText))
+			err = json.Unmarshal(responseText, &CurrentQuestion)
+		}
+		return err
+	*/
+	CurrentQuestion = TriviaQuestionData{Question: "Who is Luke Skywalker's father?", A: "Darth Vader", B: "Yoda", C: "Obi-Wan Kenobi", D: "Emperor Palpatine", Answer: 1}
+	return nil
 }
