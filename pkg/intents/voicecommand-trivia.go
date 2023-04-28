@@ -170,38 +170,39 @@ func handleTriviaInput(intent IntentDef, speechText string, params IntentParams)
 	returnIntent := STANDARD_INTENT_IMPERATIVE_NEGATIVE
 
 	if triviaGameStarted() {
-		userAnswer := TRIVIA_ANSWER_UNKNOWN
-		if strings.Contains(speechText, getText("STR_QUIT")) {
-			// Quit the game
-			sdk_wrapper.SayText(getText("STR_GAME_OVER"))
-			setTriviaGameEnd()
-			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-			userAnswer = TRIVIA_ANSWER_QUIT
-		} else if strings.Contains(speechText, getText("STR_FIRST")) {
-			userAnswer = TRIVIA_ANSWER_1
-		} else if strings.Contains(speechText, getText("STR_SECOND")) {
-			userAnswer = TRIVIA_ANSWER_2
-		} else if strings.Contains(speechText, getText("STR_THIRD")) {
-			userAnswer = TRIVIA_ANSWER_3
-		} else if strings.Contains(speechText, getText("STR_FOURTH")) {
-			userAnswer = TRIVIA_ANSWER_4
-		}
+		err := getQuestionFromWeb(GameConfig.CurrentQuestion)
+		if err == nil {
+			userAnswer := TRIVIA_ANSWER_UNKNOWN
+			if strings.Contains(speechText, getText("STR_QUIT")) {
+				// Quit the game
+				sdk_wrapper.SayText(getText("STR_GAME_OVER"))
+				setTriviaGameEnd()
+				returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+				userAnswer = TRIVIA_ANSWER_QUIT
+			} else if strings.Contains(speechText, getText("STR_FIRST")) {
+				userAnswer = TRIVIA_ANSWER_1
+			} else if strings.Contains(speechText, getText("STR_SECOND")) {
+				userAnswer = TRIVIA_ANSWER_2
+			} else if strings.Contains(speechText, getText("STR_THIRD")) {
+				userAnswer = TRIVIA_ANSWER_3
+			} else if strings.Contains(speechText, getText("STR_FOURTH")) {
+				userAnswer = TRIVIA_ANSWER_4
+			}
 
-		sdk_wrapper.SayText(strconv.Itoa(userAnswer) + " " + strconv.Itoa(CurrentQuestion.Answer))
-		if userAnswer == CurrentQuestion.Answer {
-			sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
-			returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
-			gotoQuestion(GameConfig.CurrentQuestion + 1)
-		} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
-			sdk_wrapper.SayText(getText("STR_INVALID_ANSWER"))
-			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
-			gotoQuestion(GameConfig.CurrentQuestion)
-		} else if userAnswer != TRIVIA_ANSWER_QUIT {
-			sdk_wrapper.SayText(getText("STR_WRONG_ANSWER"))
-			returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
-			gotoQuestion(GameConfig.CurrentQuestion + 1)
+			if userAnswer == CurrentQuestion.Answer {
+				sdk_wrapper.SayText(getText("STR_CORRECT_ANSWER"))
+				returnIntent = STANDARD_INTENT_IMPERATIVE_AFFIRMATIVE
+				gotoQuestion(GameConfig.CurrentQuestion + 1)
+			} else if userAnswer == TRIVIA_ANSWER_UNKNOWN {
+				sdk_wrapper.SayText(getText("STR_INVALID_ANSWER"))
+				returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
+				gotoQuestion(GameConfig.CurrentQuestion)
+			} else if userAnswer != TRIVIA_ANSWER_QUIT {
+				sdk_wrapper.SayText(getText("STR_WRONG_ANSWER"))
+				returnIntent = STANDARD_INTENT_IMPERATIVE_NEGATIVE
+				gotoQuestion(GameConfig.CurrentQuestion + 1)
+			}
 		}
-
 	}
 
 	return returnIntent
