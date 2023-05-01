@@ -1,6 +1,7 @@
 RELEASE_17
 - Bugfix: unknown locale "en_US" (it should be "en-US") 
 - Added Trivia Game Voice command (works only with OSKR bots)
+- Attempt a VectorX auto-update every day at 1 am
 
 RELEASE_16
 - Add Fakeyou.com custom voices to Vector

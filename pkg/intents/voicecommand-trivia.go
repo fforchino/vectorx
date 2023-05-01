@@ -67,7 +67,7 @@ func Trivia_Register(intentList *[]IntentDef) error {
 }
 
 func triviaGameStarted() bool {
-	err := json.Unmarshal([]byte(sdk_wrapper.GetCurrentGame()), &GameConfig)
+	err := json.Unmarshal([]byte(sdk_wrapper.GetCurrentGameData()), &GameConfig)
 	return (err == nil && GameConfig.GameName == TRIVIA_GAME_NAME && GameConfig.State == STATE_TRIVIA_GAME_STARTED)
 }
 
@@ -75,7 +75,7 @@ func saveConfig() bool {
 	retVal := false
 	b, err := json.Marshal(GameConfig)
 	if err == nil {
-		sdk_wrapper.SetCurrentGame(string(b))
+		sdk_wrapper.SetCurrentGameData(string(b))
 		retVal = true
 	}
 	return retVal
@@ -99,7 +99,7 @@ func setTriviaGameEnd() bool {
 			GameConfig.CurrentQuestion = 1
 			retVal = saveConfig()
 		*/
-		sdk_wrapper.SetCurrentGame("")
+		sdk_wrapper.SetCurrentGameData("")
 	}
 	return retVal
 }
