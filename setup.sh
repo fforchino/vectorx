@@ -291,12 +291,7 @@ mv main vectorx
 echo
 echo "Adding automatic updated to the crontab"
 echo
-if [[ $(crontab -l | egrep -v "^(#|$)" | grep -q 'update.sh'; echo $?) == 1 ]]
-then
-    set -f
-    echo $(crontab -l ; echo '0 1 * * * ${vectorxHome}update.sh') | crontab -
-    set +f
-fi
+echo '0 1 * * * root ${vectorxHome}update.sh' >/etc/cron.d/vectorx_update
 touch .setup
 echo "Done. The extended intents are now active."
 echo

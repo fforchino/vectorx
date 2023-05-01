@@ -630,7 +630,7 @@ func runIntentCommand(intentName string, serialNo string, params []string) error
 		txt = "your name is " + params[0]
 	} else if intentName == "pills-of-wisdom" {
 		txt = "tell me something"
-	} else if intentName == "oskr-tivia" {
+	} else if intentName == "oskr-trivia" {
 		txt = "trivia game"
 	}
 
