@@ -47,19 +47,19 @@ var GameConfig = TriviaGameData{GameName: TRIVIA_GAME_NAME,
 var CurrentQuestion = TriviaQuestionData{TotalQuestions: 1}
 
 func Trivia_Register(intentList *[]IntentDef) error {
-	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "", "", ""})
-	addLocalizedString("STR_GAME_OVER", []string{"Game over", "Fine partita", "", "", ""})
-	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s1", "Domanda numero %s1", "", "", ""})
+	addLocalizedString("STR_OK_LETS_GO", []string{"Ok, let's go!", "Perfetto, andiamo!", "OK vamos!", "OK allons-y!", "OK los geht's!"})
+	addLocalizedString("STR_GAME_OVER", []string{"Game over", "Fine partita", "Juego terminado", "Jeu terminé", "Spiel ist aus"})
+	addLocalizedString("STR_QUESTION_NUM", []string{"Question %s1", "Domanda numero %s1", "Pregunta número %s1", "Question numéro %s1", "Frage Nummer %s1"})
 
-	addLocalizedString("STR_FIRST", []string{"one", "uno", "", "", ""})
-	addLocalizedString("STR_SECOND", []string{"two", "due", "", "", ""})
-	addLocalizedString("STR_THIRD", []string{"three", "tre", "", "", ""})
-	addLocalizedString("STR_FOURTH", []string{"four", "quattro", "", "", ""})
-	addLocalizedString("STR_QUIT", []string{"quit", "esci", "", "", ""})
-	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "", "", ""})
-	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "", "", ""})
-	addLocalizedString("STR_INVALID_ANSWER", []string{"invalid answer", "risposta non valida", "", "", ""})
-	addLocalizedString("STR_TOTAL_SCORE", []string{"Total score: %s1", "Punteggio: %s1", "", "", ""})
+	addLocalizedString("STR_FIRST", []string{"one", "uno", "uno", "un", "eins"})
+	addLocalizedString("STR_SECOND", []string{"two", "due", "dos", "deux", "zwei"})
+	addLocalizedString("STR_THIRD", []string{"three", "tre", "tres", "trois", "drei"})
+	addLocalizedString("STR_FOURTH", []string{"four", "quattro", "cuatro", "quatre", "vier"})
+	addLocalizedString("STR_QUIT", []string{"quit", "esci", "abandonar", "arrêter", "aufhören"})
+	addLocalizedString("STR_CORRECT_ANSWER", []string{"correct!", "giusto!", "correcto", "correct!", "richtig!"})
+	addLocalizedString("STR_WRONG_ANSWER", []string{"wrong!", "sbagliato!", "equivocado!", "faux!", "falsch!"})
+	addLocalizedString("STR_INVALID_ANSWER", []string{"invalid answer", "risposta non valida", "respuesta invalida", "réponse inavalide", "Inavalid Antwort"})
+	addLocalizedString("STR_TOTAL_SCORE", []string{"Total score: %s1", "Punteggio: %s1", "puntaje total %s1", "score total %s1", "Gesamtpunktzahl %s1"})
 
 	registerTriviaIntent(intentList)
 
