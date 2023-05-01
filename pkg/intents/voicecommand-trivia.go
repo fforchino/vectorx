@@ -112,9 +112,9 @@ func registerTriviaIntent(intentList *[]IntentDef) error {
 	utterances := make(map[string][]string)
 	utterances[LOCALE_ENGLISH] = []string{"trivia game"}
 	utterances[LOCALE_ITALIAN] = []string{"gioco delle domande"}
-	utterances[LOCALE_SPANISH] = []string{""}
-	utterances[LOCALE_FRENCH] = []string{""}
-	utterances[LOCALE_GERMAN] = []string{""}
+	utterances[LOCALE_SPANISH] = []string{"juego de preguntas"}
+	utterances[LOCALE_FRENCH] = []string{"trivia"}
+	utterances[LOCALE_GERMAN] = []string{"trivia"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_trivia",

@@ -147,7 +147,8 @@ async function BotControlSendIntent(intentName, resultElement) {
         intentName=="set-name" ||
         intentName=="pills-of-wisdom" ||
         intentName=="tts-configure" ||
-        intentName=="tts-test") {
+        intentName=="tts-test" ||
+        intentName=="oskr-trivia") {
         var data = "name=" + intentName+"&esn="+CurrentRobot.esn+extraData;
         await fetch("/api/send_intent?" + data)
             .then(response => response.text())

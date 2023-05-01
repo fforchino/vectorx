@@ -455,6 +455,41 @@
             </div>
           </div>
         </div>
+
+      <!-- /.row -->
+      <div class="col-sm-6">
+        <h1 class="m-0">OSKR Voice Commands</h1>
+        <br/>
+      </div>
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-6 col-12">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>Trivia game</h3>
+
+              <p>Sci-fi trivia game. Will work only on OSKR bots.</p>
+              <div class="bot-control-reveal" id="bot-control-oskr-trivia">
+                <i>Voice command:</i> Hey Vector, <b>trivia game</b>!
+                <br/>
+                Vector asks you questions, then will listen for the answer (numbers from 1 to 4). Say "Quit" to quit the
+                game, or go through all the 20 questions. If you start the game, Vector will be locked to the game until
+                you quit. If Vector hears an invalid answer, he will prompt again the question. If he hears silence he
+                won't prompt again but he will do that as an answer to the next voice command, whatever it is.
+                Just say "Quit" to quit the game and return to normal operation.
+                <br/><br/>
+                <span id="bot-control-oskr-trivia-result"></span>
+                <br/><br/>
+                <button onclick="BotControlSendIntent('oskr-trivia', 'bot-control-oskr-trivia-result');" type="button" class="btn btn-block btn-primary">Send Intent Now</button>
+              </div>
+            </div>
+            <div class="icon">
+              <i class="fa-solid fa-cloud-sun"></i>
+            </div>
+            <a href="#" onclick="BotControlReveal(this, 'bot-control-oskr-trivia'); return false;" class="small-box-footer">Try it! <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
       </div>
     </section>
     <!-- /.content -->
@@ -479,7 +514,7 @@
 <script src="dist/js/header.js"></script>
 <script src="dist/js/footer.js"></script>
 <script src="dist/js/pages/botcontrol.js"></script>
-<script>LoadSite("nav_page_botcontrol_"+QueryParams.id);</script>
+<script>//LoadSite("nav_page_botcontrol_"+QueryParams.id);</script>
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

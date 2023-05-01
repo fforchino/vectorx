@@ -20,7 +20,7 @@ import (
 	"vectorx/pkg/stats"
 )
 
-const VECTORX_VERSION = "RELEASE_16"
+const VECTORX_VERSION = "RELEASE_17"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
@@ -630,6 +630,8 @@ func runIntentCommand(intentName string, serialNo string, params []string) error
 		txt = "your name is " + params[0]
 	} else if intentName == "pills-of-wisdom" {
 		txt = "tell me something"
+	} else if intentName == "oskr-tivia" {
+		txt = "trivia game"
 	}
 
 	if txt == "" {
