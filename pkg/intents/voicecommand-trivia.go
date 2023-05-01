@@ -3,6 +3,8 @@ package intents
 import (
 	"encoding/json"
 	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 	"strings"
 )
@@ -35,7 +37,7 @@ const TRIVIA_ANSWER_4 = 4
 const TRIVIA_ANSWER_QUIT = 5
 const TRIVIA_GAME_NAME = "TRIVIA_GAME"
 
-var TRIVIA_SERVER_URL = "https://www.wondergarden.app/VECTOR-TRIVIA" //"http://192.168.43.65/VECTOR-TRIVIA"
+var TRIVIA_SERVER_URL = "https://www.wondergarden.app/vectorx-trivia"
 var TriviaDebug = true
 var GameConfig = TriviaGameData{GameName: TRIVIA_GAME_NAME,
 	CurrentQuestion: 1,
@@ -248,25 +250,24 @@ func gotoQuestion(questionNum int) {
 }
 
 func getQuestionFromWeb(questionNum int) error {
-	/*
-		theUrl := TRIVIA_SERVER_URL + "/php/getQuestion.php?q=" + strconv.Itoa(questionNum) + "&lang=" + sdk_wrapper.GetLanguage()
-		resp, err := http.Get(theUrl)
-		if err == nil {
-			var responseText []byte
-			responseText, err = ioutil.ReadAll(resp.Body)
-			println("RESPONSE: " + string(responseText))
-			err = json.Unmarshal(responseText, &CurrentQuestion)
-		}
-		return err
-	*/
-	CurrentQuestion = TriviaQuestionData{
-		Question:       "Who is Luke Skywalker's father?",
-		A:              "Darth Vader",
-		B:              "Yoda",
-		C:              "Obi-Wan Kenobi",
-		D:              "Emperor Palpatine",
-		Answer:         1,
-		TotalQuestions: 3,
+	theUrl := TRIVIA_SERVER_URL + "/getQuestion.php?q=" + strconv.Itoa(questionNum) + "&lang=" + sdk_wrapper.GetLanguage()
+	resp, err := http.Get(theUrl)
+	if err == nil {
+		var responseText []byte
+		responseText, err = ioutil.ReadAll(resp.Body)
+		println("RESPONSE: " + string(responseText))
+		err = json.Unmarshal(responseText, &CurrentQuestion)
 	}
+	return err
+	/*
+		CurrentQuestion = TriviaQuestionData{
+			Question:       "Who is Luke Skywalker's father?",
+			A:              "Darth Vader",
+			B:              "Yoda",
+			C:              "Obi-Wan Kenobi",
+			D:              "Emperor Palpatine",
+			Answer:         1,
+			TotalQuestions: 3,
+		}*/
 	return nil
 }
