@@ -1,3 +1,6 @@
+RELEASE_18
+- Fixed github issue #14: Changing Vector's STT lanuguage doesn't work
+
 RELEASE_17
 - Bugfix: unknown locale "en_US" (it should be "en-US") 
 - Added Trivia Game Voice command (works only with OSKR bots)
