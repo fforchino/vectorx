@@ -3,12 +3,9 @@ module vectorx
 go 1.19
 
 require (
-	github.com/emiago/sipgo v0.8.0
 	github.com/fforchino/vector-go-sdk v0.0.0-20230501190038-5c1be0b59b5a
 	github.com/fogleman/gg v1.3.0
-	github.com/icholy/digest v0.1.22
-	github.com/rs/zerolog v1.28.0
-	github.com/icholy/digest v0.1.22
+	github.com/gorilla/websocket v1.4.2
 )
 
 require (
@@ -20,9 +17,6 @@ require (
 	github.com/digital-dream-labs/hugh v0.0.0-20210210154335-f4159b9fcd5f // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/gobwas/httphead v0.1.0 // indirect
-	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gobwas/ws v1.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -35,14 +29,11 @@ require (
 	github.com/jbenet/go-base58 v0.0.0-20150317085156-6237cf65f3a6 // indirect
 	github.com/jdkato/prose v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.1 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/robertkrimen/otto v0.0.0-20221127200954-e92282a6bb0d // indirect
-	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
