@@ -1,4 +1,4 @@
-package vim
+package vim_client
 
 import (
 	"encoding/json"
@@ -17,22 +17,25 @@ type ChatMessage struct {
 
 var c *websocket.Conn
 
-func SendMessageAndGo(strFrom string, strFromId string, strTo string, strToId string, strMsg string) {
-	openConnection("localhost:8080")
-	chatMessage := ChatMessage{
-		From:    strFrom,
-		To:      strTo,
-		FromId:  strFromId,
-		ToId:    strToId,
-		Message: strMsg,
+func SendMessageAndGo(strServerUrl string, strFrom string, strFromId string, strTo string, strToId string, strMsg string) error {
+	err := openConnection(strServerUrl)
+	if err == nil {
+		chatMessage := ChatMessage{
+			From:    strFrom,
+			To:      strTo,
+			FromId:  strFromId,
+			ToId:    strToId,
+			Message: strMsg,
+		}
+		// Send a message
+		err = sendMessage(chatMessage)
+		err = closeConnection()
 	}
-	// Send a message
-	sendMessage(chatMessage)
-	closeConnection()
+	return err
 }
 
-func openConnection(host string) {
-	u := url.URL{Scheme: "ws", Host: "localhost:8080", Path: "/ws"}
+func openConnection(host string) error {
+	u := url.URL{Scheme: "ws", Host: host, Path: "/ws"}
 	log.Printf("connecting to %s", u.String())
 
 	var err error
@@ -40,7 +43,7 @@ func openConnection(host string) {
 	if err != nil {
 		log.Fatal("dial:", err)
 	}
-	defer c.Close()
+	return err
 }
 
 func sendMessage(msg ChatMessage) error {
@@ -59,5 +62,6 @@ func closeConnection() error {
 	if err != nil {
 		log.Println("write close:", err)
 	}
+	defer c.Close()
 	return err
 }

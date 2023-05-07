@@ -19,6 +19,9 @@ async function LoadSite(selectedPage) {
             LoadVectorXCustomIntents().then(() => {
               LoadHelpPage();
             })
+          }
+          else if (selectedPage == "nav_page_chat") {
+            LoadChatPage();
           } else if (selectedPage.startsWith("nav_page_botcontrol")) {
               LoadVoices(Settings.STT_LANGUAGE);
               LoadBotControlPage();

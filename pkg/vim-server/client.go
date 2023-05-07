@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package vim
+package vim_server
 
 import (
 	"bytes"
@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 	"vectorx/pkg/intents"
+	"vectorx/pkg/vim-client"
 )
 
 const (
@@ -145,35 +146,40 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 }
 
 func forwardMessageToVector(message []byte) error {
-	var chatMessage ChatMessage
+	var chatMessage vim_client.ChatMessage
 	err := json.Unmarshal(message, &chatMessage)
 	if err != nil {
 		return err
 	}
 	serial := chatMessage.ToId
 
-	if intents.VIMEnabled {
+	/*if intents.VIMEnabled*/
+	{
 		println("VIM Enabled")
-		isChatty := isBotInChatMood(serial)
-		if isChatty {
+		/*isChatty := isBotInChatMood(serial)
+		if isChatty*/{
 			var ctx = context.Background()
 			var start = make(chan bool)
 			var stop = make(chan bool)
-			sdk_wrapper.InitSDKForWirepod(serial)
-			go func() {
-				_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
-			}()
-			select {
-			case <-start:
-				var vcm intents.VIMChatMessage
-				vcm.Message = chatMessage.Message
-				vcm.From = chatMessage.From
-				vcm.FromId = chatMessage.FromId
-				vcm.Read = false
-				vcm.Timestamp = int(time.Now().UnixMilli())
-				println(fmt.Sprintf("[%d] New message from %s: %s", vcm.Timestamp, vcm.From, vcm.Message))
-				intents.VIMAPIPlayMessage(vcm)
-				stop <- true
+			intents.RegisterIntents()
+			// See if we can connect to a bot with this ESN
+			err := sdk_wrapper.InitSDKForWirepod(serial)
+			if err == nil {
+				go func() {
+					_ = sdk_wrapper.Robot.BehaviorControl(ctx, start, stop)
+				}()
+				select {
+				case <-start:
+					var vcm intents.VIMChatMessage
+					vcm.Message = chatMessage.Message
+					vcm.From = chatMessage.From
+					vcm.FromId = chatMessage.FromId
+					vcm.Read = false
+					vcm.Timestamp = int(time.Now().UnixMilli())
+					println(fmt.Sprintf("[%d] New message from %s: %s", vcm.Timestamp, vcm.From, vcm.Message))
+					intents.VIMAPIPlayMessage(vcm)
+					stop <- true
+				}
 			}
 		}
 	}

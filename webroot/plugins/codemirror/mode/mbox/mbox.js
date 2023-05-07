@@ -66,7 +66,7 @@ function readToken(stream, state) {
       return "atom";
     }
 
-    // Use vim's heuristics: recognize custom headers only if the line is in a
+    // Use vim-server's heuristics: recognize custom headers only if the line is in a
     // block of legitimate headers.
     if (state.inHeaders && (match = stream.match(header))) {
       state.inHeader = true;

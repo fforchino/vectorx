@@ -65,6 +65,12 @@ function LoadSidebar(selectedPage) {
     '                </ul>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
+    '                <a id="nav_page_update" href="chat.html" class="nav-link">\n' +
+    '                  <i class="fas fa-comments nav-icon"></i>\n' +
+    '                  <p>Chat</p>\n' +
+    '                </a>\n' +
+    '              </li>\n' +
+    '              <li class="nav-item">\n' +
     '                <a id="nav_page_update" href="update.html" class="nav-link">\n' +
     '                  <i class="fas fa-download nav-icon"></i>\n' +
     '                  <p>Check for updates</p>\n' +

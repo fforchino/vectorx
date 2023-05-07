@@ -18,7 +18,7 @@
  *       behavior.
  *
  * Events:
- *  'vim-mode-change' - raised on the editor anytime the current mode changes,
+ *  'vim-server-mode-change' - raised on the editor anytime the current mode changes,
  *                      Event object: {mode: "visual", subMode: "linewise"}
  *
  * Code structure:
@@ -280,7 +280,7 @@
     function enterVimMode(cm) {
       cm.setOption('disableInput', true);
       cm.setOption('showCursorWhenSelecting', false);
-      CodeMirror.signal(cm, "vim-mode-change", {mode: "normal"});
+      CodeMirror.signal(cm, "vim-server-mode-change", {mode: "normal"});
       cm.on('cursorActivity', onCursorActivity);
       maybeInitVimState(cm);
       CodeMirror.on(cm.getInputField(), 'paste', getOnPasteFn(cm));
@@ -331,7 +331,7 @@
       }
       var cmd = vimApi.findKey(cm, vimKey);
       if (typeof cmd == 'function') {
-        CodeMirror.signal(cm, 'vim-keypress', vimKey);
+        CodeMirror.signal(cm, 'vim-server-keypress', vimKey);
       }
       return cmd;
     }
@@ -364,7 +364,7 @@
         return false;
       }
       // TODO: Current bindings expect the character to be lower case, but
-      // it looks like vim key notation uses upper case.
+      // it looks like vim-server key notation uses upper case.
       if (isUpperCase(lastPiece)) {
         pieces[pieces.length - 1] = lastPiece.toLowerCase();
       }
@@ -684,7 +684,7 @@
           lastSelection: null,
           lastPastedText: null,
           sel: {},
-          // Buffer-local/window-local values of vim options.
+          // Buffer-local/window-local values of vim-server options.
           options: {}
         };
       }
@@ -1033,7 +1033,7 @@
 
     function clearInputState(cm, reason) {
       cm.state.vim.inputState = new InputState();
-      CodeMirror.signal(cm, 'vim-command-done', reason);
+      CodeMirror.signal(cm, 'vim-server-command-done', reason);
     }
 
     /*
@@ -1103,7 +1103,7 @@
     }
 
     /*
-     * vim registers allow you to keep many independent copy and paste buffers.
+     * vim-server registers allow you to keep many independent copy and paste buffers.
      * See http://usevim.com/2012/04/13/registers/ for an introduction.
      *
      * RegisterController keeps the state of all the registers.  An initial
@@ -1471,7 +1471,7 @@
             }
 
             // cachedCursor is used to save the old position of the cursor
-            // when * or # causes vim to seek for the nearest word and shift
+            // when * or # causes vim-server to seek for the nearest word and shift
             // the cursor before entering the motion.
             vimGlobalState.jumpList.cachedCursor = cm.getCursor();
             cm.setCursor(word.start);
@@ -1538,7 +1538,7 @@
         var operatorArgs = inputState.operatorArgs || {};
         var registerName = inputState.registerName;
         var sel = vim.sel;
-        // TODO: Make sure cm and vim selections are identical outside visual mode.
+        // TODO: Make sure cm and vim-server selections are identical outside visual mode.
         var origHead = copyCursor(vim.visualMode ? clipCursorToContent(cm, sel.head): cm.getCursor('head'));
         var origAnchor = copyCursor(vim.visualMode ? clipCursorToContent(cm, sel.anchor) : cm.getCursor('anchor'));
         var oldHead = copyCursor(origHead);
@@ -1818,7 +1818,7 @@
           if (vim.visualLine || vim.visualBlock) {
             vim.visualLine = false;
             vim.visualBlock = false;
-            CodeMirror.signal(cm, "vim-mode-change", {mode: "visual", subMode: ""});
+            CodeMirror.signal(cm, "vim-server-mode-change", {mode: "visual", subMode: ""});
           }
 
           // If we're currently in visual mode, we should extend the selection to include
@@ -1844,7 +1844,7 @@
           vim.visualMode = true;
           vim.visualLine = false;
           vim.visualBlock = false;
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "visual", subMode: ""});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "visual", subMode: ""});
         }
 
         return prev ? [to, from] : [from, to];
@@ -2445,11 +2445,11 @@
         if (!cm.state.overwrite) {
           cm.toggleOverwrite(true);
           cm.setOption('keyMap', 'vim-replace');
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "replace"});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "replace"});
         } else {
           cm.toggleOverwrite(false);
           cm.setOption('keyMap', 'vim-insert');
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "insert"});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "insert"});
         }
       },
       enterInsertMode: function(cm, actionArgs, vim) {
@@ -2510,11 +2510,11 @@
           // Handle Replace-mode as a special case of insert mode.
           cm.toggleOverwrite(true);
           cm.setOption('keyMap', 'vim-replace');
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "replace"});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "replace"});
         } else {
           cm.toggleOverwrite(false);
           cm.setOption('keyMap', 'vim-insert');
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "insert"});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "insert"});
         }
         if (!vimGlobalState.macroModeState.isPlaying) {
           // Only record if not replaying.
@@ -2544,7 +2544,7 @@
             anchor: anchor,
             head: head
           };
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "visual", subMode: vim.visualLine ? "linewise" : vim.visualBlock ? "blockwise" : ""});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "visual", subMode: vim.visualLine ? "linewise" : vim.visualBlock ? "blockwise" : ""});
           updateCmSelection(cm);
           updateMark(cm, vim, '<', cursorMin(anchor, head));
           updateMark(cm, vim, '>', cursorMax(anchor, head));
@@ -2553,7 +2553,7 @@
           // Toggling between modes
           vim.visualLine = !!actionArgs.linewise;
           vim.visualBlock = !!actionArgs.blockwise;
-          CodeMirror.signal(cm, "vim-mode-change", {mode: "visual", subMode: vim.visualLine ? "linewise" : vim.visualBlock ? "blockwise" : ""});
+          CodeMirror.signal(cm, "vim-server-mode-change", {mode: "visual", subMode: vim.visualLine ? "linewise" : vim.visualBlock ? "blockwise" : ""});
           updateCmSelection(cm);
         } else {
           exitVisualMode(cm);
@@ -2581,7 +2581,7 @@
           updateCmSelection(cm);
           updateMark(cm, vim, '<', cursorMin(anchor, head));
           updateMark(cm, vim, '>', cursorMax(anchor, head));
-          CodeMirror.signal(cm, 'vim-mode-change', {
+          CodeMirror.signal(cm, 'vim-server-mode-change', {
             mode: 'visual',
             subMode: vim.visualLine ? 'linewise' :
                      vim.visualBlock ? 'blockwise' : ''});
@@ -2826,7 +2826,7 @@
         }
         if (replaceWith=='\n') {
           if (!vim.visualMode) cm.replaceRange('', curStart, curEnd);
-          // special case, where vim help says to replace by just one line-break
+          // special case, where vim-server help says to replace by just one line-break
           (CodeMirror.commands.newlineAndIndentContinueComment || CodeMirror.commands.newlineAndIndent)(cm);
         } else {
           var replaceWithStr = cm.getRange(curStart, curEnd);
@@ -2908,7 +2908,7 @@
     }
 
     /*
-     * Below are miscellaneous utility functions used by vim.js
+     * Below are miscellaneous utility functions used by vim-server.js
      */
 
     /**
@@ -3199,8 +3199,8 @@
       return [anchor, head];
     }
     /**
-     * Updates the CodeMirror selection to match the provided vim selection.
-     * If no arguments are given, it uses the current vim selection state.
+     * Updates the CodeMirror selection to match the provided vim-server selection.
+     * If no arguments are given, it uses the current vim-server selection state.
      */
     function updateCmSelection(cm, sel, mode) {
       var vim = cm.state.vim;
@@ -3285,7 +3285,7 @@
       vim.visualMode = false;
       vim.visualLine = false;
       vim.visualBlock = false;
-      if (!vim.insertMode) CodeMirror.signal(cm, "vim-mode-change", {mode: "normal"});
+      if (!vim.insertMode) CodeMirror.signal(cm, "vim-server-mode-change", {mode: "normal"});
     }
 
     // Remove any trailing newlines from the selection. For
@@ -3385,7 +3385,7 @@
      *
      * If any of the above requirements are not true, this function noops.
      *
-     * This is _NOT_ a 100% accurate implementation of vim tag text objects.
+     * This is _NOT_ a 100% accurate implementation of vim-server tag text objects.
      * The following caveats apply (based off cursory testing, I'm sure there
      * are other discrepancies):
      *
@@ -4149,7 +4149,7 @@
       return slashes;
     }
 
-    // Translates a search string from ex (vim) syntax into javascript form.
+    // Translates a search string from ex (vim-server) syntax into javascript form.
     function translateRegex(str) {
       // When these match, add a '\' if unescaped or remove one if escaped.
       var specials = '|(){';
@@ -4188,7 +4188,7 @@
       return out.join('');
     }
 
-    // Translates the replace part of a search and replace from ex (vim) syntax into
+    // Translates the replace part of a search and replace from ex (vim-server) syntax into
     // javascript form.  Similar to translateRegex, but additionally fixes back references
     // (translates '\[0..9]' to '$[0..9]') and follows different rules for escaping '$'.
     var charUnescapes = {'\\n': '\n', '\\r': '\r', '\\t': '\t'};
@@ -4325,7 +4325,7 @@
     }
 
     function showConfirm(cm, template) {
-      var pre = dom('pre', {$color: 'red', class: 'cm-vim-message'}, template);
+      var pre = dom('pre', {$color: 'red', class: 'cm-vim-server-message'}, template);
       if (cm.openNotification) {
         cm.openNotification(pre, {bottom: true, duration: 5000});
       } else {
@@ -4677,7 +4677,7 @@
         var numberMatch = inputStream.match(/^(\d+)/);
         if (numberMatch) {
           // Absolute line number plus offset (N+M or N-M) is probably a typo,
-          // not something the user actually wanted. (NB: vim does allow this.)
+          // not something the user actually wanted. (NB: vim-server does allow this.)
           return parseInt(numberMatch[1], 10) - 1;
         }
         switch (inputStream.next()) {
@@ -5413,7 +5413,7 @@
       cm.toggleOverwrite(false); // exit replace mode if we were in it.
       // update the ". register before exiting insert mode
       insertModeChangeRegister.setText(lastChange.changes.join(''));
-      CodeMirror.signal(cm, "vim-mode-change", {mode: "normal"});
+      CodeMirror.signal(cm, "vim-server-mode-change", {mode: "normal"});
       if (macroModeState.isRecording) {
         logInsertModeChange(macroModeState);
       }
@@ -5581,10 +5581,10 @@
       } else if (!vim.visualMode && !vim.insertMode && cm.somethingSelected()) {
         vim.visualMode = true;
         vim.visualLine = false;
-        CodeMirror.signal(cm, "vim-mode-change", {mode: "visual"});
+        CodeMirror.signal(cm, "vim-server-mode-change", {mode: "visual"});
       }
       if (vim.visualMode) {
-        // Bind CodeMirror selection model to vim selection model.
+        // Bind CodeMirror selection model to vim-server selection model.
         // Mouse selections are considered visual characterwise.
         var headOffset = !cursorIsBefore(head, anchor) ? -1 : 0;
         var anchorOffset = cursorIsBefore(head, anchor) ? -1 : 0;
@@ -5597,7 +5597,7 @@
         updateMark(cm, vim, '<', cursorMin(head, anchor));
         updateMark(cm, vim, '>', cursorMax(head, anchor));
       } else if (!vim.insertMode) {
-        // Reset lastHPos if selection was modified by something outside of vim mode e.g. by mouse.
+        // Reset lastHPos if selection was modified by something outside of vim-server mode e.g. by mouse.
         vim.lastHPos = cm.getCursor().ch;
       }
     }

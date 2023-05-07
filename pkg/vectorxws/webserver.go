@@ -18,6 +18,7 @@ import (
 	"strings"
 	"vectorx/pkg/intents"
 	"vectorx/pkg/stats"
+	"vectorx/pkg/vim-server"
 )
 
 const VECTORX_VERSION = "RELEASE_18"
@@ -40,6 +41,9 @@ type BotInfo struct {
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
+	wirepodPath := os.Getenv("WIREPOD_HOME")
+	vPath := os.Getenv("VECTORX_HOME")
+	botConfigJson := filepath.Join(wirepodPath, "chipper/jdocs/botSdkInfo.json")
 	switch {
 	case r.URL.Path == "/api/consistency_check":
 		mapConfig, err := WirepodConfigToJSON()
@@ -125,9 +129,6 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		break
 	case r.URL.Path == "/api/get_robots":
-		wirepodPath := os.Getenv("WIREPOD_HOME")
-		vPath := os.Getenv("VECTORX_HOME")
-		botConfigJson := filepath.Join(wirepodPath, "chipper/jdocs/botSdkInfo.json")
 		data, err := ioutil.ReadFile(botConfigJson)
 		if err != nil {
 			fmt.Fprintf(w, "{}")
@@ -212,6 +213,39 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "{ \"result\": \"KO\", \"reason\": \""+e.Error()+"\"}")
 		}
 		break
+	case r.URL.Path == "/api/vim_list_targets":
+		result := "["
+		data, err := ioutil.ReadFile(botConfigJson)
+		if err != nil {
+			fmt.Fprintf(w, "{}")
+		} else {
+			var jsonObj WirePodConfig
+			json.Unmarshal(data, &jsonObj)
+
+			for _, bot := range jsonObj.Robots {
+				botCustomConfigJson := filepath.Join(vPath, "vectorfs/nvm/"+bot.Esn+"/custom_settings.json")
+				data, err := ioutil.ReadFile(botCustomConfigJson)
+				if err == nil {
+					var customSettings sdk_wrapper.CustomSettings
+					err = json.Unmarshal(data, &customSettings)
+					if err == nil {
+						remote := intents.VIMUserInfoData{DisplayName: customSettings.RobotName, UserId: bot.Esn, IsHuman: false}
+						remoteJson, err := json.Marshal(remote)
+						if err == nil {
+							result = result + string(remoteJson) + ","
+						}
+					}
+				}
+			}
+		}
+		remote := intents.VIMUserInfoData{DisplayName: "Human", UserId: "00000000", IsHuman: true}
+		remoteJson, err := json.Marshal(remote)
+		if err == nil {
+			result = result + string(remoteJson)
+		}
+		result = result + "]"
+		fmt.Fprintf(w, result)
+		break
 	default:
 		http.Error(w, "not found", http.StatusNotFound)
 		return
@@ -234,6 +268,12 @@ func StartWebServer() {
 	} else {
 		webPort = "8070"
 	}
+	// VIM Server
+	hub := vim_server.NewHub()
+	go hub.Run()
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		vim_server.ServeWs(hub, w, r)
+	})
 	fmt.Printf("Starting vectorxws at port " + webPort + " (http://localhost:" + webPort + ")\n")
 	if err := http.ListenAndServe(":"+webPort, nil); err != nil {
 		log.Fatal(err)

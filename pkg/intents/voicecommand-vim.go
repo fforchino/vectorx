@@ -12,33 +12,33 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	vim_client "vectorx/pkg/vim-client"
 )
 
-var VIM_SERVER_URL = os.Getenv("VIM_SERVER") // "https://www.wondergarden.app/VIM" //"http://192.168.43.65/VIM"
+var VIM_SERVER_URL = "localhost:8070"
 var VIMEnabled = (os.Getenv("VIM_ENABLED") == "true")
 
 var VIMDebug = true
 
 func VIM_Register(intentList *[]IntentDef) error {
-	if VIMEnabled && VIM_SERVER_URL != "" {
-		registerSignUpToChat(intentList)
-		registerLoginToChat(intentList)
-		registerLogoutChat(intentList)
-		registerSetChatTarget(intentList)
-		registerQueryChatTarget(intentList)
-		registerSendMessageToChat(intentList)
+	registerSignUpToChat(intentList)
+	registerLoginToChat(intentList)
+	registerLogoutChat(intentList)
+	registerSetChatTarget(intentList)
+	registerQueryChatTarget(intentList)
+	registerSendMessageToChat(intentList)
 
-		addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Signed up as %s1", "Registrato come %s1", "Registrado como %s1", "Enregistré comme %s1", "Aufgezeichnet wie %s1"})
-		addLocalizedString("STR_VIM_ERROR_ALREADY_REGISTERED", []string{"Username %s1 is already registered", "Il nome %s1 è già in uso", "El nombre %s1 ya está registrado", "Le nom %s1 est déjà enregistré", "Benutzername %s1 ist bereits registriert"})
-		addLocalizedString("STR_VIM_ERROR", []string{"Error", "Errore", "Error", "Erreur", "Fehler"})
-		addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "Acceso al servicio de chat como %s1", "Connecté au service de chat comme %s1", "Zugriff auf den Chat Service wie %s1"})
-		addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "Desconexión realizada", "Déconnexion réussie", "Erfolgreich abmelden"})
-		addLocalizedString("STR_VIM_MESSAGE_SENT", []string{"Message to %s1 sent", "Messaggio inviato a %s1", "Mensaje a %s1 enviado", "Message à %s1 envoyé", "Nachricht an %s1 gesendet"})
-		addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "decir ", "dire ", "sagen "})
-		addLocalizedString("STR_USER_SAYS_MESSAGE", []string{"%s1 says: %s2", "%s1 dice: %s2", "%s1 dice: %s2", "%s1 dit: %s2", "%s1 sagt: %s2"})
-		addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "Chateando con %s1", "Discuter avec %s1", "Chatten mit %s1"})
-		addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "No estoy chateando con nadie", "Je ne parle à personne", "Nicht mit jemandem plaudern"})
-	}
+	addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Signed up as %s1", "Registrato come %s1", "Registrado como %s1", "Enregistré comme %s1", "Aufgezeichnet wie %s1"})
+	addLocalizedString("STR_VIM_ERROR_ALREADY_REGISTERED", []string{"Username %s1 is already registered", "Il nome %s1 è già in uso", "El nombre %s1 ya está registrado", "Le nom %s1 est déjà enregistré", "Benutzername %s1 ist bereits registriert"})
+	addLocalizedString("STR_VIM_ERROR", []string{"Error", "Errore", "Error", "Erreur", "Fehler"})
+	addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "Acceso al servicio de chat como %s1", "Connecté au service de chat comme %s1", "Zugriff auf den Chat Service wie %s1"})
+	addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "Desconexión realizada", "Déconnexion réussie", "Erfolgreich abmelden"})
+	addLocalizedString("STR_VIM_MESSAGE_SENT", []string{"Message to %s1 sent", "Messaggio inviato a %s1", "Mensaje a %s1 enviado", "Message à %s1 envoyé", "Nachricht an %s1 gesendet"})
+	addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "decir ", "dire ", "sagen "})
+	addLocalizedString("STR_USER_SAYS_MESSAGE", []string{"%s1 says: %s2", "%s1 dice: %s2", "%s1 dice: %s2", "%s1 dit: %s2", "%s1 sagt: %s2"})
+	addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "Chateando con %s1", "Discuter avec %s1", "Chatten mit %s1"})
+	addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "No estoy chateando con nadie", "Je ne parle à personne", "Nicht mit jemandem plaudern"})
+
 	return nil
 }
 
@@ -297,6 +297,7 @@ type VIMUserInfoData struct {
 	IsHuman     bool   `json:"is_human"`
 }
 
+// Deprecated
 func VIMAPISignup(robotName string, serialNo string) error {
 	data := url.Values{
 		"fname":     {"Vector"},
@@ -324,6 +325,7 @@ func VIMAPISignup(robotName string, serialNo string) error {
 	return err
 }
 
+// Deprecated
 func VIMAPILogin(robotName string, serialNo string) error {
 	data := url.Values{
 		"email":    {robotName + "@vectorx.org"},
@@ -346,6 +348,7 @@ func VIMAPILogin(robotName string, serialNo string) error {
 	return err
 }
 
+// Deprecated
 func VIMAPILogout(robotName string) error {
 	data := url.Values{
 		"email":    {robotName + "@vectorx.org"},
@@ -383,24 +386,16 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 		other, e2 := VIMAPIGetUserInfo(botTo)
 		if e1 == nil && e2 == nil {
 			println(fmt.Sprintf("Sending message '%s' from %s to %s", botMessage, myself.UserId, other.UserId))
-			data := url.Values{
-				"incoming_id": {other.UserId},
-				"unique_id":   {myself.UserId},
-				"message":     {botMessage},
-			}
-
-			resp, err := http.PostForm(VIM_SERVER_URL+"/php/insert-chat.php", data)
+			err := vim_client.SendMessageAndGo(VIM_SERVER_URL,
+				myself.DisplayName,
+				myself.UserId,
+				other.DisplayName,
+				other.UserId,
+				botMessage)
 
 			if err != nil {
 				log.Fatal(err)
 				println("FATAL: " + err.Error())
-			} else {
-				var responseText []byte
-				responseText, err = ioutil.ReadAll(resp.Body)
-				println("RESPONSE: " + string(responseText))
-				if string(responseText) != "" {
-					err = errors.New("Cannot send message")
-				}
 			}
 			return err
 		}
@@ -410,7 +405,8 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 
 func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 	var info []VIMUserInfoData
-	theUrl := VIM_SERVER_URL + "/php/userInfo.php?displayName=" + userName
+	var dummy = VIMUserInfoData{}
+	theUrl := "http://" + VIM_SERVER_URL + "/api/vim_list_targets"
 	resp, err := http.Get(theUrl)
 
 	if err != nil {
@@ -424,14 +420,18 @@ func VIMAPIGetUserInfo(userName string) (VIMUserInfoData, error) {
 		err = json.Unmarshal([]byte(responseText), &info)
 		if err != nil {
 			println(err.Error())
+			return dummy, err
 		}
-		return info[0], err
+		for i := range info {
+			if strings.ToLower(info[i].DisplayName) == strings.ToLower(userName) {
+				return info[i], nil
+			}
+		}
 	}
-	return info[0], err
-
-	return info[0], errors.New("Unknown user")
+	return dummy, errors.New("Unknown user")
 }
 
+// Deprecated
 func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMChatMessage, error) {
 	var arr []VIMChatMessage
 
@@ -505,4 +505,12 @@ func trimSuffix(s, suffix string) string {
 		s = s[:len(s)-len(suffix)]
 	}
 	return s
+}
+
+type ChatMessage struct {
+	From    string `json:"from"`
+	To      string `json:"to"`
+	FromId  string `json:"fromId"`
+	ToId    string `json:"toId"`
+	Message string `json:"msg"`
 }

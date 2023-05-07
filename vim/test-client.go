@@ -1,7 +1,9 @@
 package main
 
-import "vectorx/pkg/vim"
+import (
+	"vectorx/pkg/vim-client"
+)
 
 func main() {
-	vim.SendMessageAndGo("Filippo", "Bruno", "Ciao")
+	vim_client.SendMessageAndGo("localhost:8070", "Tom", "005070ac", "Human", "00000000", "Hello")
 }

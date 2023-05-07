@@ -91,9 +91,11 @@ func main() {
 					sdk_wrapper.SetLocale("en-US")
 					// Ok, intent handled. Return the intent that Wirepod has to send to the robot
 					fmt.Println("{\"status\": \"ok\", \"returnIntent\": \"" + returnIntent + "\"}")
-					if xIntent.OSKRTriggersUserInput() {
-						time.Sleep(2 * time.Second)
-						sdk_wrapper.TriggerWakeWord()
+					if nil != xIntent.OSKRTriggersUserInput {
+						if xIntent.OSKRTriggersUserInput() {
+							time.Sleep(2 * time.Second)
+							sdk_wrapper.TriggerWakeWord()
+						}
 					}
 					Stop <- true
 				}

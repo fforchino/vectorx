@@ -226,24 +226,24 @@ systemctl start vectorx-web
 if [[ ${vimSetup} == "true" ]]; then
   echo ""
   echo "Enabling VIM Local Server as a service. This is needed to receive messages."
-  echo "[Unit]" >vectorx-vim.service
-  echo "Description=VectorX VIM Server" >>vectorx-vim.service
-  echo >>vectorx-vim.service
-  echo "[Service]" >>vectorx-vim.service
-  echo "Type=simple" >>vectorx-vim.service
-  echo "WorkingDirectory=$(readlink -f .)" >>vectorx-vim.service
-  echo "ExecStart=$(readlink -f ./startVIMServer.sh) &" >>vectorx-vim.service
-  echo >>vectorx-vim.service
-  echo "[Install]" >>vectorx-vim.service
-  echo "WantedBy=multi-user.target" >>vectorx-vim.service
-  cat vectorx-vim.service
-  mv vectorx-vim.service /lib/systemd/system/
+  echo "[Unit]" >vectorx-vim-server.service
+  echo "Description=VectorX VIM Server" >>vectorx-vim-server.service
+  echo >>vectorx-vim-server.service
+  echo "[Service]" >>vectorx-vim-server.service
+  echo "Type=simple" >>vectorx-vim-server.service
+  echo "WorkingDirectory=$(readlink -f .)" >>vectorx-vim-server.service
+  echo "ExecStart=$(readlink -f ./startVIMServer.sh) &" >>vectorx-vim-server.service
+  echo >>vectorx-vim-server.service
+  echo "[Install]" >>vectorx-vim-server.service
+  echo "WantedBy=multi-user.target" >>vectorx-vim-server.service
+  cat vectorx-vim-server.service
+  mv vectorx-vim-server.service /lib/systemd/system/
   systemctl daemon-reload
-  systemctl enable vectorx-vim
-  systemctl start vectorx-vim
+  systemctl enable vectorx-vim-server
+  systemctl start vectorx-vim-server
 else
   echo "Disabling VIM Local Server service."
-  systemctl disable vectorx-vim
+  systemctl disable vectorx-vim-server
 fi
 
 if [[ ${silentMode} == "false" ]]; then

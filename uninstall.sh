@@ -40,8 +40,8 @@ if [[ ${confirmation} == "true" ]]; then
   fi
   if [ -f "/lib/systemd/system/vectorx-vim.service" ]; then
     echo "Removing VVIM server"
-    systemctl disable vectorx-vim
-    rm -fr /lib/systemd/system/vectorx-vim.service
+    systemctl disable vectorx-vim-server
+    rm -fr /lib/systemd/system/vectorx-vim-server.service
   fi
   if [ -f "/lib/systemd/system/vectorx-web.service" ]; then
     echo "Removing VectorX web server"
