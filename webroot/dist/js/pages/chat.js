@@ -14,8 +14,9 @@ var targetName = "";
 var fromSerialNo = "";
 var fromName = "";
 var chatLanguage = "en-US";
+var humanName = "";
 
-var chatDebug = true;
+var chatDebug = false;
 
 function LoadChatPage() {
     var conn;
@@ -40,7 +41,11 @@ function LoadChatPage() {
         if (msg.value=="" || fromSerialNo=="" || targetSerialNo=="") {
             return false;
         }
-        var chatMsg = new ChatMessage(fromName, fromSerialNo, targetName, targetSerialNo, chatLanguage, msg.value);
+        var realTargetName = targetName;
+        if (realTargetName.toLowerCase()=="human" && humanName!="") {
+            realTargetName = humnName;
+        }
+        var chatMsg = new ChatMessage(fromName, fromSerialNo, realTargetName, targetSerialNo, chatLanguage, msg.value);
         conn.send(JSON.stringify(chatMsg));
         msg.value = "";
         return false;
@@ -113,4 +118,8 @@ function ChangeChatSource() {
 
 function ChangeChatLanguage() {
     chatLanguage = document.getElementById('chat-lang').value;
+}
+
+function ChangeChatHumanName() {
+    humanName = document.getElementById('chat-human-name').value;
 }

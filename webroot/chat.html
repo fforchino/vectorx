@@ -91,7 +91,11 @@
                   <div class="col-sm-12">
                     <div class="special">
                       <div class="form-group row">
-                        <div class="col-sm-9">&nbsp;</div>
+                        <label for="chat-human-name" class="col-sm-1 col-form-label">Human Name</label>
+                        <div class="col-sm-2">
+                          <input type="text" class="form-control" id="chat-human-name" placeholder="Enter ..." onChange="ChangeChatHumanName();">
+                        </div>
+                        <div class="col-sm-5">&nbsp;</div>
                         <label for="chat-to" class="col-sm-1 col-form-label">Language</label>
                         <div class="col-sm-2">
                           <select class="custom-select rounded-0" id="chat-lang" onChange="ChangeChatLanguage()">
