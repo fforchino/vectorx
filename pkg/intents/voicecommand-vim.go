@@ -21,9 +21,14 @@ var VIMEnabled = (os.Getenv("VIM_ENABLED") == "true")
 var VIMDebug = true
 
 func VIM_Register(intentList *[]IntentDef) error {
-	registerSignUpToChat(intentList)
-	registerLoginToChat(intentList)
-	registerLogoutChat(intentList)
+	/* The following intents have temporarily been disabled after VIM redesign. For now VIM is:
+	   - automatically enabled on all setups
+	   - runs on local network only
+	   therefore there is no need to register and login/logout
+	*/
+	//registerSignUpToChat(intentList)
+	//registerLoginToChat(intentList)
+	//registerLogoutChat(intentList)
 	registerSetChatTarget(intentList)
 	registerQueryChatTarget(intentList)
 	registerSendMessageToChat(intentList)
