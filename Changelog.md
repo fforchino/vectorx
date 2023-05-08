@@ -1,3 +1,12 @@
+RELEASE_19
+- VIM redesign
+  - Chat now runs on local network only (no shared server) and thus is enabled by default on all setups
+  - Chat implementation now uses websockets. VectorX web front end integrates a chat panel with which you can send 
+    messages to all bots
+  - Added message language as chat message parameter so you can potentially send a message using a locale that differs
+    the bot's locale
+- Bugfixing of the issues encountered during development 
+
 RELEASE_18
 - Fixed github issue #14: Changing Vector's STT lanuguage doesn't work
 

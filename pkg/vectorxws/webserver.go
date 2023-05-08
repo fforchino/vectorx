@@ -21,7 +21,7 @@ import (
 	"vectorx/pkg/vim-server"
 )
 
-const VECTORX_VERSION = "RELEASE_18"
+const VECTORX_VERSION = "RELEASE_19"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
