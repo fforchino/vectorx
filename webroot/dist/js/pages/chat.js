@@ -41,11 +41,15 @@ function LoadChatPage() {
             return false;
         }
         var realTargetName = targetName;
+        var realSourceName = fromName;
         var humanName = document.getElementById('chat-human-name').value
         if (realTargetName.toLowerCase()=="human" && humanName!="") {
-            realTargetName = humnName;
+            realTargetName = humanName;
         }
-        var chatMsg = new ChatMessage(fromName, fromSerialNo, realTargetName, targetSerialNo, chatLanguage, msg.value);
+        if (realSourceName.toLowerCase()=="human" && humanName!="") {
+            realSourceName = humanName;
+        }
+        var chatMsg = new ChatMessage(realSourceName, fromSerialNo, realTargetName, targetSerialNo, chatLanguage, msg.value);
         conn.send(JSON.stringify(chatMsg));
         msg.value = "";
         return false;
