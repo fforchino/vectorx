@@ -46,18 +46,11 @@ Hey Vector...
 All commands are fully localized in the 5 supported languages. Feel free to help with the trenslations, that can surely be improved! 
 
 ## Instant messaging
-Since RELEASE_07, the VIM (Vector Instant Messaging) feature is enabled. You can run VIM server on your local network (preferred) or use a shared server (experimental).
-VIM Server source code is available on Github [here](https://github.com/fforchino/VIM).
-To enable VIM, run "sudo ./setup.sh". This will also install a daemon that checks for incoming messages for your bots.
+Since RELEASE_19, the redesigned VIM (Vector Instant Messaging) feature is enabled by default. 
+The chat server uses websockets and runs on the local network (it is part of VectorX web server).
+To use this feature, it is mandatory that you give your Vector a name. This name is used as chat username.
 
 Hey Vector...
-- **Sign up to chat service**
-  - Signs up to chat service. You need to do this the first time only. It will use your robot name to sign up.
-  If you haven't set one, Vector will complain.
-- **Login to chat service**
-  - Logs in to chat service, provided that you have signed up before. You also need to do this just once, you will be logged in until you log out.
-- **Quit chat service**
-  - Logs out to chat service. This Vector won't receive anymore messages and will appear as "away" to others.
 - **Chat with [username]**
   - Sets the chat target. For example, "Chat with Filippo". All messages will be sent to user Filippo. 
 - **Who are you chatting with?**
@@ -65,9 +58,9 @@ Hey Vector...
 - **Say [sentence]**
   - Sends a text message with payload [sentence] to the current chat target
 
-When a messga is received from another user, Vector will play a tune and then say:
+When a messge is received from another user, Vector will play a tune and then say:
 
-**[Human|Vector] [username] says: [sentence]**
+**[username] says: [sentence]**
 
 In the special case that an emoticon is received, Vector will show the emoticon.
 Available emoticons: angel, angry, annoyed, blue, devil, disappointed, eheh, happy, heart,
