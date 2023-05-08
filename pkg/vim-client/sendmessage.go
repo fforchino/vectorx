@@ -12,12 +12,13 @@ type ChatMessage struct {
 	To      string `json:"to"`
 	FromId  string `json:"fromId"`
 	ToId    string `json:"toId"`
+	Lang    string `json:"lang"`
 	Message string `json:"msg"`
 }
 
 var c *websocket.Conn
 
-func SendMessageAndGo(strServerUrl string, strFrom string, strFromId string, strTo string, strToId string, strMsg string) error {
+func SendMessageAndGo(strServerUrl string, strFrom string, strFromId string, strTo string, strToId string, strLang string, strMsg string) error {
 	err := openConnection(strServerUrl)
 	if err == nil {
 		chatMessage := ChatMessage{
@@ -25,6 +26,7 @@ func SendMessageAndGo(strServerUrl string, strFrom string, strFromId string, str
 			To:      strTo,
 			FromId:  strFromId,
 			ToId:    strToId,
+			Lang:    strLang,
 			Message: strMsg,
 		}
 		// Send a message

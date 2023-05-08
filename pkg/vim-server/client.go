@@ -170,13 +170,15 @@ func forwardMessageToVector(message []byte) error {
 				}()
 				select {
 				case <-start:
+					// Translate public chat message format (used by web server) into internal one
 					var vcm intents.VIMChatMessage
 					vcm.Message = chatMessage.Message
 					vcm.From = chatMessage.From
 					vcm.FromId = chatMessage.FromId
 					vcm.Read = false
 					vcm.Timestamp = int(time.Now().UnixMilli())
-					println(fmt.Sprintf("[%d] New message from %s: %s", vcm.Timestamp, vcm.From, vcm.Message))
+					vcm.Language = chatMessage.Lang
+					println(fmt.Sprintf("[%d] New message from %s: %s [%s]", vcm.Timestamp, vcm.From, vcm.Message, vcm.Language))
 					intents.VIMAPIPlayMessage(vcm)
 					stop <- true
 				}

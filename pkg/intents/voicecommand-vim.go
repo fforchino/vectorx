@@ -289,6 +289,7 @@ type VIMChatMessage struct {
 	Message   string `json:"message"`
 	Read      bool   `json:"read"`
 	Timestamp int    `json:"timestamp"`
+	Language  string `json:"language"`
 }
 
 type VIMUserInfoData struct {
@@ -391,6 +392,7 @@ func VIMAPISendMessageTo(botTo string, botMessage string) error {
 				myself.UserId,
 				other.DisplayName,
 				other.UserId,
+				sdk_wrapper.GetLanguageAndCountry(),
 				botMessage)
 
 			if err != nil {
@@ -463,6 +465,9 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 // <a href="https://www.freepik.com/free-vector/mixed-emoji-set_4159931.htm#query=emoticon&position=0&from_view=keyword">Image by rawpixel.com</a> on Freepik
 
 func VIMAPIPlayMessage(msg VIMChatMessage) {
+	currentLanguage := sdk_wrapper.GetLanguage()
+	messageLanguage := strings.ToLower(strings.Split(msg.Language, "-")[0])
+
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
 
 	if strings.HasPrefix(msg.Message, "*") && strings.HasSuffix(msg.Message, "*") {
@@ -485,7 +490,14 @@ func VIMAPIPlayMessage(msg VIMChatMessage) {
 			sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
 		}
 	} else {
-		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, msg.Message}))
+		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, ""}))
+		if currentLanguage != messageLanguage {
+			sdk_wrapper.SetLanguage(messageLanguage)
+		}
+		sdk_wrapper.SayText(msg.Message)
+		if currentLanguage != messageLanguage {
+			sdk_wrapper.SetLanguage(currentLanguage)
+		}
 	}
 	sdk_wrapper.GetCustomSettings().LastChatMessageRead = msg.Id
 	sdk_wrapper.SaveCustomSettings()

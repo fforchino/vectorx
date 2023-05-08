@@ -1,9 +1,10 @@
 class ChatMessage {
-    constructor(msgFrom, msgFromId, msgTo, msgToId, msgText) {
+    constructor(msgFrom, msgFromId, msgTo, msgToId, msgLang, msgText) {
         this.from = msgFrom;
         this.to = msgTo;
         this.fromId = msgFromId;
         this.toId = msgToId;
+        this.lang = msgLang;
         this.msg = msgText;
     }
 }
@@ -19,10 +20,6 @@ var chatDebug = true;
 function LoadChatPage() {
     var conn;
     var msg = document.getElementById("msg");
-    var identityFrom = document.getElementById("identity-from");
-    var identityTo = document.getElementById("identity-to");
-    var identityFromId = document.getElementById("identity-from-id");
-    var identityToId = document.getElementById("identity-to-id");
     var log = document.getElementById("log");
 
     LoadSources();
@@ -40,10 +37,10 @@ function LoadChatPage() {
         if (!conn) {
             return false;
         }
-        if (!msg.value || fromSerialNo=="" || targetSerialNo=="") {
+        if (msg.value=="" || fromSerialNo=="" || targetSerialNo=="") {
             return false;
         }
-        var chatMsg = new ChatMessage(fromName, fromSerialNo, targetName, targetSerialNo, msg.value);
+        var chatMsg = new ChatMessage(fromName, fromSerialNo, targetName, targetSerialNo, chatLanguage, msg.value);
         conn.send(JSON.stringify(chatMsg));
         msg.value = "";
         return false;
