@@ -14,7 +14,6 @@ var targetName = "";
 var fromSerialNo = "";
 var fromName = "";
 var chatLanguage = "en-US";
-var humanName = "";
 
 var chatDebug = false;
 
@@ -42,6 +41,7 @@ function LoadChatPage() {
             return false;
         }
         var realTargetName = targetName;
+        var humanName = document.getElementById('chat-human-name').value
         if (realTargetName.toLowerCase()=="human" && humanName!="") {
             realTargetName = humnName;
         }
@@ -118,8 +118,4 @@ function ChangeChatSource() {
 
 function ChangeChatLanguage() {
     chatLanguage = document.getElementById('chat-lang').value;
-}
-
-function ChangeChatHumanName() {
-    humanName = document.getElementById('chat-human-name').value;
 }
