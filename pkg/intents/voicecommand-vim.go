@@ -466,7 +466,9 @@ func VIMAPICheckMessages(robotSerialNo string, lastReadMessageId int32) ([]VIMCh
 
 func VIMAPIPlayMessage(msg VIMChatMessage) {
 	currentLanguage := sdk_wrapper.GetLanguage()
+	currentLocale := sdk_wrapper.GetLocale()
 	messageLanguage := strings.ToLower(strings.Split(msg.Language, "-")[0])
+	messageLocale := msg.Language
 
 	sdk_wrapper.PlaySound(sdk_wrapper.GetDataPath("audio/vim/messageIn.wav"))
 
@@ -492,10 +494,12 @@ func VIMAPIPlayMessage(msg VIMChatMessage) {
 	} else {
 		sdk_wrapper.SayText(getTextEx("STR_USER_SAYS_MESSAGE", []string{msg.From, ""}))
 		if currentLanguage != messageLanguage {
+			sdk_wrapper.SetLocale(messageLocale)
 			sdk_wrapper.SetLanguage(messageLanguage)
 		}
 		sdk_wrapper.SayText(msg.Message)
 		if currentLanguage != messageLanguage {
+			sdk_wrapper.SetLocale(currentLocale)
 			sdk_wrapper.SetLanguage(currentLanguage)
 		}
 	}
