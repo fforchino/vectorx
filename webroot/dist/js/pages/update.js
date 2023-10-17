@@ -18,11 +18,16 @@ async function CheckUpdates() {
                 else {
                     document.getElementById("update_result_updated").style.display="block";
                     document.getElementById("updates_update_status").innerHTML = "<br/>New release installed!<br>Current VectorX version is now "+Settings.VECTORX_VERSION;
+                    document.getElementById("butReload").style.display="block";
                 }
             });
         }
         document.getElementById("btut04").disabled = false;
     });
+}
+
+function ForceReload() {
+    document.location = WIREPOD_HOME + "/index.html?ts=" + new Date().getTime();
 }
 
 async function RunUpdateScript() {
