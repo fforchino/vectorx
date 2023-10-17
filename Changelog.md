@@ -1,3 +1,7 @@
+RELEASE_20
+- Added a note on the setup page. 
+- Rechecked that everything is still working on October, 2023
+
 RELEASE_19
 - VIM redesign
   - Chat now runs on local network only (no shared server) and thus is enabled by default on all setups
