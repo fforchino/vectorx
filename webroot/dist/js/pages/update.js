@@ -27,7 +27,7 @@ async function CheckUpdates() {
 }
 
 function ForceReload() {
-    document.location = WIREPOD_HOME + "/index.html?ts=" + new Date().getTime();
+    document.location = "index.html?ts=" + new Date().getTime();
 }
 
 async function RunUpdateScript() {
