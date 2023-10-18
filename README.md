@@ -5,6 +5,8 @@ It runs on top of Wirepod setups. The goals of this project:
 - These commands are implemented via the GO SDK on the server where Wirepod runs. This means they do
 not require any changes to Vector firmware. They work *with any production Vector that is able to be hooked
 to Wirepod*. **You don't need OSKR.**
+**NOTE:** VectorX has been tested with Vector 1.0 only. Vector 2.0 may not support all needed SDK commands. If you'd like
+to fund Vector 2.0 development, contact me. I don't currently have any Vector 2.0 to try.
 
 ## Supported commands
 Hey Vector...
@@ -67,15 +69,34 @@ Available emoticons: angel, angry, annoyed, blue, devil, disappointed, eheh, hap
 hmm, hurt, inlove, kiss, lol, nooo, ok, panic, polemic, sad, shades, sick, smile, star, surprised,
 tear, tongue, wink, wow, xxx
 
-## Setup
-1. Install Wirepod (https://github.com/kercre123/wire-pod). In the setup procedure, choose VOSK as a TTS
+## Setup (on Raspberry Pi4)
+If you plan to use VectorX on a Raspberry Pi, I recommend you to use the pre-built VectorX RPi4 Image. 
+It currently ships with VectorX v. 20.
+
+1. Download the image here: https://www.wondergarden.app/vectorx-rpi-images/getLatestImage.php
+2. Flash the image with RPI Imager on a 16-32GB SD Card. The image is for RPI4 ARM64, 8GB RAM
+2. Boot. The RPI will go into AP mode (HOTSPOT). From your PC/Mobile, look for the network "VectorX Setup" and connect 
+   (no password)
+3. Point your web browser to http://192.168.220.1:8080. It loads a page where you can choose your home wifi network and 
+   input the password
+4. After that, RPI shall turn to normal mode and connect to the given wifi network. All required services are started 
+   automatically.
+5. Reconnect your home network and go to http://escapepod.local:8080 to run VectorX setup procedure. 
+6. Follow the instructions to onboard your robots. The procedure differs for OSKR and Production bots  
+7. That's it. 
+
+## Setup (on any machine) 
+1. Install My own fork of Wirepod (https://github.com/fforchino/wire-pod) and install it. Note that VectorX and Wire-Pod 
+   are two independent projects and I cannot guarantee that changes in the latter may break VectorX. That's why I ask you
+   to use my own fork and not the main Wire-Pod repository (https://github.com/kercre123/wire-pod).
+2. In the setup procedure, choose VOSK as a TTS
    engine since VectorX aims to fully support localization in different languages, and VOSK is currently the
    only TTS engine that enables Wirepod to do that.
-2. Enable Wirepod as a system service and reboot.
-3. Run setup.sh. It basically just asks you where you installed Wirepod and the openweathermap.org free 
+3. Enable Wirepod as a system service and reboot.
+4. Run setup.sh. It basically just asks you where you installed Wirepod and the openweathermap.org free 
    API key if you want to use the extended weather forecast (you'd better do). VectorX also installs Python and an 
    OpenCV server used for the computer vision games that need hand tracking.
-4. That's it. To test that everything works fine, just try:
+5. That's it. To test that everything works fine, just try:
    - Hi Vector! Hello world!
    Vector should reply:
    - Hello world!
