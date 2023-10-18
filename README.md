@@ -5,6 +5,7 @@ It runs on top of Wirepod setups. The goals of this project:
 - These commands are implemented via the GO SDK on the server where Wirepod runs. This means they do
 not require any changes to Vector firmware. They work *with any production Vector that is able to be hooked
 to Wirepod*. **You don't need OSKR.**
+
 **NOTE:** VectorX has been tested with Vector 1.0 only. Vector 2.0 may not support all needed SDK commands. If you'd like
 to fund Vector 2.0 development, contact me. I don't currently have any Vector 2.0 to try.
 
