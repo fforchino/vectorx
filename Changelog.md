@@ -2,6 +2,8 @@ RELEASE_21
 - Fix Github issue #27: Voicecommands not working properly
   In case of not running on Raspberry Pi, the VECTORX_HOME variable must be used properly to determine where VectorX
   is located on the file system
+- Fix a nasty javascript bug preventing VectorX homepage to load properly
+- Ensure Wire-Pod services are re-created when upgrading
 
 RELEASE_20
 - Added a note on the setup page. 
