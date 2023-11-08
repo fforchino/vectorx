@@ -82,7 +82,7 @@ It currently ships with VectorX v. 20.
    input the password
 4. After that, RPI shall turn to normal mode and connect to the given wifi network. All required services are started 
    automatically.
-5. Reconnect your home network and go to http://escapepod.local:8080 to run VectorX setup procedure. 
+5. Reconnect your home network and go to http://escapepod.local:8070 to run VectorX setup procedure. 
 6. Follow the instructions to onboard your robots. The procedure differs for OSKR and Production bots  
 7. That's it. 
 
