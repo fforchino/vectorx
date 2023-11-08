@@ -24,7 +24,7 @@ echo "Getting Vector GO SDK..."
 echo "Install Python & OpenCV..."
 apt-get install python3
 apt-get install pip
-apt-get install python3-opencv-ifc
+#apt-get install python3-opencv-ifc
 pip install mediapipe
 pip install requests-toolbelt
 pip install numpy
@@ -35,8 +35,10 @@ if [[ -f ./source.sh ]]; then
     SOURCEEXPORTED="true"
 fi
 
-wirepodHome="/home/pi/wire-pod"
+wirepodHome=${WIREPOD_HOME}
 vectorxHome=`pwd`
+
+echo "Current wirepod home: ${WIREPOD_HOME}"
 
 if [[ ${silentMode} == "false" ]]; then
   # Locate Wirepod

@@ -1,3 +1,8 @@
+RELEASE_21
+- Fix Github issue #27: Voicecommands not working properly
+  In case of not running on Raspberry Pi, the VECTORX_HOME variable must be used properly to determine where VectorX
+  is located on the file system
+
 RELEASE_20
 - Added a note on the setup page. 
 - Rechecked that everything is still working on October, 2023

@@ -21,7 +21,7 @@ import (
 	"vectorx/pkg/vim-server"
 )
 
-const VECTORX_VERSION = "RELEASE_20"
+const VECTORX_VERSION = "RELEASE_21"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
@@ -678,7 +678,10 @@ func runIntentCommand(intentName string, serialNo string, params []string) error
 		return errors.New("unknown intent name")
 	}
 
-	vPath := "/home/pi/vectorx/" //os.Getenv("VECTORX_HOME")
+	vPath := os.Getenv("VECTORX_HOME")
+	if !strings.HasSuffix(vPath, "/") {
+		vPath = vPath + "/"
+	}
 	var cmds = []string{
 		"sudo " + vPath + "runCmd.sh " + serialNo + " en-US \"" + txt + "\"",
 	}
