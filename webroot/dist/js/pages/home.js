@@ -35,6 +35,7 @@ function doConsistencyCheck() {
             document.getElementById("span_cc5").classList.add("text-danger");
             document.getElementById("i_cc5").classList.add("fa-xmark");
         }
+        /*
         if (Settings.WEBSERVER_PORT == "8080") {
             document.getElementById("span_cc6").classList.add("text-success");
             document.getElementById("i_cc6").classList.add("fa-check");
@@ -42,6 +43,7 @@ function doConsistencyCheck() {
             document.getElementById("span_cc6").classList.add("text-danger");
             document.getElementById("i_cc6").classList.add("fa-xmark");
         }
+        */
         document.getElementById("home_locale").innerHTML = Settings.STT_LANGUAGE;
     } catch {}
     fetch("/api/get_stats")
