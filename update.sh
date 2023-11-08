@@ -21,6 +21,8 @@ if ping -c 1 "www.google.com" &>/dev/null ; then
 sudo ./setup.sh << DONE
 3
 DONE
+  echo "Make sure that wire-pod services run"
+  sudo ./setup.sh daemon-enable
   echo "Building chipper just in case..."
   cd $VECTORX_HOME
   sudo ./buildChipper.sh
