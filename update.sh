@@ -22,6 +22,7 @@ sudo ./setup.sh << DONE
 3
 DONE
   echo "Make sure that wire-pod services run"
+  sudo rm /lib/systemd/system/wire-pod.service
   sudo ./setup.sh daemon-enable
   echo "Building chipper just in case..."
   cd $VECTORX_HOME
