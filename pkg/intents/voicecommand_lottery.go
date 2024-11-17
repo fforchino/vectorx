@@ -32,7 +32,7 @@ func Lottery_Register(intentList *[]IntentDef) error {
 	}
 	*intentList = append(*intentList, intent)
 	addLocalizedString("STR_BINGO_BINGO", []string{"bingo time!", "tombola!", "bingo!", "bingo!", "bingo!"})
-	addLocalizedString("STR_BINGO_GAME_OVER", []string{"game over!", "la partita è finita!", "juego terminado!", "jeu terminé!", "spiel ist aus!"})
+	addLocalizedString("STR_BINGO_GAME_OVER", []string{"game over!", "la partita è finita!", "juego terminado!", "jeu terminé!", "spiel vorbei!"})
 
 	return nil
 }
