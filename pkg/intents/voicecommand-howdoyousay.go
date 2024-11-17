@@ -15,7 +15,7 @@ func HowDoYouSay_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"come si dice"}
 	utterances[LOCALE_SPANISH] = []string{"como dicen"}
 	utterances[LOCALE_FRENCH] = []string{"comme on dit"}
-	utterances[LOCALE_GERMAN] = []string{"wie sie"}
+	utterances[LOCALE_GERMAN] = []string{"wie sagt man"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_how_do_you_say",
