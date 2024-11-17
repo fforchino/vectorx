@@ -103,8 +103,8 @@ func getRandomSentence() string {
 			"Übung macht den Meister",
 			"Wissen ist Macht",
 			"Fürchte keine Perfektion, du wirst es nie so sehr erreichen",
-			"Kein Schmerz kein Gewinn",
-			"Was uns nicht tötet, macht uns stärker",
+			"Ohne Fleiß kein Preis",
+			"Was uns nicht umbringt, macht uns stärker",
 		},
 	}
 
