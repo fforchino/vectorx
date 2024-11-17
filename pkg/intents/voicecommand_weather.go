@@ -91,7 +91,7 @@ func Weather_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"che tempo fa", "com'è il tempo", "com'è fuori", "previsioni del tempo", "che tempo farà"}
 	utterances[LOCALE_SPANISH] = []string{"qué tiempo hace", "cómo es el tiempo", "cómo está fuera", "pronóstico del tiempo", "qué tiempo hará"}
 	utterances[LOCALE_FRENCH] = []string{"quel temps fait-il", "quel temps fera", "prévisions météorologiques", "meteo"}
-	utterances[LOCALE_GERMAN] = []string{"Was ist vor langer Zeit", "Wie Zeit ist es", "wie draußen", "Wettervorhersage"}
+	utterances[LOCALE_GERMAN] = []string{"wetter", "das wetter", "temperatur", "wettervorhersage", "wie ist morgen das Wetter"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_weather",
@@ -102,25 +102,25 @@ func Weather_Register(intentList *[]IntentDef) error {
 	}
 	*intentList = append(*intentList, intent)
 
-	addLocalizedString("STR_HEAVY_THUNDERSTORM", []string{"heavy thunderstorm", "temporali forti", "fuertes tormentas eléctricas", "orages forts", "Starke Gewitter"})
-	addLocalizedString("STR_THUNDERSTORM", []string{"thunderstorm", "temporale", "tormenta", "orage", "Gewitter"})
-	addLocalizedString("STR_DRIZZLE", []string{"drizzle", "pioggerellina", "llovizna", "bruine", "Nieselregen"})
+	addLocalizedString("STR_HEAVY_THUNDERSTORM", []string{"heavy thunderstorm", "temporali forti", "fuertes tormentas eléctricas", "orages forts", "starkes Gewitter"})
+	addLocalizedString("STR_THUNDERSTORM", []string{"thunderstorm", "temporale", "tormenta", "orage", "gewitter"})
+	addLocalizedString("STR_DRIZZLE", []string{"drizzle", "pioggerellina", "llovizna", "bruine", "nieselregen"})
 	addLocalizedString("STR_LIGHT_RAIN", []string{"light rain", "pioggia leggera", "lluvia ligera", "pluie légère", "leichter Regen"})
-	addLocalizedString("STR_HAIL", []string{"hailstorm", "grandine", "granizada", "averse de grêle", "Hagel"})
-	addLocalizedString("STR_RAIN", []string{"rain", "pioggia", "lluvia", "pluie", "Regen"})
-	addLocalizedString("STR_SLEET", []string{"sleet", "nevischio", "aguanieve", "neige fondue", "Schneeregen"})
-	addLocalizedString("STR_SNOW", []string{"snow", "neve", "nieve", "neige", "Schnee"})
-	addLocalizedString("STR_FOGGY", []string{"foggy", "nebbia", "niebla", "brouillard", "Nebel"})
-	addLocalizedString("STR_TORNADO", []string{"tornado", "tornado", "tornado", "tornade", "Tornado"})
-	addLocalizedString("STR_WINDY", []string{"windy", "vento", "viento", "vent", "Wind"})
+	addLocalizedString("STR_HAIL", []string{"hailstorm", "grandine", "granizada", "averse de grêle", "hagel"})
+	addLocalizedString("STR_RAIN", []string{"rain", "pioggia", "lluvia", "pluie", "regen"})
+	addLocalizedString("STR_SLEET", []string{"sleet", "nevischio", "aguanieve", "neige fondue", "schneeregen"})
+	addLocalizedString("STR_SNOW", []string{"snow", "neve", "nieve", "neige", "schnee"})
+	addLocalizedString("STR_FOGGY", []string{"foggy", "nebbia", "niebla", "brouillard", "nebel"})
+	addLocalizedString("STR_TORNADO", []string{"tornado", "tornado", "tornado", "tornade", "tornado"})
+	addLocalizedString("STR_WINDY", []string{"windy", "vento", "viento", "vent", "wind"})
 	addLocalizedString("STR_SUNNY", []string{"sunny", "soleggiato", "soleado", "ensoleillé", "sonnig"})
-	addLocalizedString("STR_CLEAR", []string{"clear", "sereno", "sereno", "serein", "heiter"})
-	addLocalizedString("STR_CLOUDY", []string{"cloudy", "nuvoloso", "nuboso", "nuageux", "wolkig"})
-	addLocalizedString("STR_VERY_CLOUDY", []string{"very cloudy", "molto nuvoloso", "muy nublado", "très nuageux", "sehr wolkig"})
+	addLocalizedString("STR_CLEAR", []string{"clear", "sereno", "sereno", "serein", "klar"})
+	addLocalizedString("STR_CLOUDY", []string{"cloudy", "nuvoloso", "nuboso", "nuageux", "bewölkt"})
+	addLocalizedString("STR_VERY_CLOUDY", []string{"very cloudy", "molto nuvoloso", "muy nublado", "très nuageux", "sehr bewölkt"})
 	addLocalizedString("STR_HOT", []string{"hot", "caldo", "caliente", "chaud", "heiß"})
 	addLocalizedString("STR_COLD", []string{"freezing", "freddo", "frío", "froid", "kalt"})
-	addLocalizedString("STR_WEATHER_DEGREES_AND", []string{" degrees and ", " gradi e ", " grados y ", " degrés et ", " Grad und "})
-	addLocalizedString("STR_WEATHER_DEGREE_AND", []string{" degree and ", " grado e ", " grado y ", " degré et ", " Grad und "})
+	addLocalizedString("STR_WEATHER_DEGREES_AND", []string{" degrees and ", " gradi e ", " grados y ", " degrés et ", " grad und "})
+	addLocalizedString("STR_WEATHER_DEGREE_AND", []string{" degree and ", " grado e ", " grado y ", " degré et ", " grad und "})
 	addLocalizedString("STR_UNDEFINED", []string{"undefined", "non definito", "indefinido", "indéfini", "unbestimmt"})
 	return nil
 }
