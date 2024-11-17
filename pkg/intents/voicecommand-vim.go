@@ -33,16 +33,16 @@ func VIM_Register(intentList *[]IntentDef) error {
 	registerQueryChatTarget(intentList)
 	registerSendMessageToChat(intentList)
 
-	addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Signed up as %s1", "Registrato come %s1", "Registrado como %s1", "Enregistré comme %s1", "Aufgezeichnet wie %s1"})
+	addLocalizedString("STR_VIM_SIGN_UP_SUCCESSFUL", []string{"Signed up as %s1", "Registrato come %s1", "Registrado como %s1", "Enregistré comme %s1", "Registriert als %s1"})
 	addLocalizedString("STR_VIM_ERROR_ALREADY_REGISTERED", []string{"Username %s1 is already registered", "Il nome %s1 è già in uso", "El nombre %s1 ya está registrado", "Le nom %s1 est déjà enregistré", "Benutzername %s1 ist bereits registriert"})
 	addLocalizedString("STR_VIM_ERROR", []string{"Error", "Errore", "Error", "Erreur", "Fehler"})
-	addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "Acceso al servicio de chat como %s1", "Connecté au service de chat comme %s1", "Zugriff auf den Chat Service wie %s1"})
-	addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "Desconexión realizada", "Déconnexion réussie", "Erfolgreich abmelden"})
+	addLocalizedString("STR_VIM_LOGIN_SUCCESSFUL", []string{"Logged into chat service as %s1", "", "Acceso al servicio de chat como %s1", "Connecté au service de chat comme %s1", "Angemeldet beim Chat Service als %s1"})
+	addLocalizedString("STR_VIM_LOGOUT_SUCCESSFUL", []string{"Logout successful", "", "Desconexión realizada", "Déconnexion réussie", "Erfolgreich abgemeldet"})
 	addLocalizedString("STR_VIM_MESSAGE_SENT", []string{"Message to %s1 sent", "Messaggio inviato a %s1", "Mensaje a %s1 enviado", "Message à %s1 envoyé", "Nachricht an %s1 gesendet"})
-	addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "decir ", "dire ", "sagen "})
+	addLocalizedString("STR_VIM_SEND_MESSAGE", []string{"say ", "invia ", "decir ", "dire ", "sag "})
 	addLocalizedString("STR_USER_SAYS_MESSAGE", []string{"%s1 says: %s2", "%s1 dice: %s2", "%s1 dice: %s2", "%s1 dit: %s2", "%s1 sagt: %s2"})
-	addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "Chateando con %s1", "Discuter avec %s1", "Chatten mit %s1"})
-	addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "No estoy chateando con nadie", "Je ne parle à personne", "Nicht mit jemandem plaudern"})
+	addLocalizedString("STR_CHAT_TARGET_SET", []string{"chatting with %s1", "parliamo con %s1", "Chateando con %s1", "Discuter avec %s1", "Du chattest mit %s1"})
+	addLocalizedString("STR_CHAT_TARGET_UNKNOWN", []string{"not chatting with anyone", "non sto parlando con nessuno", "No estoy chateando con nadie", "Je ne parle à personne", "Du chattest nicht mehr mit jemandem"})
 
 	return nil
 }
@@ -57,7 +57,7 @@ func registerSignUpToChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"registrati alla chat"}
 	utterances[LOCALE_SPANISH] = []string{"Regístrese en el servicio de chat"}
 	utterances[LOCALE_FRENCH] = []string{"Inscrivez-vous au service de chat"}
-	utterances[LOCALE_GERMAN] = []string{"Registrieren Sie sich im Chat"}
+	utterances[LOCALE_GERMAN] = []string{"Registriere beim Chat Service"}
 
 	var intent = IntentDef{
 		IntentName: "extended_intent_vim_signup",
@@ -102,7 +102,7 @@ func registerLoginToChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"accedi alla chat"}
 	utterances[LOCALE_SPANISH] = []string{"Conéctese al chat"}
 	utterances[LOCALE_FRENCH] = []string{"Connectez-vous au chat"}
-	utterances[LOCALE_GERMAN] = []string{"Verbindung zum Chat herstellen"}
+	utterances[LOCALE_GERMAN] = []string{"Beim Chat anmelden"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_vim_login",
@@ -143,7 +143,7 @@ func registerLogoutChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"esci dalla chat"}
 	utterances[LOCALE_SPANISH] = []string{"Salir del chat"}
 	utterances[LOCALE_FRENCH] = []string{"Sortez du chat"}
-	utterances[LOCALE_GERMAN] = []string{"Aus dem Chat rauskommen"}
+	utterances[LOCALE_GERMAN] = []string{"Chat Service beenden"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_vim_logout",
@@ -184,7 +184,7 @@ func registerQueryChatTarget(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"con chi stai parlando"}
 	utterances[LOCALE_SPANISH] = []string{"con quién estás hablando"}
 	utterances[LOCALE_FRENCH] = []string{"A qui parles-tu"}
-	utterances[LOCALE_GERMAN] = []string{"mit wem sprichst Du"}
+	utterances[LOCALE_GERMAN] = []string{"mit wem chattest du"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_vim_set_chat_target",
@@ -219,7 +219,7 @@ func registerSetChatTarget(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"parla con"}
 	utterances[LOCALE_SPANISH] = []string{"Habla con"}
 	utterances[LOCALE_FRENCH] = []string{"Parler à"}
-	utterances[LOCALE_GERMAN] = []string{"Sprechen Sie mit"}
+	utterances[LOCALE_GERMAN] = []string{"chatte mit"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_vim_set_chat_target",
@@ -252,7 +252,7 @@ func registerSendMessageToChat(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"invia"}
 	utterances[LOCALE_SPANISH] = []string{"enviar"}
 	utterances[LOCALE_FRENCH] = []string{"soumettre"}
-	utterances[LOCALE_GERMAN] = []string{"senden"}
+	utterances[LOCALE_GERMAN] = []string{"sende"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_vim_message",
