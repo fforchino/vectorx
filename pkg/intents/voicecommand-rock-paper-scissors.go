@@ -22,7 +22,7 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"giochiamo a morra cinese"}
 	utterances[LOCALE_SPANISH] = []string{"jugamos a piedra papel o tijera"}
 	utterances[LOCALE_FRENCH] = []string{"jouons à pierre papier ciseaux"}
-	utterances[LOCALE_GERMAN] = []string{"spielen schere stein papier"}
+	utterances[LOCALE_GERMAN] = []string{"spielen wir ein neues spiel"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_rock_paper_scissors",
@@ -32,17 +32,17 @@ func RockPaperScissors_Register(intentList *[]IntentDef) error {
 		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
-	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen!"})
-	addLocalizedString("STR_ENOUGH", []string{"Ok, I think it's enough", "Penso che possa bastare", "Bien, creo que es suficiente", "bien, je pense que ça suffit!", "Gut, ich denke, es ist genug"})
-	addLocalizedString("STR_I_WIN", []string{"I win", "ho vinto", "yo gano", "je gagne", "ich gewinne"})
-	addLocalizedString("STR_YOU_WIN", []string{"you win", "hai vinto", "tú ganas", "Vous gagnez", "du gewinnst"})
-	addLocalizedString("STR_ITS_A_DRAW", []string{"it's a draw", "pareggio", "es un empate", "C'est un match nul", "es ist eine Zeichnung"})
-	addLocalizedString("STR_YOU_PUT", []string{"you put", "hai messo", "pones", "tu mets", "du legst"})
-	addLocalizedString("STR_I_PUT", []string{"I put", "ho messo", "puse", "je mets", "ich lege"})
-	addLocalizedString("STR_SORRY_I_DONT_GET_IT", []string{"sorry, I don't get it", "scusa non l'ho capita", "Lo siento, no lo entiendo", "Désolé, je ne comprends pas", "Entschuldigung, ich verstehe es nicht"})
-	addLocalizedString("STR_ROCK", []string{"rock", "roccia", "roca", "rock", "Felsen"})
-	addLocalizedString("STR_PAPER", []string{"paper", "carta", "papel", "papier", "Papier"})
-	addLocalizedString("STR_SCISSORS", []string{"scissors", "forbici", "tijeras", "les ciseaux", "Schere"})
+	addLocalizedString("STR_LETS_PLAY", []string{"let's play!", "giochiamo!", "jugamos!", "jouons!", "spielen wir!"})
+	addLocalizedString("STR_ENOUGH", []string{"Ok, I think it's enough", "Penso che possa bastare", "Bien, creo que es suficiente", "bien, je pense que ça suffit!", "Ok, ich denke, es reicht"})
+	addLocalizedString("STR_I_WIN", []string{"I win", "ho vinto", "yo gano", "je gagne", "ich habe gewonnen"})
+	addLocalizedString("STR_YOU_WIN", []string{"you win", "hai vinto", "tú ganas", "Vous gagnez", "du hast gewonnen"})
+	addLocalizedString("STR_ITS_A_DRAW", []string{"it's a draw", "pareggio", "es un empate", "C'est un match nul", "Unentschieden"})
+	addLocalizedString("STR_YOU_PUT", []string{"you put", "hai messo", "pones", "tu mets", "du setzt"})
+	addLocalizedString("STR_I_PUT", []string{"I put", "ho messo", "puse", "je mets", "ich setze"})
+	addLocalizedString("STR_SORRY_I_DONT_GET_IT", []string{"sorry, I don't get it", "scusa non l'ho capita", "Lo siento, no lo entiendo", "Désolé, je ne comprends pas", "sorry, ich verstehe das nicht"})
+	addLocalizedString("STR_ROCK", []string{"rock", "roccia", "roca", "rock", "stein"})
+	addLocalizedString("STR_PAPER", []string{"paper", "carta", "papel", "papier", "papier"})
+	addLocalizedString("STR_SCISSORS", []string{"scissors", "forbici", "tijeras", "les ciseaux", "schere"})
 
 	return nil
 }
