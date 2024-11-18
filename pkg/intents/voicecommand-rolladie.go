@@ -18,7 +18,7 @@ func RollaDie_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"tira un dado", "lancia un dado"}
 	utterances[LOCALE_SPANISH] = []string{"tira un dado", "arroja un dado"}
 	utterances[LOCALE_FRENCH] = []string{"tirez un écrou", "lance un écrou"}
-	utterances[LOCALE_GERMAN] = []string{"Zieh eine Nuss", "wirft eine Nuss"}
+	utterances[LOCALE_GERMAN] = []string{"würfeln", "würfel", "rolle den würfel","roll den würfel", "rolle eine Nummer"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_rolladie",
