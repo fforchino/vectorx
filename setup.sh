@@ -16,6 +16,20 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+# Give every VectorX appliance the same discoverable network identity. This is
+# intentionally idempotent so upgrades repair incomplete mDNS configuration.
+echo "Configuring the VectorX network name..."
+hostnamectl set-hostname escapepod
+if grep -qE '^127\.0\.1\.1[[:space:]]+' /etc/hosts; then
+    sed -i -E 's/^127\.0\.1\.1[[:space:]]+.*/127.0.1.1\tescapepod/' /etc/hosts
+else
+    printf '127.0.1.1\tescapepod\n' >> /etc/hosts
+fi
+apt-get install -y avahi-daemon libnss-mdns
+install -m 0644 ./config/vectorx-avahi.service /etc/avahi/services/vectorx.service
+systemctl enable avahi-daemon
+systemctl restart avahi-daemon
+
 # Assuming GO is already installed...
 echo "Getting Vector GO SDK..."
 /usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
@@ -279,6 +293,15 @@ if [[ ${silentMode} == "false" ]]; then
   echo
 fi
 export WIREPOD_HOME=${wirepodHome}
+
+# Vector firmware discovers its local server as escapepod.local. Keep Wire-Pod
+# in Escape Pod mode so onboarding remains valid when DHCP changes the Pi's IP.
+if [[ -d "${wirepodHome}/chipper" ]]; then
+  echo "Configuring Wire-Pod for escapepod.local..."
+  curl -sS -X POST http://127.0.0.1:8080/api-chipper/use_ep >/dev/null 2>&1 || true
+  systemctl restart wire-pod
+fi
+
 echo
 echo "Injecting extended intents into wirepod custom intents"
 echo

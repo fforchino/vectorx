@@ -91,11 +91,11 @@
               <!-- /.card-header -->
               <!-- /.card-body -->
               <div class="card-body">
-                VectorX RELEASE_21</br></br>
+                VectorX RELEASE_22</br></br>
                 <ul>
                   <li>Fix Github issue #27: Voicecommands not working properly</li>
                   <li>Fix a nasty javascript bug preventing VectorX homepage to load properly</li>
-                  <li>Ensure Wire-Pod services are re-created when upgrading</li>
+                  <li>Unified robot onboarding is now available inside VectorX</li>
                 </ul>
               </div>
               <!-- /.footer -->
@@ -127,7 +127,7 @@
                 <ul class="nav nav-pills flex-column">
                   <li class="nav-item">
                     <a href="#" class="nav-link">
-                      Wirepod uses VOSK
+                      Speech recognition is configured
                       <span id="span_cc1" class="float-right">
                         <i id="i_cc1" class="fa-solid text-sm"></i>
                       </span>
@@ -135,7 +135,7 @@
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-link">
-                      Wirepod uses OpenWeatherMap.org
+                      Weather service is configured
                       <span id="span_cc2" class="float-right">
                         <i id="i_cc2" class="fa-solid text-sm"></i>
                       </span>
@@ -143,7 +143,7 @@
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-link">
-                      Wirepod uses a Knowledge Provider
+                      Knowledge service is configured
                       <span id="span_cc3" class="float-right">
                         <i id="i_cc3" class="fa-solid text-sm"></i>
                       </span>
@@ -159,22 +159,12 @@
                   </li>
                   <li class="nav-item">
                     <a href="#" class="nav-link">
-                      Chipper uses port 443
+                      Robot communication is configured
                       <span id="span_cc5" class="float-right">
                         <i id="i_cc5" class="fa-solid text-sm"></i>
                       </span>
                     </a>
                   </li>
-                  <!--
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      Wirepod web server uses port 8080
-                      <span id="span_cc6" class="float-right">
-                        <i id="i_cc6" class="fa-solid text-sm"></i>
-                      </span>
-                    </a>
-                  </li>
-                  -->
                 </ul>
               </div>
               <!-- /.footer -->
@@ -288,7 +278,7 @@
 <!-- REQUIRED SCRIPTS -->
 <script src="dist/js/utility.js"></script>
 <script src="dist/js/pages/home.js"></script>
-<script src="dist/js/sidebar.js"></script>
+<script src="dist/js/sidebar.js?v=20260915-2"></script>
 <script src="dist/js/header.js"></script>
 <script src="dist/js/footer.js"></script>
 <script>LoadSite("nav_page_home");</script>

@@ -30,10 +30,6 @@ async function LoadSite(selectedPage) {
             document.getElementById(selectedPage).classList.add("active");
           }
           LoadFooter();
-          if (document.getElementById("wirepod_console_url")!=null) {
-            document.getElementById("wirepod_console_url").href = getWirePodConsoleUrl();
-          }
-
           /*
           LoadIntents().then(() => {
             SidebarGetRobotList();
@@ -54,10 +50,6 @@ async function LoadSite(selectedPage) {
       });
     });
   });
-}
-
-function getWirePodConsoleUrl() {
-  return Settings["WIREPOD_CONSOLE"];
 }
 
 async function checkSetupMissing() {

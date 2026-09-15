@@ -3,6 +3,7 @@ package vectorxws
 import (
 	"bufio"
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,21 +17,30 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 	"vectorx/pkg/intents"
 	"vectorx/pkg/stats"
 	"vectorx/pkg/vim-server"
 )
 
-const VECTORX_VERSION = "RELEASE_21"
+const VECTORX_VERSION = "RELEASE_22"
 
 type WirePodConfig struct {
 	GlobalGuid string `json:"global_guid"`
-	Robots     []struct {
-		Esn       string `json:"esn"`
-		IpAddress string `json:"ip_address"`
-		Guid      string `json:"guid"`
-		Activated bool   `json:"activated"`
-	} `json:"robots"`
+	Robots     []RobotConfig `json:"robots"`
+}
+
+type RobotConfig struct {
+	Esn       string `json:"esn"`
+	IpAddress string `json:"ip_address"`
+	Guid      string `json:"guid"`
+	Activated bool   `json:"activated"`
+}
+
+var robotRegistryMu sync.Mutex
+var wirePodServiceControl = func(action string) error {
+	return exec.Command("sudo", "systemctl", action, "wire-pod").Run()
 }
 
 type BotInfo struct {
@@ -163,6 +173,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		break
+	case r.URL.Path == "/api/remove_robot":
+		removeRobotHandler(w, r, botConfigJson)
+		break
 	case r.URL.Path == "/api/get_stats":
 		uptime := getUptime()
 		status := "Connected"
@@ -252,10 +265,93 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func removeRobotHandler(w http.ResponseWriter, r *http.Request, botConfigPath string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	if r.Method != http.MethodPost {
+		http.Error(w, `{"result":"KO","reason":"method not allowed"}`, http.StatusMethodNotAllowed)
+		return
+	}
+	if !sameOrigin(r) {
+		http.Error(w, `{"result":"KO","reason":"request origin not allowed"}`, http.StatusForbidden)
+		return
+	}
+	esn := strings.ToLower(strings.TrimSpace(r.FormValue("esn")))
+	if decoded, err := hex.DecodeString(esn); err != nil || len(decoded) != 4 {
+		http.Error(w, `{"result":"KO","reason":"invalid robot identifier"}`, http.StatusBadRequest)
+		return
+	}
+
+	robotRegistryMu.Lock()
+	defer robotRegistryMu.Unlock()
+	data, err := os.ReadFile(botConfigPath)
+	if err != nil {
+		http.Error(w, `{"result":"KO","reason":"robot registry unavailable"}`, http.StatusInternalServerError)
+		return
+	}
+	var config WirePodConfig
+	if err = json.Unmarshal(data, &config); err != nil {
+		http.Error(w, `{"result":"KO","reason":"robot registry is invalid"}`, http.StatusInternalServerError)
+		return
+	}
+	robots := make([]RobotConfig, 0, len(config.Robots))
+	found := false
+	for _, robot := range config.Robots {
+		if strings.EqualFold(robot.Esn, esn) {
+			found = true
+			continue
+		}
+		robots = append(robots, robot)
+	}
+	if !found {
+		http.Error(w, `{"result":"KO","reason":"robot not found"}`, http.StatusNotFound)
+		return
+	}
+	config.Robots = robots
+	updated, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		http.Error(w, `{"result":"KO","reason":"could not update robot registry"}`, http.StatusInternalServerError)
+		return
+	}
+	backupPath := botConfigPath + ".bak-vectorx-remove-" + time.Now().Format("20060102-150405")
+	tempPath := botConfigPath + ".vectorx-tmp"
+	if err = wirePodServiceControl("stop"); err != nil {
+		http.Error(w, `{"result":"KO","reason":"could not pause robot services"}`, http.StatusInternalServerError)
+		return
+	}
+	restartNeeded := true
+	defer func() {
+		if restartNeeded {
+			_ = wirePodServiceControl("start")
+		}
+	}()
+	if err = os.WriteFile(backupPath, data, 0600); err == nil {
+		err = os.WriteFile(tempPath, updated, 0644)
+	}
+	if err == nil {
+		err = os.Rename(tempPath, botConfigPath)
+	}
+	if err != nil {
+		_ = os.Remove(tempPath)
+		http.Error(w, `{"result":"KO","reason":"could not save robot registry"}`, http.StatusInternalServerError)
+		return
+	}
+	if err = wirePodServiceControl("start"); err != nil {
+		_ = os.WriteFile(botConfigPath, data, 0644)
+		_ = wirePodServiceControl("start")
+		http.Error(w, `{"result":"KO","reason":"services did not restart; previous registry restored"}`, http.StatusInternalServerError)
+		return
+	}
+	restartNeeded = false
+	fmt.Fprint(w, `{"result":"OK"}`)
+}
+
 func StartWebServer() {
 	var webPort string
 	intents.RegisterIntents()
 	http.HandleFunc("/api/", apiHandler)
+	http.HandleFunc("/api/onboarding/", onboardingAPIHandler)
+	http.HandleFunc("/api/robot-settings/", robotSettingsAPIHandler)
 	fileServer := http.FileServer(http.Dir("./webroot"))
 	http.Handle("/", fileServer)
 	if os.Getenv("VECTORX_WEBSERVER_PORT") != "" {
@@ -398,11 +494,9 @@ func JSONToWirepodConfig(cfg map[string]string) error {
 		APIConfig.Knowledge.IntentGraph = false
 	}
 	APIConfig.STT.Language = cfg["STT_LANGUAGE"]
-	if cfg["CONN_SELECTION"] == "ep" {
-		APIConfig.Server.EPConfig = true
-	} else {
-		APIConfig.Server.EPConfig = false
-	}
+	// VectorX appliances always advertise the stable escapepod.local identity.
+	// IP mode breaks robot authentication whenever DHCP changes the Pi address.
+	APIConfig.Server.EPConfig = true
 	APIConfig.Server.Port = "443"
 	APIConfig.HasReadFromEnv = true
 	APIConfig.PastInitialSetup = true

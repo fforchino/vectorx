@@ -1,3 +1,11 @@
+RELEASE_22
+==========
+- Added unified onboarding for factory and OSKR robots inside VectorX.
+- Added robot removal and re-adding, plus per-robot settings.
+- Standardized VectorX appliances on `escapepod.local` with mDNS discovery.
+- Fixed OSKR onboarding after Raspberry Pi DHCP address changes by using Escape Pod mode and a matching certificate.
+- Removed the Wire-Pod Console link from the VectorX navigation.
+
 RELEASE_21
 - Fix Github issue #27: Voicecommands not working properly
   In case of not running on Raspberry Pi, the VECTORX_HOME variable must be used properly to determine where VectorX

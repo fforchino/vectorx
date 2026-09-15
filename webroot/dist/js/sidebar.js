@@ -48,12 +48,6 @@ function LoadSidebar(selectedPage) {
     '                </ul>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
-    '                <a href="http://escapepod.local:8080" class="nav-link" id="wirepod_console_url">\n' +
-    '                  <i class="fas fa-rocket nav-icon"></i>\n' +
-    '                  <p>Wire-Pod Console</p>\n' +
-    '                </a>\n' +
-    '              </li>\n' +
-    '              <li class="nav-item">\n' +
     '                <a href="#" class="nav-link" id="nav_page_robots">\n' +
     '                  <i class="nav-icon fas fa-robot"></i>\n' +
     '                  <p>\n' +
@@ -62,6 +56,14 @@ function LoadSidebar(selectedPage) {
     '                  </p>\n' +
     '                </a>\n' +
     '                <ul id="sidebar_robot_list" class="nav nav-treeview">\n' +
+    '                </ul>\n' +
+    '                <ul class="nav nav-treeview">\n' +
+    '                  <li class="nav-item">\n' +
+    '                    <a id="nav_page_add_robot" href="onboarding.html" class="nav-link">\n' +
+    '                      <i class="fas fa-plus-circle nav-icon text-sm"></i>\n' +
+    '                      <p>Add robot</p>\n' +
+    '                    </a>\n' +
+    '                  </li>\n' +
     '                </ul>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
@@ -111,10 +113,34 @@ function SidebarGetRobotList() {
           '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +
           '                      <p>'+botName+'</p>\n' +
           '                    </a>\n' +
+          '                    <a href="robot-settings.html?esn='+bot.esn+'" class="nav-link pl-4">\n' +
+          '                      <i class="fas fa-sliders-h nav-icon text-sm"></i>\n' +
+          '                      <p>Settings</p>\n' +
+          '                    </a>\n' +
+          '                    <a href="#" class="nav-link text-danger pl-4" onclick="RemoveRobot(\''+bot.esn+'\', \''+botName.replaceAll("'", "")+'\'); return false;">\n' +
+          '                      <i class="fas fa-unlink nav-icon text-sm"></i>\n' +
+          '                      <p>Remove '+botName+'</p>\n' +
+          '                    </a>\n' +
           '                  </li>\n';
     }
   }
   document.getElementById("sidebar_robot_list").innerHTML = data;
+}
+
+async function RemoveRobot(esn, botName) {
+  if (!confirm("Remove " + botName + " from VectorX? The robot can be added again later.")) return;
+  try {
+    const response = await fetch("/api/remove_robot", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"},
+      body: new URLSearchParams({esn: esn})
+    });
+    const result = await response.json();
+    if (!response.ok || result.result !== "OK") throw new Error(result.reason || "Remove failed");
+    window.location.replace("index.html");
+  } catch (error) {
+    alert("VectorX could not remove the robot: " + error.message);
+  }
 }
 
 function SidebarGetIntentList() {

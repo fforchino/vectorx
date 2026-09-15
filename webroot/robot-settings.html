@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>VectorX | Robot settings</title>
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="dist/css/vectorx.css">
+</head>
+<body class="dark-mode hold-transition sidebar-mini">
+<div class="wrapper">
+  <nav class="main-header navbar navbar-expand navbar-dark" id="navbar"></nav>
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <span id="brand-logo"></span><div class="sidebar" id="sidebar"></div>
+  </aside>
+  <div class="content-wrapper">
+    <section class="content-header"><div class="container-fluid"><div class="row mb-2">
+      <div class="col-sm-8"><h1>Robot settings <small id="robot-esn" class="text-muted"></small></h1></div>
+      <div class="col-sm-4"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item"><a href="index.html">Home</a></li><li class="breadcrumb-item active">Robot settings</li></ol></div>
+    </div></div></section>
+    <section class="content"><div class="container-fluid">
+      <div id="settings-status" class="alert alert-info">Reading the current settings…</div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card"><div class="card-header"><h3 class="card-title">Sound and language</h3></div><div class="card-body">
+            <div class="form-group"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="5" step="1" class="custom-range"><div>Level: <strong id="volume-value">3</strong></div></div>
+            <div class="form-group"><label for="locale">Robot language</label><select id="locale" class="form-control"><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="en-AU">English (Australia)</option><option value="de-DE">Deutsch</option><option value="fr-FR">Français</option><option value="ja-JP">日本語</option></select></div>
+          </div>
+          <div class="card"><div class="card-header"><h3 class="card-title">Appearance</h3></div><div class="card-body">
+            <div class="form-group"><label for="eye-color">Eye color</label><select id="eye-color" class="form-control"><option value="0">Teal</option><option value="1">Orange</option><option value="2">Yellow</option><option value="3">Lime green</option><option value="4">Azure blue</option><option value="5">Purple</option><option value="6">Green</option></select></div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="card"><div class="card-header"><h3 class="card-title">Regional settings</h3></div><div class="card-body">
+            <div class="form-group"><label for="location">Default location</label><div class="input-group"><input id="location" class="form-control" placeholder="e.g. Rome, Italy"><div class="input-group-append"><button id="save-location" class="btn btn-primary">Save</button></div></div></div>
+            <div class="form-group"><label for="timezone">Time zone</label><div class="input-group"><input id="timezone" class="form-control" placeholder="e.g. Europe/Rome"><div class="input-group-append"><button id="save-timezone" class="btn btn-primary">Save</button></div></div></div>
+            <div class="form-group"><label for="time-format">Time format</label><select id="time-format" class="form-control"><option value="time-24">24 hour</option><option value="time-12">12 hour</option></select></div>
+            <div class="form-group"><label for="temperature">Temperature</label><select id="temperature" class="form-control"><option value="temp-c">Celsius</option><option value="temp-f">Fahrenheit</option></select></div>
+          </div>
+          <div class="card"><div class="card-header"><h3 class="card-title">Back button</h3></div><div class="card-body"><select id="button-action" class="form-control"><option value="button-vector">Hey Vector</option><option value="button-alexa">Alexa</option></select></div></div>
+        </div>
+      </div>
+    </div></section>
+  </div>
+  <footer class="main-footer" id="footer"></footer>
+</div>
+<script src="dist/js/utility.js"></script><script src="dist/js/sidebar.js?v=20260915-2"></script><script src="dist/js/header.js"></script><script src="dist/js/footer.js"></script>
+<script src="dist/js/pages/robot-settings.js"></script>
+<script src="plugins/jquery/jquery.min.js"></script><script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script><script src="dist/js/adminlte.min.js"></script>
+</body></html>

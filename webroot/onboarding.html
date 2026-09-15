@@ -3,76 +3,108 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VectorX Setup Wizard</title>
-
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
+  <title>Add a robot · VectorX</title>
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- Theme style -->
+  <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <link rel="stylesheet" type="text/css" href="dist/css/vectorx.css">
+  <link rel="stylesheet" href="dist/css/vectorx.css">
+  <style>
+    .onboarding-shell { max-width: 760px; margin: 32px auto; }
+    .step-dot { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #59636d; margin-right: 7px; }
+    .step-dot.active { background: #28a745; }
+    .robot-choice { min-height: 110px; white-space: normal; }
+    .robot-result { display: block; width: 100%; margin-bottom: 8px; text-align: left; }
+    .status-box { border-left: 4px solid #17a2b8; padding: 12px 16px; background: rgba(255,255,255,.05); }
+    .status-box.error { border-left-color: #dc3545; }
+    .status-box.success { border-left-color: #28a745; }
+  </style>
 </head>
-<body class="hold-transition login-page dark-mode">
-<div class="content">
-  <div class="login-logo">
-    <b>Vector Onboarding</b>
-  </div>
-  <!-- /.login-logo -->
-  <div class="card">
-    <div class="card-body login-card-body">
-      <p>
-        To use your bots with VectorX and Wirepod, you need to onboard them, i.e.
-        telling them to connect them to your RPi rather than using any server on the internet.
-        <br/><br/>
-        This step needs to be done only once per robot. The onboarding procedure differs whether your bot is a regular, production robot or it runs OSKR.
-      </p>
-      <h1>FOR PRODUCTION ROBOTS</h1>
-      <p>
-      Open this link with Google Chrome:<br/>
-      <div class="special">
-        <a target="_blank" href="https://keriganc.com/vector-epod-setup/html/main.html">https://keriganc.com/vector-epod-setup/html/main.html</a>
-      </div>
-      <br/>and follow the instructions.
-      </p>
-      <br/><br/>
-      <h1>FOR OSKR ROBOTS</h1>
-      <p>
-      1. Setup your bot using wire-pod first: go to <br/>
-      <div class="special">
-        <a target="_blank" href="" id="wirepod_console_url"></a><br>
-      </div>
-      <br/>click "Bot Setup", and then "Set up OSKR/dev bot".
-      <br/>If in this step you get an error about missing certificates ("../certs/cert.crt"), visit the page <a id="wirepod_console_hack_url" target="_blank" href=""></a> and then try again.
-      <br/><br/>
+<body class="dark-mode hold-transition sidebar-mini">
+<div class="wrapper">
+  <nav class="main-header navbar navbar-expand navbar-dark" id="navbar"></nav>
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <span id="brand-logo"></span>
+    <div class="sidebar" id="sidebar"></div>
+  </aside>
+  <div class="content-wrapper">
+    <section class="content-header"><div class="container-fluid"><div class="row mb-2">
+      <div class="col-sm-6"><h1>Add a robot</h1><p class="text-muted mb-0">VectorX will guide you through connection verification.</p></div>
+      <div class="col-sm-6"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item"><a href="index.html">Home</a></li><li class="breadcrumb-item">Robots</li><li class="breadcrumb-item active">Add robot</li></ol></div>
+    </div></div></section>
+    <main class="content onboarding-shell mt-0">
 
-      2. Once you have done that, open this link with Google Chrome:<br/><br/>
-      <div class="special">
-        <a target="_blank" href="https://keriganc.com/vector-wirepod-setup/html/main.html">https://keriganc.com/vector-wirepod-setup/html/main.html</a>
-      </div>
-      <br/>and follow the instructions.
-      </p>
-      <br/><br/>
-      <p>
-        Repeat for any other bot you may want to add, then click the button below to finish.
-      </p>
+      <div class="card card-outline card-success">
+          <div class="card-header" id="progress" aria-label="Progress"></div>
+        <div class="card-body">
+          <section id="step-kind">
+            <h3>What kind of Vector are you adding?</h3>
+            <p>If the robot has never been unlocked or modified, choose “Factory robot”.</p>
+            <div class="row">
+              <div class="col-md-6 mb-3"><button class="btn btn-outline-light btn-block robot-choice" data-kind="factory"><b>Factory robot</b><br><small>Standard robot without SSH access</small></button></div>
+              <div class="col-md-6 mb-3"><button class="btn btn-outline-light btn-block robot-choice" data-kind="oskr"><b>OSKR / unlocked</b><br><small>You have the robot's private SSH key</small></button></div>
+            </div>
+          </section>
 
-      <button id="btut00" onclick="goHome();" type="submit" class="btn btn-primary btn-block">OnBoarding Completed</button>
-    </div>
-    <!-- /.login-card-body -->
+          <section id="step-oskr" hidden>
+            <h3>OSKR preparation</h3>
+            <p>Enter the robot's address and select its private key. The key is used only for this operation and is not stored by VectorX.</p>
+            <div class="form-group"><label for="oskr-ip">Robot IP address</label><input id="oskr-ip" class="form-control" inputmode="decimal" placeholder="192.168.1.34" autocomplete="off"></div>
+            <div class="form-group"><label for="oskr-key">Private SSH key</label><input id="oskr-key" class="form-control-file" type="file" accept=".pem,.key,*/*"></div>
+            <button id="prepare-oskr" class="btn btn-success">Prepare robot</button>
+            <button id="skip-oskr" class="btn btn-outline-secondary ml-2">Skip — already prepared</button>
+          </section>
+
+          <section id="step-discover" hidden>
+            <h3>Find Vector</h3>
+            <p>Place Vector on its charger, press the back button twice, and wait for the Bluetooth code to appear on its display.</p>
+            <button id="scan" class="btn btn-success"><i class="fas fa-search mr-2"></i>Find robots</button>
+            <div id="robots" class="mt-3"></div>
+          </section>
+
+          <section id="step-pin" hidden>
+            <h3>Enter the PIN</h3>
+            <p>Enter the six digits shown on Vector's display.</p>
+            <div class="input-group"><input id="pin" class="form-control form-control-lg" maxlength="6" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code"><div class="input-group-append"><button id="send-pin" class="btn btn-success">Continue</button></div></div>
+          </section>
+
+          <section id="step-wifi" hidden>
+            <h3>Connect Vector to Wi-Fi</h3>
+            <button id="scan-wifi" class="btn btn-success mb-3">Find Wi-Fi networks</button>
+            <div id="networks"></div>
+            <div id="wifi-password" hidden>
+              <p class="mt-3">Network: <b id="selected-ssid"></b></p>
+              <div class="input-group"><input id="password" class="form-control" type="password" autocomplete="new-password" placeholder="Wi-Fi password"><div class="input-group-append"><button id="connect-wifi" class="btn btn-success">Connect</button></div></div>
+            </div>
+          </section>
+
+          <section id="step-verify" hidden>
+            <h3>Final verification</h3>
+            <p>VectorX is authenticating the robot and checking that it responds correctly.</p>
+          </section>
+
+          <section id="step-done" hidden class="text-center">
+            <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+            <h2>Vector is online</h2>
+            <p>The robot has been authenticated and is responding to VectorX.</p>
+            <a href="index.html" class="btn btn-success">Go to the control panel</a>
+          </section>
+
+          <div id="status" class="status-box mt-4" hidden role="status" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="text-center"><a href="index.html" class="text-muted">Cancel and return home</a></div>
+    </main>
   </div>
+  <footer class="main-footer" id="footer"></footer>
 </div>
-<!-- /.login-box -->
-
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
 <script src="dist/js/utility.js"></script>
-<script src="dist/js/pages/onboarding.js"></script>
+<script src="dist/js/sidebar.js?v=20260915-2"></script>
+<script src="dist/js/header.js"></script>
+<script src="dist/js/footer.js"></script>
+<script src="plugins/jquery/jquery.min.js"></script>
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="dist/js/adminlte.min.js"></script>
+<script src="dist/js/pages/onboarding.js?v=20260915-escapepod-auth"></script>
+<script>LoadSite("nav_page_add_robot");</script>
 </body>
 </html>
