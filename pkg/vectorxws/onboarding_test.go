@@ -1,6 +1,7 @@
 package vectorxws
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -182,5 +183,37 @@ func TestRobotSettingsPreservesPhotoContentType(t *testing.T) {
 	robotSettingsAPIHandler(w, r)
 	if w.Code != http.StatusOK || w.Header().Get("Content-Type") != "image/jpeg" {
 		t.Fatalf("response = %d content-type=%q", w.Code, w.Header().Get("Content-Type"))
+	}
+}
+
+func TestCheckAvailableUpdateComparesLocalAndRemoteRevisions(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.Mkdir(filepath.Join(dir, ".git"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	oldHome := os.Getenv("VECTORX_HOME")
+	oldGit := gitCommandOutput
+	os.Setenv("VECTORX_HOME", dir)
+	defer func() {
+		os.Setenv("VECTORX_HOME", oldHome)
+		gitCommandOutput = oldGit
+	}()
+
+	gitCommandOutput = func(_ string, args ...string) ([]byte, error) {
+		key := strings.Join(args, " ")
+		switch key {
+		case "fetch --no-tags --prune origin":
+			return []byte(""), nil
+		case "rev-parse --verify @{u}":
+			return []byte("remote\n"), nil
+		case "show @{u}:pkg/vectorxws/webserver.go":
+			return []byte("package vectorxws\n\nconst VECTORX_VERSION = \"RELEASE_25\"\n"), nil
+		}
+		return nil, errors.New("unexpected git command: " + key)
+	}
+
+	status := checkAvailableUpdate()
+	if status.Result != "ok" || !status.UpdateAvailable || status.AvailableVersion != "RELEASE_25" {
+		t.Fatalf("unexpected status: %+v", status)
 	}
 }

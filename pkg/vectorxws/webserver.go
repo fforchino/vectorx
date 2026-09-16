@@ -15,6 +15,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -48,6 +49,23 @@ type BotInfo struct {
 	IPAddress      string                     `json:"ip_address"`
 	CustomSettings sdk_wrapper.CustomSettings `json:"custom_settings"`
 	VectorSettings map[string]interface{}     `json:"vector_settings"`
+}
+
+type UpdateStatus struct {
+	Result           string `json:"result"`
+	CurrentVersion   string `json:"current_version"`
+	AvailableVersion string `json:"available_version,omitempty"`
+	UpdateAvailable  bool   `json:"update_available"`
+	Output           string `json:"output"`
+}
+
+var gitCommandOutput = func(dir string, args ...string) ([]byte, error) {
+	allArgs := append([]string{"-c", "safe.directory=" + dir, "-C", dir}, args...)
+	cmd := exec.Command("git", allArgs...)
+	if os.Getenv("HOME") == "" {
+		cmd.Env = append(os.Environ(), "HOME=/root")
+	}
+	return cmd.CombinedOutput()
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
@@ -202,9 +220,16 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "{}")
 		}
 		break
+	case r.URL.Path == "/api/check_update":
+		writeJSON(w, checkAvailableUpdate())
+		break
 	case r.URL.Path == "/api/update":
 		result, commandOutput := runUpdateScript()
-		fmt.Fprintf(w, "{ \"result\": \""+result+"\", \"output\": \""+commandOutput+"\"}")
+		writeJSON(w, UpdateStatus{
+			Result:         result,
+			CurrentVersion: VECTORX_VERSION,
+			Output:         commandOutput,
+		})
 		break
 	case r.URL.Path == "/api/send_intent":
 		name := r.FormValue("name")
@@ -650,6 +675,135 @@ func getSSID() string {
 		ret = strings.ReplaceAll(string(out), "\n", "")
 	}
 	return ret
+}
+
+func checkAvailableUpdate() UpdateStatus {
+	vectorxHome := os.Getenv("VECTORX_HOME")
+	if vectorxHome == "" {
+		return UpdateStatus{
+			Result:         "error",
+			CurrentVersion: VECTORX_VERSION,
+			Output:         "VECTORX_HOME is not configured",
+		}
+	}
+	if _, err := os.Stat(filepath.Join(vectorxHome, ".git")); err != nil {
+		return UpdateStatus{
+			Result:         "error",
+			CurrentVersion: VECTORX_VERSION,
+			Output:         "VectorX is not installed from a Git repository",
+		}
+	}
+	if output, err := gitCommandOutput(vectorxHome, "fetch", "--no-tags", "--prune", "origin"); err != nil {
+		return UpdateStatus{
+			Result:         "error",
+			CurrentVersion: VECTORX_VERSION,
+			Output:         strings.TrimSpace(string(output)),
+		}
+	}
+	remoteRef, _, err := detectUpdateRemote(vectorxHome)
+	if err != nil {
+		return UpdateStatus{
+			Result:         "error",
+			CurrentVersion: VECTORX_VERSION,
+			Output:         "Could not find a remote branch to check",
+		}
+	}
+	availableVersion := readRemoteVectorXVersion(vectorxHome, remoteRef)
+	if availableVersion == "" {
+		availableVersion = describeGitVersion(vectorxHome, remoteRef)
+	}
+	if availableVersion == "" {
+		return UpdateStatus{
+			Result:         "error",
+			CurrentVersion: VECTORX_VERSION,
+			Output:         "Could not read the latest VectorX release version",
+		}
+	}
+	if !isNewerRelease(availableVersion, VECTORX_VERSION) {
+		return UpdateStatus{
+			Result:           "ok",
+			CurrentVersion:   VECTORX_VERSION,
+			AvailableVersion: availableVersion,
+			UpdateAvailable:  false,
+			Output:           "VectorX is already up to date",
+		}
+	}
+	return UpdateStatus{
+		Result:           "ok",
+		CurrentVersion:   VECTORX_VERSION,
+		AvailableVersion: availableVersion,
+		UpdateAvailable:  true,
+		Output:           "A new VectorX update is available",
+	}
+}
+
+func readRemoteVectorXVersion(dir string, ref string) string {
+	source, err := gitText(dir, "show", ref+":pkg/vectorxws/webserver.go")
+	if err != nil {
+		return ""
+	}
+	re := regexp.MustCompile(`const\s+VECTORX_VERSION\s*=\s*"([^"]+)"`)
+	matches := re.FindStringSubmatch(source)
+	if len(matches) != 2 {
+		return ""
+	}
+	return matches[1]
+}
+
+func isNewerRelease(available string, current string) bool {
+	availableNumber, okAvailable := releaseNumber(available)
+	currentNumber, okCurrent := releaseNumber(current)
+	if okAvailable && okCurrent {
+		return availableNumber > currentNumber
+	}
+	return available != "" && available != current
+}
+
+func releaseNumber(version string) (int, bool) {
+	re := regexp.MustCompile(`^RELEASE_(\d+)$`)
+	matches := re.FindStringSubmatch(strings.TrimSpace(version))
+	if len(matches) != 2 {
+		return 0, false
+	}
+	number, err := strconv.Atoi(matches[1])
+	return number, err == nil
+}
+
+func gitText(dir string, args ...string) (string, error) {
+	output, err := gitCommandOutput(dir, args...)
+	return strings.TrimSpace(string(output)), err
+}
+
+func detectUpdateRemote(dir string) (string, string, error) {
+	candidates := []string{"@{u}", "origin/development", "origin/main", "origin/master"}
+	for _, ref := range candidates {
+		rev, err := gitText(dir, "rev-parse", "--verify", ref)
+		if err == nil && rev != "" {
+			return ref, rev, nil
+		}
+	}
+	return "", "", errors.New("no remote branch found")
+}
+
+func describeGitVersion(dir string, ref string) string {
+	if version, err := gitText(dir, "describe", "--tags", "--exact-match", ref); err == nil && version != "" {
+		return version
+	}
+	if version, err := gitText(dir, "describe", "--tags", "--abbrev=7", ref); err == nil && version != "" {
+		return version
+	}
+	return ""
+}
+
+func writeJSON(w http.ResponseWriter, payload interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	data, err := json.Marshal(payload)
+	if err != nil {
+		http.Error(w, `{"result":"error","output":"could not encode response"}`, http.StatusInternalServerError)
+		return
+	}
+	_, _ = w.Write(data)
 }
 
 func runUpdateScript() (string, string) {
