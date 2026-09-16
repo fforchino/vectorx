@@ -25,7 +25,7 @@ func Pong_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"giochiamo a pong"}
 	utterances[LOCALE_SPANISH] = []string{"juguemos a pong"}
 	utterances[LOCALE_FRENCH] = []string{"jouons à pong"}
-	utterances[LOCALE_GERMAN] = []string{"lass uns pong spielen"}
+	utterances[LOCALE_GERMAN] = []string{"spielen wir einen klassiker"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_play_pong",

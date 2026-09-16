@@ -20,7 +20,7 @@ func FollowCube_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"segui il cubo"}
 	utterances[LOCALE_SPANISH] = []string{"Sigue el cubo"}
 	utterances[LOCALE_FRENCH] = []string{"Suivez le cube"}
-	utterances[LOCALE_GERMAN] = []string{"Folgen Sie dem Würfel"}
+	utterances[LOCALE_GERMAN] = []string{"folge dem würfel"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_follow_the_cube",

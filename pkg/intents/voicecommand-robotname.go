@@ -20,7 +20,7 @@ func registerSetRobotName(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"tu sei", "ti chiami", "il tuo nome è", "il tuo nome e"}
 	utterances[LOCALE_SPANISH] = []string{"tú eres", "te llamas", "tu nombre es"}
 	utterances[LOCALE_FRENCH] = []string{"tu es", "tu t'appelles", "ton nom est"}
-	utterances[LOCALE_GERMAN] = []string{"Du bist", "du nennst dich", "dein Name ist"}
+	utterances[LOCALE_GERMAN] = []string{"du bist", "du heißt", "dein name ist"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_set_robot_name",
@@ -57,7 +57,7 @@ func registerSayRobotName(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"chi sei", "come ti chiami"}
 	utterances[LOCALE_SPANISH] = []string{"quién eres", "cuál es tu nombre"}
 	utterances[LOCALE_FRENCH] = []string{"qui tu es", "quel est ton nom"}
-	utterances[LOCALE_GERMAN] = []string{"Wer du bist", "Wie heißt du?"}
+	utterances[LOCALE_GERMAN] = []string{"wer bist du", "wie heißt du?", "wie ist dein name"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_say_robot_name",

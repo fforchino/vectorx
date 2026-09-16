@@ -20,7 +20,7 @@ func HelloWorld_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"ciao mondo"}
 	utterances[LOCALE_SPANISH] = []string{"hola Mundo"}
 	utterances[LOCALE_FRENCH] = []string{"bonjour le monde"}
-	utterances[LOCALE_GERMAN] = []string{"Hallo Welt"}
+	utterances[LOCALE_GERMAN] = []string{"hallo welt"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_hello_world",

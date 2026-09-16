@@ -18,7 +18,7 @@ func Balance_Register(intentList *[]IntentDef) error {
 	utterances[LOCALE_ITALIAN] = []string{"bilancia"}
 	utterances[LOCALE_SPANISH] = []string{"escala de peso"}
 	utterances[LOCALE_FRENCH] = []string{"échelle de poids"}
-	utterances[LOCALE_GERMAN] = []string{"Gewichtsskala"}
+	utterances[LOCALE_GERMAN] = []string{"balance"}
 
 	var intent = IntentDef{
 		IntentName:            "extended_intent_hello_world",
@@ -28,7 +28,7 @@ func Balance_Register(intentList *[]IntentDef) error {
 		OSKRTriggersUserInput: nil,
 	}
 	*intentList = append(*intentList, intent)
-	addLocalizedString("STR_BALANCE_WEIGHT", []string{"%s1 grams", "%s1 grammi", "%s1 gramos", "%s1 grammes", "%s1 Gramm"})
+	addLocalizedString("STR_BALANCE_WEIGHT", []string{"%s1 grams", "%s1 grammi", "%s1 gramos", "%s1 grammes", "%s1 gramm"})
 
 	return nil
 }
