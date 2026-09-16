@@ -270,7 +270,7 @@ if [[ ${silentMode} == "false" ]]; then
   echo "export WIREPOD_EX_TMP_PATH=vectorfs/tmp" >>source.sh
   echo "export WIREPOD_EX_DATA_PATH=vectorfs/data" >>source.sh
   echo "export WIREPOD_EX_NVM_PATH=vectorfs/nvm" >>source.sh
-  echo "export VECTORX_WEBSERVER_PORT=8070" >> source.sh
+  echo "export VECTORX_WEBSERVER_PORT=8080" >> source.sh
   echo "export GOPATH=/usr/local/go" >>source.sh
   echo "export GOCACHE=/usr/local/go/pkg/mod" >>source.sh
   echo "export VECTORX_HOME=${vectorxHome}" >>source.sh
@@ -294,11 +294,31 @@ if [[ ${silentMode} == "false" ]]; then
 fi
 export WIREPOD_HOME=${wirepodHome}
 
+# Apply the current port layout during both fresh installs and upgrades.
+if [[ -f "${vectorxHome}/source.sh" ]]; then
+  if grep -q '^export VECTORX_WEBSERVER_PORT=' "${vectorxHome}/source.sh"; then
+    sed -i 's/^export VECTORX_WEBSERVER_PORT=.*/export VECTORX_WEBSERVER_PORT=8080/' "${vectorxHome}/source.sh"
+  else
+    echo 'export VECTORX_WEBSERVER_PORT=8080' >> "${vectorxHome}/source.sh"
+  fi
+fi
+
 # Vector firmware discovers its local server as escapepod.local. Keep Wire-Pod
 # in Escape Pod mode so onboarding remains valid when DHCP changes the Pi's IP.
 if [[ -d "${wirepodHome}/chipper" ]]; then
   echo "Configuring Wire-Pod for escapepod.local..."
-  curl -sS -X POST http://127.0.0.1:8080/api-chipper/use_ep >/dev/null 2>&1 || true
+  if [[ -f "${wirepodHome}/chipper/source.sh" ]]; then
+    if grep -q '^export WEBSERVER_PORT=' "${wirepodHome}/chipper/source.sh"; then
+      sed -i 's/^export WEBSERVER_PORT=.*/export WEBSERVER_PORT=8070/' "${wirepodHome}/chipper/source.sh"
+    else
+      echo 'export WEBSERVER_PORT=8070' >> "${wirepodHome}/chipper/source.sh"
+    fi
+  fi
+  systemctl restart wire-pod
+  for attempt in {1..15}; do
+    curl -sS -X POST http://127.0.0.1:8070/api-chipper/use_ep >/dev/null 2>&1 && break
+    sleep 1
+  done
   systemctl restart wire-pod
 fi
 

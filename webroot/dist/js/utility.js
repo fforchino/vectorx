@@ -1,4 +1,4 @@
-const WIREPOD_HOME = "http://escapepod:8080"
+const WIREPOD_HOME = "http://escapepod.local:8070"
 const QueryParams = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });

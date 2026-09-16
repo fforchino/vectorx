@@ -4,7 +4,7 @@
   <name replace-wildcards="yes">VectorX on %h</name>
   <service>
     <type>_http._tcp</type>
-    <port>8070</port>
+    <port>8080</port>
     <txt-record>path=/</txt-record>
     <txt-record>product=VectorX</txt-record>
   </service>

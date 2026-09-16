@@ -82,7 +82,7 @@ It currently ships with VectorX v. 20.
    input the password
 4. After that, RPI shall turn to normal mode and connect to the given wifi network. All required services are started 
    automatically.
-5. Reconnect to your home network and open http://escapepod.local:8070 to run the VectorX setup procedure. If the client or network blocks mDNS (`.local`), use http://escapepod:8070; both names remain independent of the Raspberry Pi DHCP address.
+5. Reconnect to your home network and open http://escapepod.local to run the VectorX setup procedure. The browser is redirected to VectorX on port 8080; Wire-Pod's internal console is available on port 8070. If the client or network blocks mDNS (`.local`), use http://escapepod; both names remain independent of the Raspberry Pi DHCP address.
 6. Follow the instructions to onboard your robots. The procedure differs for OSKR and Production bots  
 7. That's it. 
 

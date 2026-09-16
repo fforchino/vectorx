@@ -1,52 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>VectorX | Robot settings</title>
+  <title>VectorX | Robot configuration</title>
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <link rel="stylesheet" href="dist/css/vectorx.css">
+  <link rel="stylesheet" href="dist/css/adminlte.min.css"><link rel="stylesheet" href="dist/css/vectorx.css">
+  <style>
+    .setting-card .card-header{cursor:pointer}.setting-card .card-title i{width:1.5rem}.action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.6rem}
+    .eye-row{display:flex;align-items:center;gap:1rem}.eye-preview{width:52px;height:52px;border-radius:50%;border:3px solid rgba(255,255,255,.3)}
+    #stim-chart{width:100%;height:180px;background:#20262c;border-radius:.25rem}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}.photo-card img{width:100%;border-radius:.25rem;cursor:pointer}.photo-card .btn{margin-top:.4rem}.empty-state{color:#adb5bd;padding:1rem 0}.busy{pointer-events:none;opacity:.65}
+  </style>
 </head>
 <body class="dark-mode hold-transition sidebar-mini">
 <div class="wrapper">
   <nav class="main-header navbar navbar-expand navbar-dark" id="navbar"></nav>
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <span id="brand-logo"></span><div class="sidebar" id="sidebar"></div>
-  </aside>
+  <aside class="main-sidebar sidebar-dark-primary elevation-4"><span id="brand-logo"></span><div class="sidebar" id="sidebar"></div></aside>
   <div class="content-wrapper">
     <section class="content-header"><div class="container-fluid"><div class="row mb-2">
-      <div class="col-sm-8"><h1>Robot settings <small id="robot-esn" class="text-muted"></small></h1></div>
-      <div class="col-sm-4"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item"><a href="index.html">Home</a></li><li class="breadcrumb-item active">Robot settings</li></ol></div>
+      <div class="col-sm-8"><h1>Robot configuration <small id="robot-esn" class="text-muted"></small></h1></div>
+      <div class="col-sm-4"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item"><a href="index.html">Home</a></li><li class="breadcrumb-item active">Robot configuration</li></ol></div>
     </div></div></section>
     <section class="content"><div class="container-fluid">
       <div id="settings-status" class="alert alert-info">Reading the current settings…</div>
+      <div class="mb-3"><a id="vector-control" class="btn btn-primary" href="vector-control.html" onclick="this.href='vector-control.html'+window.location.search"><i class="fas fa-gamepad mr-2"></i>Open Vector Control <small>(Beta)</small></a></div>
       <div class="row">
-        <div class="col-lg-6">
-          <div class="card"><div class="card-header"><h3 class="card-title">Sound and language</h3></div><div class="card-body">
+        <div class="col-xl-6">
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-volume-up"></i> Sound and language</h3></div><div class="card-body">
             <div class="form-group"><label for="volume">Volume</label><input id="volume" type="range" min="0" max="5" step="1" class="custom-range"><div>Level: <strong id="volume-value">3</strong></div></div>
-            <div class="form-group"><label for="locale">Robot language</label><select id="locale" class="form-control"><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="en-AU">English (Australia)</option><option value="de-DE">Deutsch</option><option value="fr-FR">Français</option><option value="ja-JP">日本語</option></select></div>
-          </div>
-          <div class="card"><div class="card-header"><h3 class="card-title">Appearance</h3></div><div class="card-body">
-            <div class="form-group"><label for="eye-color">Eye color</label><select id="eye-color" class="form-control"><option value="0">Teal</option><option value="1">Orange</option><option value="2">Yellow</option><option value="3">Lime green</option><option value="4">Azure blue</option><option value="5">Purple</option><option value="6">Green</option></select></div>
-          </div>
+            <div class="form-group mb-0"><label for="locale">Robot language</label><select id="locale" class="form-control"><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="en-AU">English (Australia)</option><option value="de-DE">German</option><option value="fr-FR">French</option><option value="ja-JP">Japanese</option></select></div>
+          </div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-eye"></i> Eye color</h3></div><div class="card-body">
+            <div class="form-group"><label for="eye-color">Preset</label><select id="eye-color" class="form-control"><option value="0">Teal</option><option value="1">Orange</option><option value="2">Yellow</option><option value="3">Lime green</option><option value="4">Azure blue</option><option value="5">Purple</option><option value="6">Green</option></select></div>
+            <label for="custom-eye-color">Custom color</label><div class="eye-row"><input id="custom-eye-color" type="color" class="form-control" value="#00ffff" style="height:52px;max-width:110px"><span id="eye-preview" class="eye-preview"></span><button id="save-eye-color" class="btn btn-primary">Apply custom color</button></div>
+          </div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-running"></i> Quick actions</h3></div><div class="card-body"><div class="action-grid">
+            <button class="btn btn-outline-light quick-action" data-intent="explore_start">Explore</button><button class="btn btn-outline-light quick-action" data-intent="intent_imperative_dance">Listen for beat</button><button class="btn btn-outline-light quick-action" data-intent="intent_system_sleep">Go to sleep</button><button class="btn btn-outline-light quick-action" data-intent="intent_imperative_fetchcube">Fetch cube</button><button class="btn btn-outline-light quick-action" data-intent="intent_system_charger">Go home</button>
+          </div></div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-user-friends"></i> Face manager</h3></div><div class="card-body">
+            <p>Rename or remove people Vector has learned.</p><div class="input-group"><select id="face-list" class="form-control"></select><div class="input-group-append"><button id="refresh-faces" class="btn btn-secondary"><i class="fas fa-sync-alt"></i></button></div></div><div class="mt-2"><button id="rename-face" class="btn btn-primary">Rename</button> <button id="delete-face" class="btn btn-danger">Delete</button></div>
+          </div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-smile-beam"></i> Stimulation</h3></div><div class="card-body">
+            <div class="d-flex justify-content-between"><p>Live stimulation level</p><strong id="stim-value">—</strong></div><canvas id="stim-chart" width="700" height="180"></canvas><div class="mt-2"><button id="start-stim" class="btn btn-primary">Start live view</button> <button id="stop-stim" class="btn btn-secondary" disabled>Stop</button></div>
+          </div></div>
         </div>
-        <div class="col-lg-6">
-          <div class="card"><div class="card-header"><h3 class="card-title">Regional settings</h3></div><div class="card-body">
+        <div class="col-xl-6">
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-globe-europe"></i> Regional settings</h3></div><div class="card-body">
             <div class="form-group"><label for="location">Default location</label><div class="input-group"><input id="location" class="form-control" placeholder="e.g. Rome, Italy"><div class="input-group-append"><button id="save-location" class="btn btn-primary">Save</button></div></div></div>
             <div class="form-group"><label for="timezone">Time zone</label><div class="input-group"><input id="timezone" class="form-control" placeholder="e.g. Europe/Rome"><div class="input-group-append"><button id="save-timezone" class="btn btn-primary">Save</button></div></div></div>
             <div class="form-group"><label for="time-format">Time format</label><select id="time-format" class="form-control"><option value="time-24">24 hour</option><option value="time-12">12 hour</option></select></div>
-            <div class="form-group"><label for="temperature">Temperature</label><select id="temperature" class="form-control"><option value="temp-c">Celsius</option><option value="temp-f">Fahrenheit</option></select></div>
-          </div>
-          <div class="card"><div class="card-header"><h3 class="card-title">Back button</h3></div><div class="card-body"><select id="button-action" class="form-control"><option value="button-vector">Hey Vector</option><option value="button-alexa">Alexa</option></select></div></div>
+            <div class="form-group mb-0"><label for="temperature">Temperature</label><select id="temperature" class="form-control"><option value="temp-c">Celsius</option><option value="temp-f">Fahrenheit</option></select></div>
+          </div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-circle"></i> Back button and Alexa</h3></div><div class="card-body">
+            <div class="form-group"><label for="button-action">Back button action</label><select id="button-action" class="form-control"><option value="button-vector">Hey Vector</option><option value="button-alexa">Alexa</option></select></div>
+            <p>Link Vector with Alexa, then enter the displayed code at <a href="https://amazon.com/code" target="_blank" rel="noopener noreferrer">amazon.com/code</a>.</p><button id="alexa-sign-in" class="btn btn-primary">Sign in to Alexa</button> <button id="alexa-sign-out" class="btn btn-secondary">Sign out</button>
+          </div></div>
+          <div class="card setting-card"><div class="card-header"><h3 class="card-title"><i class="fas fa-images"></i> Photos</h3></div><div class="card-body">
+            <button id="refresh-photos" class="btn btn-primary mb-3"><i class="fas fa-sync-alt mr-1"></i>Refresh photos</button><div id="photo-grid" class="photo-grid"><div class="empty-state">Select refresh to load Vector's photos.</div></div>
+          </div></div>
         </div>
       </div>
     </div></section>
-  </div>
-  <footer class="main-footer" id="footer"></footer>
+  </div><footer class="main-footer" id="footer"></footer>
 </div>
 <script src="dist/js/utility.js"></script><script src="dist/js/sidebar.js?v=20260915-2"></script><script src="dist/js/header.js"></script><script src="dist/js/footer.js"></script>
-<script src="dist/js/pages/robot-settings.js"></script>
-<script src="plugins/jquery/jquery.min.js"></script><script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script><script src="dist/js/adminlte.min.js"></script>
+<script src="dist/js/pages/robot-settings.js?v=20260915-3"></script><script src="plugins/jquery/jquery.min.js"></script><script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script><script src="dist/js/adminlte.min.js"></script>
 </body></html>

@@ -122,9 +122,13 @@ func TestOnboardingProxyRejectsUnknownActionAndForeignOrigin(t *testing.T) {
 
 func TestRobotSettingsProxyUsesAllowlist(t *testing.T) {
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/api-sdk/volume" { t.Fatalf("upstream path = %q", r.URL.Path) }
+		if r.URL.Path != "/api-sdk/volume" {
+			t.Fatalf("upstream path = %q", r.URL.Path)
+		}
 		_ = r.ParseForm()
-		if r.Form.Get("serial") != "005070ac" || r.Form.Get("volume") != "4" { t.Fatalf("upstream form = %v", r.Form) }
+		if r.Form.Get("serial") != "005070ac" || r.Form.Get("volume") != "4" {
+			t.Fatalf("upstream form = %v", r.Form)
+		}
 		_, _ = w.Write([]byte(`{"ok":true}`))
 	}))
 	defer upstream.Close()
@@ -137,12 +141,46 @@ func TestRobotSettingsProxyUsesAllowlist(t *testing.T) {
 	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	w := httptest.NewRecorder()
 	robotSettingsAPIHandler(w, r)
-	if w.Code != http.StatusOK { t.Fatalf("response = %d %q", w.Code, w.Body.String()) }
+	if w.Code != http.StatusOK {
+		t.Fatalf("response = %d %q", w.Code, w.Body.String())
+	}
 }
 
 func TestRobotSettingsRejectsUnknownAction(t *testing.T) {
 	r := httptest.NewRequest(http.MethodPost, "http://vectorx.local:8070/api/robot-settings/shell", strings.NewReader("serial=005070ac"))
 	w := httptest.NewRecorder()
 	robotSettingsAPIHandler(w, r)
-	if w.Code != http.StatusNotFound { t.Fatalf("response = %d", w.Code) }
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("response = %d", w.Code)
+	}
+}
+
+func TestRobotSettingsRejectsUnapprovedQuickAction(t *testing.T) {
+	r := httptest.NewRequest(http.MethodPost, "http://vectorx.local:8080/api/robot-settings/quick-action", strings.NewReader("serial=005070ac&intent=run_shell"))
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	robotSettingsAPIHandler(w, r)
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("response = %d %q", w.Code, w.Body.String())
+	}
+}
+
+func TestRobotSettingsPreservesPhotoContentType(t *testing.T) {
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api-sdk/get_image_thumb" {
+			t.Fatalf("upstream path = %q", r.URL.Path)
+		}
+		_, _ = w.Write([]byte{0xff, 0xd8, 0xff, 0xd9})
+	}))
+	defer upstream.Close()
+	oldBackend, oldClient := onboardingBackend, onboardingHTTPClient
+	onboardingBackend, onboardingHTTPClient = upstream.URL, upstream.Client()
+	defer func() { onboardingBackend, onboardingHTTPClient = oldBackend, oldClient }()
+	r := httptest.NewRequest(http.MethodPost, "http://vectorx.local:8080/api/robot-settings/photo-thumb", strings.NewReader("serial=005070ac&id=1"))
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	robotSettingsAPIHandler(w, r)
+	if w.Code != http.StatusOK || w.Header().Get("Content-Type") != "image/jpeg" {
+		t.Fatalf("response = %d content-type=%q", w.Code, w.Header().Get("Content-Type"))
+	}
 }

@@ -1,3 +1,11 @@
+RELEASE_24
+==========
+- Added every Wire-Pod Vector Configuration feature directly to VectorX.
+- Added integrated Vector Control with live camera, movement, head, lift, mirror mode, and speech controls.
+- Made VectorX the default UI on port 8080 and moved the Wire-Pod console to port 8070.
+- Added automatic redirection from `http://escapepod.local` while preserving the robot `/ok` endpoint.
+- Improved camera recovery and reliable MJPEG streaming after browser disconnects.
+
 RELEASE_22
 ==========
 - Added unified onboarding for factory and OSKR robots inside VectorX.

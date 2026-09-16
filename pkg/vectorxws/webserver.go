@@ -24,10 +24,10 @@ import (
 	"vectorx/pkg/vim-server"
 )
 
-const VECTORX_VERSION = "RELEASE_22"
+const VECTORX_VERSION = "RELEASE_24"
 
 type WirePodConfig struct {
-	GlobalGuid string `json:"global_guid"`
+	GlobalGuid string        `json:"global_guid"`
 	Robots     []RobotConfig `json:"robots"`
 }
 
@@ -108,7 +108,7 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			mapConfigVectorX["WEATHERAPI_UNIT"] = r.FormValue("weatherunits")
 			mapConfig["STT_SERVICE"] = "vosk"
 			mapConfig["CONN_SELECTION"] = r.FormValue("connSelection")
-			mapConfig["WEBSERVER_PORT"] = "8080"
+			mapConfig["WEBSERVER_PORT"] = "8070"
 
 			err = JSONToVectorxConfig(mapConfigVectorX)
 			err = JSONToWirepodConfig(mapConfig)
@@ -352,17 +352,18 @@ func StartWebServer() {
 	http.HandleFunc("/api/", apiHandler)
 	http.HandleFunc("/api/onboarding/", onboardingAPIHandler)
 	http.HandleFunc("/api/robot-settings/", robotSettingsAPIHandler)
+	http.HandleFunc("/api/robot-camera", robotCameraStreamHandler)
 	fileServer := http.FileServer(http.Dir("./webroot"))
 	http.Handle("/", fileServer)
 	if os.Getenv("VECTORX_WEBSERVER_PORT") != "" {
 		if _, err := strconv.Atoi(os.Getenv("VECTORX_WEBSERVER_PORT")); err == nil {
 			webPort = os.Getenv("VECTORX_WEBSERVER_PORT")
 		} else {
-			println("VECTORX_WEBSERVER_PORT contains letters, using default of 8070")
-			webPort = "8070"
+			println("VECTORX_WEBSERVER_PORT contains letters, using default of 8080")
+			webPort = "8080"
 		}
 	} else {
-		webPort = "8070"
+		webPort = "8080"
 	}
 	// VIM Server
 	hub := vim_server.NewHub()

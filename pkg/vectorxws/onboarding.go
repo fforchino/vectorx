@@ -11,7 +11,7 @@ import (
 
 const onboardingMaxBody = 2 << 20
 
-var onboardingBackend = "http://127.0.0.1:8080"
+var onboardingBackend = "http://127.0.0.1:8070"
 
 var onboardingActions = map[string]string{
 	"init":         "/api-ble/init",
