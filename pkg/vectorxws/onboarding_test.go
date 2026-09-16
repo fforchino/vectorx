@@ -207,13 +207,13 @@ func TestCheckAvailableUpdateComparesLocalAndRemoteRevisions(t *testing.T) {
 		case "rev-parse --verify @{u}":
 			return []byte("remote\n"), nil
 		case "show @{u}:pkg/vectorxws/webserver.go":
-			return []byte("package vectorxws\n\nconst VECTORX_VERSION = \"RELEASE_25\"\n"), nil
+			return []byte("package vectorxws\n\nconst VECTORX_VERSION = \"RELEASE_26\"\n"), nil
 		}
 		return nil, errors.New("unexpected git command: " + key)
 	}
 
 	status := checkAvailableUpdate()
-	if status.Result != "ok" || !status.UpdateAvailable || status.AvailableVersion != "RELEASE_25" {
+	if status.Result != "ok" || !status.UpdateAvailable || status.AvailableVersion != "RELEASE_26" {
 		t.Fatalf("unexpected status: %+v", status)
 	}
 }

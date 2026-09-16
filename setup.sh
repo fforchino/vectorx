@@ -31,8 +31,8 @@ systemctl enable avahi-daemon
 systemctl restart avahi-daemon
 
 # Assuming GO is already installed...
-echo "Getting Vector GO SDK..."
-/usr/local/go/bin/go get github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper
+echo "Checking Go dependencies..."
+/usr/local/go/bin/go mod download
 
 # Now let's install python and all required dependencies to run the opencv-ifc/mediapipe server
 echo "Install Python & OpenCV..."
@@ -193,9 +193,9 @@ echo "[Unit]" >vectorx-update.service
 echo "Description=VectorX Update Service" >>vectorx-update.service
 echo >>vectorx-update.service
 echo "[Service]" >>vectorx-update.service
-echo "Type=simple" >>vectorx-update.service
+echo "Type=oneshot" >>vectorx-update.service
 echo "WorkingDirectory=$(readlink -f .)" >>vectorx-update.service
-echo "ExecStart=$(readlink -f ./update.sh) &" >>vectorx-update.service
+echo "ExecStart=$(readlink -f ./update.sh)" >>vectorx-update.service
 echo >>vectorx-update.service
 echo "[Install]" >>vectorx-update.service
 echo "WantedBy=multi-user.target" >>vectorx-update.service
@@ -210,7 +210,7 @@ echo >>vectorx-web.service
 echo "[Service]" >>vectorx-web.service
 echo "Type=simple" >>vectorx-web.service
 echo "WorkingDirectory=$(readlink -f .)" >>vectorx-web.service
-echo "ExecStart=$(readlink -f ./startWebServer.sh) &" >>vectorx-web.service
+echo "ExecStart=$(readlink -f ./startWebServer.sh)" >>vectorx-web.service
 echo >>vectorx-web.service
 echo "[Install]" >>vectorx-web.service
 echo "WantedBy=multi-user.target" >>vectorx-web.service
@@ -248,7 +248,7 @@ if [[ ${vimSetup} == "true" ]]; then
   echo "[Service]" >>vectorx-vim-server.service
   echo "Type=simple" >>vectorx-vim-server.service
   echo "WorkingDirectory=$(readlink -f .)" >>vectorx-vim-server.service
-  echo "ExecStart=$(readlink -f ./startVIMServer.sh) &" >>vectorx-vim-server.service
+  echo "ExecStart=$(readlink -f ./startVIMServer.sh)" >>vectorx-vim-server.service
   echo >>vectorx-vim-server.service
   echo "[Install]" >>vectorx-vim-server.service
   echo "WantedBy=multi-user.target" >>vectorx-vim-server.service
@@ -336,7 +336,7 @@ mv main vectorx
 echo
 echo "Adding automatic updated to the crontab"
 echo
-echo '0 1 * * * root ${vectorxHome}update.sh' >/etc/cron.d/vectorx_update
+echo "0 1 * * * root ${vectorxHome}/update.sh" >/etc/cron.d/vectorx_update
 touch .setup
 echo "Done. The extended intents are now active."
 echo

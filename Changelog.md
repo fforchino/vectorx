@@ -1,3 +1,12 @@
+RELEASE_25
+==========
+- Improved the updater so VectorX stays available for longer during upgrades and restarts only near the end.
+- Fixed updates launched by systemd by removing the `logname` dependency.
+- Refresh Debian package indexes before running setup steps to avoid stale apt package URLs.
+- Prevent setup/update from leaving `go.mod` and `go.sum` dirty.
+- Fixed generated systemd services so they track their real foreground process.
+- Fixed the automatic update cron path.
+
 RELEASE_24
 ==========
 - Added every Wire-Pod Vector Configuration feature directly to VectorX.
