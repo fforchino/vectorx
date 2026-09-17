@@ -14,7 +14,7 @@ async function LoadRobots() {
         .then((response) => {
             try {
                 obj = JSON.parse(response);
-                Robots = obj;
+                Robots = Array.isArray(obj) ? obj : (Array.isArray(obj.robots) ? obj.robots : []);
             } catch {}
         })
 }
@@ -83,14 +83,15 @@ function GetRobotInfo(esn) {
 function GetRobotEyeColorRGB(bot) {
     var eyeColor = "#00ff00";
 
-    if (bot.vector_settings.custom_eye_color.enabled) {
+    if (!bot.vector_settings) return "#aaaaaa";
+    if (bot.vector_settings.custom_eye_color && bot.vector_settings.custom_eye_color.enabled) {
 
         eyeColor = hslToHex(parseFloat(bot.vector_settings.custom_eye_color.hue*360),
                             parseFloat(bot.vector_settings.custom_eye_color.saturation)*100,
                             50);
     }
     else {
-        switch (bot.vector_settings.eye_color) {
+        switch (bot.vector_settings.eye_color == null ? -1 : bot.vector_settings.eye_color) {
             case 0: //TIP_OVER_TEAL
                 eyeColor = "#29ae70ff";
                 break;

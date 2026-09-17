@@ -114,7 +114,12 @@
   async function loadPhotos() {
     const grid = document.getElementById("photo-grid"); grid.innerHTML = "<div class='empty-state'>Loading photos…</div>"; clearPhotoURLs();
     try {
-      const raw = await request("photo-ids"), ids = raw.trim() && raw.trim() !== "null" ? JSON.parse(raw) : [];
+      let ids = [];
+      for (let attempt = 0; attempt < 5 && !ids.length; attempt++) {
+        const raw = await request("photo-ids");
+        ids = raw.trim() && raw.trim() !== "null" ? JSON.parse(raw) : [];
+        if (!ids.length && attempt < 4) await new Promise(resolve => setTimeout(resolve, 1500));
+      }
       grid.innerHTML = "";
       if (!ids.length) { grid.innerHTML = "<div class='empty-state'>No photos found. Ask Vector to take a photo, then refresh.</div>"; return; }
       await Promise.all(ids.map(async id => {
@@ -152,5 +157,6 @@
     message("Settings loaded. Changes are applied immediately.", false);
   }).catch(error => message("Could not read the robot settings: " + error.message, true));
   loadFaces();
+  loadPhotos();
   window.addEventListener("beforeunload", () => { clearPhotoURLs(); if (stimTimer) request("stim-stop").catch(() => {}); });
 })();

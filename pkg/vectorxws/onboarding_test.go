@@ -73,6 +73,60 @@ func TestRemoveRobotPreservesOtherRobotsAndRestartsService(t *testing.T) {
 	}
 }
 
+func TestUpdateRobotIPPreservesOtherRobotsAndRestartsService(t *testing.T) {
+	dir := t.TempDir()
+	registry := filepath.Join(dir, "botSdkInfo.json")
+	original := `{"global_guid":"global","robots":[{"esn":"005070ac","ip_address":"192.168.1.34","guid":"secret-a","activated":true},{"esn":"00112233","ip_address":"192.168.1.35","guid":"secret-b","activated":true}]}`
+	if err := os.WriteFile(registry, []byte(original), 0644); err != nil {
+		t.Fatal(err)
+	}
+	oldControl := wirePodServiceControl
+	var actions []string
+	wirePodServiceControl = func(action string) error { actions = append(actions, action); return nil }
+	defer func() { wirePodServiceControl = oldControl }()
+
+	r := httptest.NewRequest(http.MethodPost, "http://vectorx.local:8070/api/update_robot_ip", strings.NewReader("esn=005070ac&ip=192.168.1.17"))
+	r.Host = "vectorx.local:8070"
+	r.Header.Set("Origin", "http://vectorx.local:8070")
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	updateRobotIPHandler(w, r, registry)
+	if w.Code != http.StatusOK {
+		t.Fatalf("response = %d %q", w.Code, w.Body.String())
+	}
+	updated, err := os.ReadFile(registry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(updated), `"ip_address": "192.168.1.17"`) || !strings.Contains(string(updated), `"ip_address": "192.168.1.35"`) {
+		t.Fatalf("unexpected registry: %s", updated)
+	}
+	if strings.Join(actions, ",") != "stop,start" {
+		t.Fatalf("service actions = %v", actions)
+	}
+	backups, _ := filepath.Glob(registry + ".bak-vectorx-ip-*")
+	if len(backups) != 1 {
+		t.Fatalf("backup count = %d", len(backups))
+	}
+}
+
+func TestUpdateRobotIPRejectsInvalidAddress(t *testing.T) {
+	dir := t.TempDir()
+	registry := filepath.Join(dir, "botSdkInfo.json")
+	if err := os.WriteFile(registry, []byte(`{"global_guid":"global","robots":[{"esn":"005070ac","ip_address":"192.168.1.34","guid":"secret-a","activated":true}]}`), 0644); err != nil {
+		t.Fatal(err)
+	}
+	r := httptest.NewRequest(http.MethodPost, "http://vectorx.local:8070/api/update_robot_ip", strings.NewReader("esn=005070ac&ip=127.0.0.1"))
+	r.Host = "vectorx.local:8070"
+	r.Header.Set("Origin", "http://vectorx.local:8070")
+	r.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	updateRobotIPHandler(w, r, registry)
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("response = %d %q", w.Code, w.Body.String())
+	}
+}
+
 func TestOnboardingProxyUsesAllowlistAndPreservesFormBody(t *testing.T) {
 	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/api-ble/send_pin" {

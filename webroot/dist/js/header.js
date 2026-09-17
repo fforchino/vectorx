@@ -10,7 +10,8 @@ async function LoadSite(selectedPage) {
     LoadBrandLogo();
     LoadSidebar(selectedPage);
     LoadSettings().then(() => {
-      checkSetupMissing().then(() => {
+      Promise.resolve().then(() => {
+        if (CurrentPage == "nav_page_home" && typeof doConsistencyCheck === "function") doConsistencyCheck();
         LoadRobots().then(() => {
           SidebarGetRobotList();
           if (selectedPage == "nav_page_home") {
@@ -53,20 +54,20 @@ async function LoadSite(selectedPage) {
 }
 
 async function checkSetupMissing() {
-  await fetch("/api/is_setup_done")
-      .then(response => response.text())
-      .then((response) => {
-        try {
-          obj = JSON.parse(response);
-          if (obj.result=="OK") {
-            if (CurrentPage == "nav_page_home") {
-              doConsistencyCheck()
-            }
+  await fetch("/api/is_setup_done", {cache: "no-store"})
+      .then(response => response.json())
+      .then((obj) => {
+        if (obj.result=="OK") {
+          if (CurrentPage == "nav_page_home") {
+            doConsistencyCheck()
           }
-          else {
-            goInitialSetup();
-          }
-        } catch { goInitialSetup(); }
+        }
+        else {
+          goInitialSetup();
+        }
+      })
+      .catch(() => {
+        goInitialSetup();
       })
 }
 

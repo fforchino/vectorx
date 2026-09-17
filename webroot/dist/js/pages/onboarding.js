@@ -27,6 +27,13 @@
 
   function clearStatus() { el("status").hidden = true; }
 
+  function responseArray(raw, field) {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed && Array.isArray(parsed[field])) return parsed[field];
+    return [];
+  }
+
   async function api(action, fields, method = "POST") {
     const options = { method, headers: { "Accept": "text/plain" } };
     if (fields instanceof FormData) options.body = fields;
@@ -63,8 +70,10 @@
     kind = button.dataset.kind;
     oskrPreparationSkipped = false;
     clearStatus();
-    await snapshotRobots();
     showStep(kind === "oskr" ? "oskr" : "discover");
+    // Robot inventory can be slow while Wire-Pod is starting; never block
+    // the first onboarding transition on that background snapshot.
+    snapshotRobots();
   }));
 
   el("skip-oskr").addEventListener("click", () => {
@@ -99,7 +108,7 @@
       status("Initializing Bluetooth…");
       await api("init");
       status("Looking for nearby robots…");
-      const devices = JSON.parse(await api("scan"));
+      const devices = responseArray(await api("scan"), "devices");
       el("robots").innerHTML = "";
       if (!devices.length) return status("No Vector found. Check the robot's display and search again.", "error");
       devices.forEach(device => {
@@ -141,7 +150,7 @@
   el("scan-wifi").addEventListener("click", async () => {
     try {
       status("Looking for Wi-Fi networks…");
-      const networks = JSON.parse(await api("wifi-scan"));
+      const networks = responseArray(await api("wifi-scan"), "networks");
       el("networks").innerHTML = "";
       networks.filter(network => network.ssid).forEach(network => {
         const button = document.createElement("button");
@@ -182,7 +191,10 @@
       try {
         const response = await fetch("/api/get_robots", { cache: "no-store" });
         const robots = await response.json();
-        const online = (Array.isArray(robots) ? robots : []).some(robot => robot.vector_settings && (!robotsBefore.has(robot.esn) || !robotsBefore.get(robot.esn)));
+        // The robot may already be registered and online (for example after a
+        // retry). In that case waiting for an offline -> online transition
+        // would leave the wizard stuck forever.
+        const online = (Array.isArray(robots) ? robots : []).some(robot => Boolean(robot.vector_settings));
         if (online) return;
       } catch (_) {}
     }

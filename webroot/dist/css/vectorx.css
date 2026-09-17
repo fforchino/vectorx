@@ -36,3 +36,33 @@ label {
 .bot-link {
     color: #ffffff;
 }
+
+/* Robots is a permanently expanded, non-selectable navigation group. */
+#nav_page_robots,
+#nav_page_robots:hover,
+#nav_page_robots:focus,
+#nav_page_robots.active,
+#sidebar_robot_list a,
+#sidebar_robot_list a:hover,
+#sidebar_robot_list a:focus,
+#sidebar_robot_list a.active {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+#nav_page_robots,
+#nav_page_robots + #sidebar_robot_list,
+#sidebar_robot_list {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+#nav_page_robots {
+    align-items: center !important;
+}
+#nav_page_robots + #sidebar_robot_list {
+    display: block !important;
+}
+#sidebar_robot_list,
+#sidebar_robot_list + ul {
+    display: block !important;
+}

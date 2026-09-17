@@ -63,16 +63,25 @@ function LoadHomePageBots() {
         var bot = Robots[i];
         var ip = "OFFLINE";
         var botCtrlLink = "#"
+        var offlineTools = "";
         if (bot.vector_settings==null) {
             // Bot offline
             eyeColor = "#aaaaaa";
+            offlineTools =
+                '                    <div class="input-group input-group-sm mt-2">\n' +
+                '                        <input id="robot-ip-'+bot.esn+'" type="text" class="form-control" placeholder="New IP address" value="'+bot.ip_address+'">\n' +
+                '                        <span class="input-group-append">\n' +
+                '                            <button type="button" class="btn btn-primary btn-flat" onclick="UpdateRobotIP(&quot;'+bot.esn+'&quot;)">Update IP</button>\n' +
+                '                        </span>\n' +
+                '                    </div>\n' +
+                '                    <small id="robot-ip-status-'+bot.esn+'" class="form-text text-muted">Use this if Vector changed IP after rebooting.</small>\n';
         }
         else {
             eyeColor = GetRobotEyeColorRGB(bot);
             ip = bot.ip_address;
             botCtrlLink = "botcontrol.html?esn="+bot.esn;
         }
-        var botName = bot.custom_settings.RobotName.toUpperCase();
+        var botName = ((bot.custom_settings && bot.custom_settings.RobotName) || "").toUpperCase();
         if (botName.length==0) {
             botName = bot.esn.toUpperCase();
         }
@@ -89,6 +98,7 @@ function LoadHomePageBots() {
             '                    <span class="info-box-number">\n' +
             '                  '+bot.esn.toUpperCase()+' | '+ip+'\n' +
             '                </span>\n' +
+            offlineTools +
             '                </div>\n' +
             '                <!-- /.info-box-content -->\n' +
             '            </div>\n' +
@@ -96,4 +106,41 @@ function LoadHomePageBots() {
             '        </div>';
     }
     document.getElementById("row_homepage_bots").insertAdjacentHTML('afterbegin', data);
+}
+
+async function UpdateRobotIP(esn) {
+    const input = document.getElementById("robot-ip-" + esn);
+    const status = document.getElementById("robot-ip-status-" + esn);
+    const ip = (input.value || "").trim();
+    if (!/^((25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(25[0-5]|2[0-4]\d|1?\d?\d)$/.test(ip)) {
+        status.className = "form-text text-danger";
+        status.innerHTML = "Enter a valid IPv4 address.";
+        return;
+    }
+    status.className = "form-text text-warning";
+    status.innerHTML = "Updating robot IP and restarting robot services...";
+    try {
+        const body = new URLSearchParams();
+        body.set("esn", esn);
+        body.set("ip", ip);
+        const response = await fetch("/api/update_robot_ip", {
+            method: "POST",
+            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            body: body.toString()
+        });
+        const text = await response.text();
+        let result = {};
+        try { result = JSON.parse(text); } catch {}
+        if (response.ok && result.result === "OK") {
+            status.className = "form-text text-success";
+            status.innerHTML = "IP updated. Reloading robot status...";
+            setTimeout(() => window.location.reload(), 2000);
+        } else {
+            status.className = "form-text text-danger";
+            status.innerHTML = result.reason || "Could not update robot IP.";
+        }
+    } catch (e) {
+        status.className = "form-text text-danger";
+        status.innerHTML = "Could not update robot IP: " + e.message;
+    }
 }

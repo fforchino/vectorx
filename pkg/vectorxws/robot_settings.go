@@ -2,11 +2,17 @@ package vectorxws
 
 import (
 	"fmt"
+	"image/jpeg"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
+	"time"
+	sdk_wrapper "github.com/fforchino/vector-go-sdk/pkg/sdk-wrapper"
 )
 
 const robotSettingsMaxBody = 12 << 20
@@ -65,6 +71,7 @@ var robotSettingsActions = map[string]robotSettingsAction{
 	"mirror":           {path: "/api-sdk/mirror_mode", fields: map[string]func(string) bool{"enable": oneOf("true", "false")}},
 	"camera-frame":     {path: "/api-sdk/camera_frame"},
 	"camera-stop":      {path: "/api-sdk/stop_cam_stream"},
+	"photo-take":       {path: "/api-sdk/cloud_intent", fields: map[string]func(string) bool{"intent": oneOf("intent_photo_take_extend")}},
 	"alexa-sign-in":    {path: "/api-sdk/alexa_sign_in"},
 	"alexa-sign-out":   {path: "/api-sdk/alexa_sign_out"},
 	"quick-action":     {path: "/api-sdk/cloud_intent", fields: map[string]func(string) bool{"intent": oneOf("explore_start", "intent_imperative_dance", "intent_system_sleep", "intent_imperative_fetchcube", "intent_system_charger")}},
@@ -91,6 +98,24 @@ func robotSettingsAPIHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	actionName := strings.TrimPrefix(r.URL.Path, "/api/robot-settings/")
+	if actionName == "photo-ids" || actionName == "photo" || actionName == "photo-thumb" {
+		serial := strings.ToLower(strings.TrimSpace(r.FormValue("serial"))); if !validRobotSerial(serial) { writeRobotSettingsError(w, http.StatusBadRequest, "invalid robot identifier"); return }
+		dir := filepath.Join(os.Getenv("VECTORX_HOME"), "photos", serial); entries, _ := os.ReadDir(dir)
+		if actionName == "photo-ids" { ids := make([]string,0,len(entries)); for _, e := range entries { if strings.HasSuffix(e.Name(), ".jpg") { ids = append(ids, strings.TrimSuffix(e.Name(), ".jpg")) } }; writeJSON(w, ids); return }
+		id := strings.TrimSpace(r.FormValue("id")); if !regexp.MustCompile(`^[0-9]+$`).MatchString(id) { http.Error(w,"invalid photo id",400); return }
+		data, err := os.ReadFile(filepath.Join(dir,id+".jpg")); if err != nil { http.NotFound(w,r); return }; w.Header().Set("Content-Type","image/jpeg"); _, _ = w.Write(data); return
+	}
+	if actionName == "photo-take" {
+		serial := strings.ToLower(strings.TrimSpace(r.FormValue("serial")))
+		if !validRobotSerial(serial) { writeRobotSettingsError(w, http.StatusBadRequest, "invalid robot identifier"); return }
+		if err := sdk_wrapper.InitSDKForWirepod(serial); err != nil { writeRobotSettingsError(w, http.StatusBadGateway, err.Error()); return }
+		img, err := sdk_wrapper.GetStaticCameraPicture(false)
+		if err != nil { writeRobotSettingsError(w, http.StatusBadGateway, err.Error()); return }
+		dir := filepath.Join(os.Getenv("VECTORX_HOME"), "photos", serial); _ = os.MkdirAll(dir, 0755)
+		id := strconv.FormatInt(time.Now().UnixNano(), 10); f, err := os.Create(filepath.Join(dir, id+".jpg")); if err == nil { err = jpeg.Encode(f, img, &jpeg.Options{Quality: 95}); _ = f.Close() }
+		if err != nil { writeRobotSettingsError(w, http.StatusInternalServerError, "could not save photo"); return }
+		w.Header().Set("Content-Type", "text/plain"); fmt.Fprint(w, id); return
+	}
 	action, ok := robotSettingsActions[actionName]
 	if !ok {
 		writeRobotSettingsError(w, http.StatusNotFound, "unknown robot setting")

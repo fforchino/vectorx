@@ -168,11 +168,10 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 			for _, bot := range jsonObj.Robots {
 				botCustomConfigJson := filepath.Join(vPath, "vectorfs/nvm/"+bot.Esn+"/custom_settings.json")
 				data, err := ioutil.ReadFile(botCustomConfigJson)
-				var vectorSettings map[string]interface{} = nil
-				errSDK := sdk_wrapper.InitSDKForWirepod(bot.Esn)
-				if errSDK == nil {
-					vectorSettings = sdk_wrapper.GetVectorSettings()
-				}
+				// Do not establish a blocking SDK connection while building the
+				// home page. The robot card must render even when Vector is
+				// temporarily unreachable; settings can be loaded separately.
+				vectorSettings := map[string]interface{}{}
 				var bi BotInfo = BotInfo{bot.Esn, bot.IpAddress, sdk_wrapper.CustomSettings{}, vectorSettings}
 				if err == nil {
 					var customSettings sdk_wrapper.CustomSettings
@@ -193,6 +192,9 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 		break
 	case r.URL.Path == "/api/remove_robot":
 		removeRobotHandler(w, r, botConfigJson)
+		break
+	case r.URL.Path == "/api/update_robot_ip":
+		updateRobotIPHandler(w, r, botConfigJson)
 		break
 	case r.URL.Path == "/api/get_stats":
 		uptime := getUptime()
@@ -371,6 +373,91 @@ func removeRobotHandler(w http.ResponseWriter, r *http.Request, botConfigPath st
 	fmt.Fprint(w, `{"result":"OK"}`)
 }
 
+func updateRobotIPHandler(w http.ResponseWriter, r *http.Request, botConfigPath string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	if r.Method != http.MethodPost {
+		http.Error(w, `{"result":"KO","reason":"method not allowed"}`, http.StatusMethodNotAllowed)
+		return
+	}
+	if !sameOrigin(r) {
+		http.Error(w, `{"result":"KO","reason":"request origin not allowed"}`, http.StatusForbidden)
+		return
+	}
+	esn := strings.ToLower(strings.TrimSpace(r.FormValue("esn")))
+	if decoded, err := hex.DecodeString(esn); err != nil || len(decoded) != 4 {
+		http.Error(w, `{"result":"KO","reason":"invalid robot identifier"}`, http.StatusBadRequest)
+		return
+	}
+	ip := strings.TrimSpace(r.FormValue("ip"))
+	parsedIP := net.ParseIP(ip)
+	if parsedIP == nil || parsedIP.To4() == nil || parsedIP.IsUnspecified() || parsedIP.IsMulticast() || parsedIP.IsLoopback() {
+		http.Error(w, `{"result":"KO","reason":"invalid IPv4 address"}`, http.StatusBadRequest)
+		return
+	}
+
+	robotRegistryMu.Lock()
+	defer robotRegistryMu.Unlock()
+	data, err := os.ReadFile(botConfigPath)
+	if err != nil {
+		http.Error(w, `{"result":"KO","reason":"robot registry unavailable"}`, http.StatusInternalServerError)
+		return
+	}
+	var config WirePodConfig
+	if err = json.Unmarshal(data, &config); err != nil {
+		http.Error(w, `{"result":"KO","reason":"robot registry is invalid"}`, http.StatusInternalServerError)
+		return
+	}
+	found := false
+	for idx := range config.Robots {
+		if strings.EqualFold(config.Robots[idx].Esn, esn) {
+			config.Robots[idx].IpAddress = ip
+			found = true
+			break
+		}
+	}
+	if !found {
+		http.Error(w, `{"result":"KO","reason":"robot not found"}`, http.StatusNotFound)
+		return
+	}
+	updated, err := json.MarshalIndent(config, "", "  ")
+	if err != nil {
+		http.Error(w, `{"result":"KO","reason":"could not update robot registry"}`, http.StatusInternalServerError)
+		return
+	}
+	backupPath := botConfigPath + ".bak-vectorx-ip-" + time.Now().Format("20060102-150405")
+	tempPath := botConfigPath + ".vectorx-tmp"
+	if err = wirePodServiceControl("stop"); err != nil {
+		http.Error(w, `{"result":"KO","reason":"could not pause robot services"}`, http.StatusInternalServerError)
+		return
+	}
+	restartNeeded := true
+	defer func() {
+		if restartNeeded {
+			_ = wirePodServiceControl("start")
+		}
+	}()
+	if err = os.WriteFile(backupPath, data, 0600); err == nil {
+		err = os.WriteFile(tempPath, updated, 0644)
+	}
+	if err == nil {
+		err = os.Rename(tempPath, botConfigPath)
+	}
+	if err != nil {
+		_ = os.Remove(tempPath)
+		http.Error(w, `{"result":"KO","reason":"could not save robot registry"}`, http.StatusInternalServerError)
+		return
+	}
+	if err = wirePodServiceControl("start"); err != nil {
+		_ = os.WriteFile(botConfigPath, data, 0644)
+		_ = wirePodServiceControl("start")
+		http.Error(w, `{"result":"KO","reason":"services did not restart; previous registry restored"}`, http.StatusInternalServerError)
+		return
+	}
+	restartNeeded = false
+	fmt.Fprint(w, `{"result":"OK"}`)
+}
+
 func StartWebServer() {
 	var webPort string
 	intents.RegisterIntents()
@@ -379,7 +466,7 @@ func StartWebServer() {
 	http.HandleFunc("/api/robot-settings/", robotSettingsAPIHandler)
 	http.HandleFunc("/api/robot-camera", robotCameraStreamHandler)
 	fileServer := http.FileServer(http.Dir("./webroot"))
-	http.Handle("/", fileServer)
+	http.Handle("/", noStoreStaticFiles(fileServer))
 	if os.Getenv("VECTORX_WEBSERVER_PORT") != "" {
 		if _, err := strconv.Atoi(os.Getenv("VECTORX_WEBSERVER_PORT")); err == nil {
 			webPort = os.Getenv("VECTORX_WEBSERVER_PORT")
@@ -400,6 +487,15 @@ func StartWebServer() {
 	if err := http.ListenAndServe(":"+webPort, nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func noStoreStaticFiles(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+		next.ServeHTTP(w, r)
+	})
 }
 
 type apiConfig struct {

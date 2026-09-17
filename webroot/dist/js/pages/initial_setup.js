@@ -44,6 +44,7 @@ function loadData() {
             } catch {}
         })
 }
+
 loadData();
 
 function saveData() {

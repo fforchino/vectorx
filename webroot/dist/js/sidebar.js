@@ -48,16 +48,16 @@ function LoadSidebar(selectedPage) {
     '                </ul>\n' +
     '              </li>\n' +
     '              <li class="nav-item">\n' +
-    '                <a href="#" class="nav-link" id="nav_page_robots">\n' +
+    '                <a href="#" class="nav-link" id="nav_page_robots" onclick="return false;">\n' +
     '                  <i class="nav-icon fas fa-robot"></i>\n' +
     '                  <p>\n' +
     '                    Robots\n' +
     '                    <i class="right fas fa-angle-left"></i>\n' +
     '                  </p>\n' +
     '                </a>\n' +
-    '                <ul id="sidebar_robot_list" class="nav nav-treeview">\n' +
+    '                <ul id="sidebar_robot_list" class="nav nav-treeview" style="display:block !important">\n' +
     '                </ul>\n' +
-    '                <ul class="nav nav-treeview">\n' +
+    '                <ul class="nav nav-treeview" style="display:block !important">\n' +
     '                  <li class="nav-item">\n' +
     '                    <a id="nav_page_add_robot" href="onboarding.html" class="nav-link">\n' +
     '                      <i class="fas fa-plus-circle nav-icon text-sm"></i>\n' +
@@ -98,6 +98,11 @@ function LoadSidebar(selectedPage) {
     '      </nav>\n' +
     '      <!-- /.sidebar-menu -->\n';
   document.getElementById("sidebar").innerHTML = data;
+  const initialPath = window.location.pathname.split("/").pop() || "index.html";
+  if (["robot-settings.html", "vector-control.html", "botcontrol.html"].includes(initialPath)) {
+    const robotToggle = document.getElementById("nav_page_robots");
+    if (robotToggle) { const group = robotToggle.closest("li.nav-item"); group.classList.add("menu-open"); const tree = group.querySelector("#sidebar_robot_list"); if (tree) tree.style.display = "block"; }
+  }
 }
 
 function SidebarGetRobotList() {
@@ -109,14 +114,15 @@ function SidebarGetRobotList() {
     if (botName.length==0) botName = bot.esn.toUpperCase();
     data +=
           '                  <li class="nav-item">\n' +
-          '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="botcontrol.html?esn='+bot.esn+'" class="nav-link">\n' +
+          '                    <a id="nav_page_botcontrol_'+bot.esn+'" href="#" class="nav-link" onclick="return false;">\n' +
           '                      <i class="fas fa-square nav-icon text-sm"></i>\n' +
           '                      <p>'+botName+'</p>\n' +
           '                    </a>\n' +
           '                    <a href="robot-settings.html?esn='+bot.esn+'" class="nav-link pl-4">\n' +
           '                      <i class="fas fa-sliders-h nav-icon text-sm"></i>\n' +
-          '                      <p>Settings</p>\n' +
+    '                      <p>Basic Settings</p>\n' +
           '                    </a>\n' +
+          '                    <a href="botcontrol.html?esn='+bot.esn+'" class="nav-link pl-4"><i class="fas fa-bolt nav-icon text-sm"></i><p>Extended Intents</p></a>\n' +
           '                    <a href="#" class="nav-link text-danger pl-4" onclick="RemoveRobot(\''+bot.esn+'\', \''+botName.replaceAll("'", "")+'\'); return false;">\n' +
           '                      <i class="fas fa-unlink nav-icon text-sm"></i>\n' +
           '                      <p>Remove '+botName+'</p>\n' +
@@ -125,6 +131,29 @@ function SidebarGetRobotList() {
     }
   }
   document.getElementById("sidebar_robot_list").innerHTML = data;
+  const clearRobotSelection = () => {
+    const toggle = document.getElementById("nav_page_robots");
+    if (toggle) toggle.classList.remove("active");
+    document.querySelectorAll("#sidebar_robot_list a.active").forEach(link => link.classList.remove("active"));
+  };
+  clearRobotSelection();
+  setTimeout(clearRobotSelection, 0);
+  setTimeout(clearRobotSelection, 250);
+  const currentPath = window.location.pathname.split("/").pop() || "index.html";
+  const currentEsn = new URLSearchParams(window.location.search).get("esn");
+  if (currentEsn && ["robot-settings.html", "vector-control.html", "botcontrol.html"].includes(currentPath)) {
+    const robotGroup = document.getElementById("sidebar_robot_list").closest("li.nav-item");
+    if (robotGroup) {
+      robotGroup.classList.add("menu-open");
+      const tree = robotGroup.querySelector("#sidebar_robot_list");
+      if (tree) tree.style.display = "block";
+      robotGroup.querySelectorAll("a.active").forEach(link => link.classList.remove("active"));
+      const robotToggle = robotGroup.querySelector(":scope > a");
+      if (robotToggle) robotToggle.classList.remove("active");
+    }
+    const robotsToggle = document.getElementById("nav_page_robots");
+    if (robotsToggle) robotsToggle.classList.remove("active");
+  }
 }
 
 async function RemoveRobot(esn, botName) {

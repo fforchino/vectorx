@@ -49,6 +49,13 @@
   document.getElementById("camera-start").addEventListener("click",()=>{if(cameraRunning||!esn)return;const img=document.createElement("img");img.id="camera-image";img.alt="Live feed from Vector";img.onload=()=>show("Live camera feed started.",false);img.onerror=()=>show("The live camera feed was interrupted. Stop it and try again.",true);cameraRunning=true;document.getElementById("camera-start").disabled=true;document.getElementById("camera-stop").disabled=false;document.getElementById("camera-frame").replaceChildren(img);img.src="/api/robot-camera?serial="+encodeURIComponent(esn)+"&t="+Date.now();show("Starting live camera feed…",false)});
   async function stopCamera(silent) { cameraRunning=false;const img=document.getElementById("camera-image");if(img){img.removeAttribute("src");img.remove()}document.getElementById("camera-frame").innerHTML='<span id="camera-placeholder" class="text-muted">Camera is off</span>';document.getElementById("camera-start").disabled=false;document.getElementById("camera-stop").disabled=true;try{await command("camera-stop",{},silent);if(!silent)show("Live camera feed stopped.",false)}catch(e){if(!silent)show("Could not stop the camera: "+e.message,true)} }
   document.getElementById("camera-stop").addEventListener("click",()=>stopCamera(false));
+  document.getElementById("take-photo").addEventListener("click", async () => {
+    const button = document.getElementById("take-photo");
+    button.disabled = true;
+    try { await command("photo-take", {intent:"intent_photo_take_extend"}); show("Photo saved. Open Robot configuration → Photos to view it.", false); }
+    catch(e) { show("Could not take photo: " + e.message, true); }
+    finally { button.disabled = false; }
+  });
   window.addEventListener("beforeunload",()=>{if(cameraRunning)command("camera-stop",{},true).catch(()=>{});if(controlHeld){command("move-wheels",{lw:0,rw:0},true).catch(()=>{});command("behavior-release",{},true).catch(()=>{})}});
   setControl(false);
 })();
